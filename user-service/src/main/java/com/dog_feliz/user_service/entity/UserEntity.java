@@ -32,8 +32,8 @@ public class UserEntity {
     @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$\n")
     private String phone;
 
-    @Column(name = "address_id")
-    @OneToOne(mappedBy = "address")
+    @OneToOne
+    @JoinColumn(name = "address_id")
     private AddressEntity address;
 
     @Column(name = "email")
