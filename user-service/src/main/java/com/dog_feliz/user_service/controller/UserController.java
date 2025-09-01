@@ -1,5 +1,7 @@
 package com.dog_feliz.user_service.controller;
 
+import com.dog_feliz.user_service.controller.dto.UserRequestDto;
+import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.UserEntity;
 import com.dog_feliz.user_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,36 +11,36 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @GetMapping
-    private List<UserEntity> getUsers(){
+    private List<UserResponseDto> getUsers(){
         return userService.getUsers();
     }
 
     @GetMapping("/{id}")
-    private Optional<UserEntity> getUser(
+    private Optional<UserResponseDto> getUser(
         @PathVariable Integer id
     ){
         return userService.getUserById(id);
     }
 
     @PostMapping
-    private UserEntity addUser(
-        @RequestBody UserEntity userEntity
+    private UserResponseDto addUser(
+        @RequestBody UserRequestDto userRequest
     ) {
-        return userService.addUser(userEntity);
+        return userService.addUser(userRequest);
     }
 
     @PutMapping
-    private UserEntity updateUser(
-        @RequestBody UserEntity userEntity
+    private UserResponseDto updateUser(
+        @RequestBody UserRequestDto userRequest
     ) {
-        return userService.updateUser(userEntity);
+        return userService.updateUser(userRequest);
     }
 
     @DeleteMapping("/{id}")

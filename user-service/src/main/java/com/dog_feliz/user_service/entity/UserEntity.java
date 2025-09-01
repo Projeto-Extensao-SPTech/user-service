@@ -1,24 +1,24 @@
 package com.dog_feliz.user_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
-import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.NumberFormat;
+import jakarta.validation.constraints.Size;
+import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_tb")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "name")
-    @Length(min = 5, max = 40)
+    @Size(min = 5, max = 40)
     private String name;
 
     @Column(name = "document")
-    @Length(min = 11, max = 11)
+    @Size(min = 11, max = 11)
     private String document;
 
     /**
@@ -29,10 +29,10 @@ public class UserEntity {
      * (21)1234-5678
      */
     @Column(name = "phone")
-    @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$\n")
+    @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$")
     private String phone;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
@@ -41,4 +41,39 @@ public class UserEntity {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "created_at")
+    private final ZonedDateTime createdAt = ZonedDateTime.now();
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDocument() {
+        return document;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public AddressEntity getAddress() {
+        return address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public ZonedDateTime getCreatedAt() {
+        return createdAt;
+    }
 }
