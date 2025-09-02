@@ -1,6 +1,7 @@
 package com.dog_feliz.user_service.service;
 
 import com.dog_feliz.user_service.controller.dto.AddressResponseDto;
+import com.dog_feliz.user_service.controller.dto.AuthorizeRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.AddressEntity;
@@ -35,6 +36,17 @@ public class UserService {
     public UserResponseDto getUserById(Long id){
         Optional<UserEntity> userEntity = userRepository.findById(id);
         if (userEntity.isEmpty()) throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+        return new UserResponseDto(userEntity.get());
+    }
+
+    public UserResponseDto authorize(AuthorizeRequestDto authorizeRequestDto){
+        Optional<UserEntity> userEntity = userRepository.findByEmail(authorizeRequestDto.getEmail());
+        if (userEntity.isEmpty()) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+        }
+        if (!userEntity.get().getPassword().equals(authorizeRequestDto.getPassword())) {
+            throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
+        }
         return new UserResponseDto(userEntity.get());
     }
 

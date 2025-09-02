@@ -1,13 +1,16 @@
 package com.dog_feliz.user_service.controller;
 
+import com.dog_feliz.user_service.controller.dto.AuthorizeRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.UserEntity;
 import com.dog_feliz.user_service.service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,13 @@ public class UserController {
         @PathVariable Long id
     ){
         return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @GetMapping("/authorize")
+    private ResponseEntity<UserResponseDto> authorize(
+        @RequestBody AuthorizeRequestDto authorizeRequestDto
+    ){
+        return ResponseEntity.ok(userService.authorize(authorizeRequestDto));
     }
 
     @PostMapping
