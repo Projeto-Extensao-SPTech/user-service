@@ -1,6 +1,6 @@
 package com.dog_feliz.user_service.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id = null;
 
     @Column(name = "name")
     @Size(min = 5, max = 40)
@@ -32,20 +32,37 @@ public class UserEntity {
     @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$")
     private String phone;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id")
-    private AddressEntity address;
-
     @Column(name = "email")
     private String email;
 
     @Column(name = "password")
     private String password;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private AddressEntity address;
+
     @Column(name = "created_at")
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
-    public Integer getId() {
+    public UserEntity(UserRequestDto userRequestDto, AddressEntity addressEntity) {
+        this.name = userRequestDto.getName();
+        this.document = userRequestDto.getDocument();
+        this.phone = userRequestDto.getPhone();
+        this.email = userRequestDto.getEmail();
+        this.address = addressEntity;
+    }
+
+    public UserEntity(Long id, UserRequestDto userRequestDto, AddressEntity addressEntity) {
+        this.id = id;
+        this.name = userRequestDto.getName();
+        this.document = userRequestDto.getDocument();
+        this.phone = userRequestDto.getPhone();
+        this.email = userRequestDto.getEmail();
+        this.address = addressEntity;
+    }
+
+    public Long getId() {
         return id;
     }
 

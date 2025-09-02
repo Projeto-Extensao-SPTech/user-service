@@ -1,6 +1,6 @@
 package com.dog_feliz.user_service.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.dog_feliz.user_service.controller.dto.AddressRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 public class AddressEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id = null;
 
     @Size(min = 8, max = 8)
     private String zipCode;
@@ -24,12 +24,25 @@ public class AddressEntity {
     private String street;
 
     @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
-    private UserEntity user;
+    private UserEntity user = null;
 
     @Column(name = "created_at")
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
-    public Integer getId() {
+    public AddressEntity(AddressRequestDto addressRequestDto) {
+        this.number = addressRequestDto.getNumber();
+        this.street = addressRequestDto.getStreet();
+        this.zipCode = addressRequestDto.getZipCode();
+    }
+
+    public AddressEntity(Long id, AddressRequestDto addressRequestDto) {
+        this.id = id;
+        this.number = addressRequestDto.getNumber();
+        this.street = addressRequestDto.getStreet();
+        this.zipCode = addressRequestDto.getZipCode();
+    }
+
+    public Long getId() {
         return id;
     }
 

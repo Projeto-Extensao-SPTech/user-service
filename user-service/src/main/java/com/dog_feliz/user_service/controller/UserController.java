@@ -5,6 +5,7 @@ import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.UserEntity;
 import com.dog_feliz.user_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,34 +19,35 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    private List<UserResponseDto> getUsers(){
-        return userService.getUsers();
+    private ResponseEntity<List<UserResponseDto>> getUsers(){
+        return ResponseEntity.ok(userService.getUsers());
     }
 
     @GetMapping("/{id}")
-    private Optional<UserResponseDto> getUser(
-        @PathVariable Integer id
+    private ResponseEntity<UserResponseDto> getUser(
+        @PathVariable Long id
     ){
-        return userService.getUserById(id);
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PostMapping
-    private UserResponseDto addUser(
+    private ResponseEntity<UserResponseDto> addUser(
         @RequestBody UserRequestDto userRequest
     ) {
-        return userService.addUser(userRequest);
+        return ResponseEntity.ok(userService.addUser(userRequest));
     }
 
-    @PutMapping
-    private UserResponseDto updateUser(
+    @PutMapping("/{id}")
+    private ResponseEntity<UserResponseDto> updateUser(
+        @PathVariable Long id,
         @RequestBody UserRequestDto userRequest
     ) {
-        return userService.updateUser(userRequest);
+        return ResponseEntity.ok(userService.updateUser(id, userRequest));
     }
 
     @DeleteMapping("/{id}")
     private void deleteUser(
-        @PathVariable Integer id
+        @PathVariable Long id
     ) {
         userService.deleteUser(id);
     }
