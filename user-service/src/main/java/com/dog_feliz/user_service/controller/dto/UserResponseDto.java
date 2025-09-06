@@ -1,11 +1,10 @@
 package com.dog_feliz.user_service.controller.dto;
 
 import com.dog_feliz.user_service.entity.UserEntity;
-
 import java.time.ZonedDateTime;
 
 public class UserResponseDto {
-    private Integer id;
+    private Long id;
     private String name;
     private String document;
     private String phone;
@@ -13,7 +12,7 @@ public class UserResponseDto {
     private String email;
     private ZonedDateTime created_at;
 
-    public UserResponseDto(Integer id, String name, String document, String phone, AddressResponseDto address, String email, ZonedDateTime created_at) {
+    public UserResponseDto(Long id, String name, String document, String phone, AddressResponseDto address, String email, ZonedDateTime created_at) {
         this.id = id;
         this.name = name;
         this.document = document;
@@ -24,6 +23,7 @@ public class UserResponseDto {
     }
 
     public UserResponseDto(UserEntity userEntity) {
+        this.id = userEntity.getId();
         this.name = userEntity.getName();
         this.document = userEntity.getName();
         this.phone = userEntity.getPhone();
@@ -32,7 +32,7 @@ public class UserResponseDto {
         this.created_at = userEntity.getCreatedAt();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

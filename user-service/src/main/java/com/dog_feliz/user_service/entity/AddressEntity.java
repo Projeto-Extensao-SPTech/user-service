@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 public class AddressEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id = null;
+    private Long id;
 
     @Size(min = 8, max = 8)
     private String zipCode;
@@ -28,6 +28,8 @@ public class AddressEntity {
 
     @Column(name = "created_at")
     private final ZonedDateTime createdAt = ZonedDateTime.now();
+
+    public AddressEntity(){}
 
     public AddressEntity(AddressRequestDto addressRequestDto) {
         this.number = addressRequestDto.getNumber();

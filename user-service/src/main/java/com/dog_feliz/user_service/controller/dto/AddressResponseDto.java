@@ -5,13 +5,13 @@ import com.dog_feliz.user_service.entity.AddressEntity;
 import java.time.ZonedDateTime;
 
 public class AddressResponseDto {
-    private Integer id;
+    private Long id;
     private String zipCode;
     private Integer number;
     private String street;
     private ZonedDateTime createdAt;
 
-    public AddressResponseDto(Integer id, String zipCode, Integer number, String street, ZonedDateTime createdAt) {
+    public AddressResponseDto(Long id, String zipCode, Integer number, String street, ZonedDateTime createdAt) {
         this.id = id;
         this.zipCode = zipCode;
         this.number = number;
@@ -27,7 +27,7 @@ public class AddressResponseDto {
         this.createdAt = address.getCreatedAt();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

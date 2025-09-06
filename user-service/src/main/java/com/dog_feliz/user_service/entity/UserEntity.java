@@ -2,6 +2,7 @@ package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.ZonedDateTime;
@@ -11,7 +12,7 @@ import java.time.ZonedDateTime;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id = null;
+    private Long id;
 
     @Column(name = "name")
     @Size(min = 5, max = 40)
@@ -33,9 +34,13 @@ public class UserEntity {
     private String phone;
 
     @Column(name = "email")
+    @Size(min = 8, max = 100)
+    @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
     private String email;
 
+    // Trabalhar na validação de senha e criptografia posteriormente
     @Column(name = "password")
+    @NotNull
     private String password;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -45,11 +50,14 @@ public class UserEntity {
     @Column(name = "created_at")
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
+    public UserEntity(){}
+
     public UserEntity(UserRequestDto userRequestDto, AddressEntity addressEntity) {
         this.name = userRequestDto.getName();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
         this.email = userRequestDto.getEmail();
+        this.password = userRequestDto.getPassword();
         this.address = addressEntity;
     }
 
@@ -59,6 +67,7 @@ public class UserEntity {
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
         this.email = userRequestDto.getEmail();
+        this.password = userRequestDto.getPassword();
         this.address = addressEntity;
     }
 
