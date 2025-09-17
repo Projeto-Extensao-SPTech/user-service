@@ -6,6 +6,9 @@ import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.exception.AddressNotFoundById;
+import com.dog_feliz.user_service.exception.UnauthorizedUser;
+import com.dog_feliz.user_service.exception.UserNotFoundById;
 import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
 import org.apache.catalina.User;
@@ -35,7 +38,7 @@ public class UserService {
 
     public UserResponseDto getUserById(Long id){
         Optional<UserEntity> userEntity = userRepository.findById(id);
-        if (userEntity.isEmpty()) throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+        if (userEntity.isEmpty()) throw new UserNotFoundById(id);
         return new UserResponseDto(userEntity.get());
     }
 
@@ -45,12 +48,13 @@ public class UserService {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
         }
         if (!userEntity.get().getPassword().equals(authorizeRequestDto.getPassword())) {
-            throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedUser(authorizeRequestDto.getEmail(), authorizeRequestDto.getPassword());
         }
         return new UserResponseDto(userEntity.get());
     }
 
     public UserResponseDto addUser(UserRequestDto userRequestDto){
+
         AddressEntity address = addressRepository.save(new AddressEntity(userRequestDto.getAddress()));
         UserEntity user = userRepository.save(new UserEntity(userRequestDto, address));
         return new UserResponseDto(user);
@@ -58,10 +62,11 @@ public class UserService {
 
     public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto){
         Optional<UserEntity> userEntity = userRepository.findById(id);
-        if (userEntity.isEmpty()) throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+        if (userEntity.isEmpty()) throw new UserNotFoundById(id);
 
-        Optional<AddressEntity> addressEntity = addressRepository.findById(userEntity.get().getAddress().getId());
-        if (addressEntity.isEmpty()) throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+        Long addressId = userEntity.get().getAddress().getId();
+        Optional<AddressEntity> addressEntity = addressRepository.findById(addressId);
+        if (addressEntity.isEmpty()) throw new AddressNotFoundById(addressId);
 
         AddressEntity addressUpdated = addressRepository.save(new AddressEntity(addressEntity.get().getId(), userRequestDto.getAddress()));
         UserEntity userUpdated = userRepository.save(new UserEntity(id, userRequestDto, addressUpdated));
