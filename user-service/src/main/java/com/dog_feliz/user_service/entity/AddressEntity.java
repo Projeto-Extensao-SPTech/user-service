@@ -14,12 +14,15 @@ public class AddressEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Convert()
     @Size(min = 8, max = 8)
     private String zipCode;
 
+    @Convert()
     @PositiveOrZero
     private Integer number;
 
+    @Convert()
     @Size(min = 5, max = 40)
     private String street;
 
@@ -29,7 +32,7 @@ public class AddressEntity {
     @Column(name = "created_at")
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
-    public AddressEntity(){}
+    public AddressEntity() {}
 
     public AddressEntity(AddressRequestDto addressRequestDto) {
         this.number = addressRequestDto.getNumber();

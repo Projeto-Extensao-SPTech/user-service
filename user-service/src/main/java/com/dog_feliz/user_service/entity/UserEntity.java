@@ -2,9 +2,8 @@ package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+
 import java.time.ZonedDateTime;
 
 @Entity
@@ -14,11 +13,12 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
     @Size(min = 5, max = 40)
     private String name;
 
-    @Column(name = "document")
+    @Min(value = 14)
+    private Integer age;
+
     @Size(min = 11, max = 11)
     private String document;
 
@@ -29,28 +29,24 @@ public class UserEntity {
      * 11 1234-5678,
      * (21)1234-5678
      */
-    @Column(name = "phone")
     @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$")
     private String phone;
 
-    @Column(name = "email")
     @Size(min = 8, max = 100)
     @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
     private String email;
 
-    // Trabalhar na validação de senha e criptografia posteriormente
-    @Column(name = "password")
-    @NotNull
     private String password;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity address;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
-    public UserEntity(){}
+    public UserEntity() {
+    }
 
     public UserEntity(UserRequestDto userRequestDto, AddressEntity addressEntity) {
         this.name = userRequestDto.getName();
