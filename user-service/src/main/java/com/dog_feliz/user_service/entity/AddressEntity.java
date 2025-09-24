@@ -1,6 +1,8 @@
 package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.AddressRequestDto;
+import com.dog_feliz.user_service.converter.crypto.IntegerCryptoConverter;
+import com.dog_feliz.user_service.converter.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -14,15 +16,15 @@ public class AddressEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Convert()
+    @Convert(converter = StringCryptoConverter.class)
     @Size(min = 8, max = 8)
     private String zipCode;
 
-    @Convert()
+    @Convert(converter = IntegerCryptoConverter.class)
     @PositiveOrZero
     private Integer number;
 
-    @Convert()
+    @Convert(converter = StringCryptoConverter.class)
     @Size(min = 5, max = 40)
     private String street;
 

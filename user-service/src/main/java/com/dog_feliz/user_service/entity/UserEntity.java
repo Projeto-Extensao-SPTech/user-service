@@ -1,6 +1,8 @@
 package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
+import com.dog_feliz.user_service.converter.crypto.IntegerCryptoConverter;
+import com.dog_feliz.user_service.converter.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -13,12 +15,15 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Convert(converter = StringCryptoConverter.class)
     @Size(min = 5, max = 40)
     private String name;
 
+    @Convert(converter = IntegerCryptoConverter.class)
     @Min(value = 14)
-    private Integer age;
+    private String age;
 
+    @Convert(converter = StringCryptoConverter.class)
     @Size(min = 11, max = 11)
     private String document;
 
@@ -29,9 +34,11 @@ public class UserEntity {
      * 11 1234-5678,
      * (21)1234-5678
      */
+    @Convert(converter = StringCryptoConverter.class)
     @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$")
     private String phone;
 
+    @Convert(converter = StringCryptoConverter.class)
     @Size(min = 8, max = 100)
     @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
     private String email;

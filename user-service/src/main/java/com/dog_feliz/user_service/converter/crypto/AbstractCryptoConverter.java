@@ -1,13 +1,13 @@
-package com.dog_feliz.user_service.converter;
+package com.dog_feliz.user_service.converter.crypto;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
 public abstract class AbstractCryptoConverter<T> implements CryptoConverter<T> {
 
-    protected final StandardPBEStringEncryptor encryptor;
+    protected static StandardPBEStringEncryptor encryptor;
 
     protected AbstractCryptoConverter(StandardPBEStringEncryptor encryptor) {
-        this.encryptor = encryptor;
+        AbstractCryptoConverter.encryptor = encryptor;
     }
 
     @Override
@@ -19,6 +19,10 @@ public abstract class AbstractCryptoConverter<T> implements CryptoConverter<T> {
     public T decrypt(String dbData) {
         if (dbData == null) return null;
         return convertFromString(encryptor.decrypt(dbData));
+    }
+
+    public static void setEncryptor(StandardPBEStringEncryptor encryptor) {
+        AbstractCryptoConverter.encryptor = encryptor;
     }
 
     protected abstract T convertFromString(String decrypted);
