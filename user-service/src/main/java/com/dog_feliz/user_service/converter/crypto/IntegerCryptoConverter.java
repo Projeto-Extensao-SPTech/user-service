@@ -5,7 +5,7 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
 @Converter
 public class IntegerCryptoConverter extends AbstractCryptoConverter<Integer> {
-    protected IntegerCryptoConverter(StandardPBEStringEncryptor encryptor) {
+    public IntegerCryptoConverter(StandardPBEStringEncryptor encryptor) {
         super(encryptor);
     }
 
@@ -21,6 +21,6 @@ public class IntegerCryptoConverter extends AbstractCryptoConverter<Integer> {
 
     @Override
     public Integer convertToEntityAttribute(String s) {
-        return s == null ? null : convertFromString(encryptor.encrypt(s));
+        return s == null ? null : convertFromString(encryptor.decrypt(s));
     }
 }

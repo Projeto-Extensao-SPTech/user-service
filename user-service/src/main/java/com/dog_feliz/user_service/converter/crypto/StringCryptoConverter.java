@@ -2,10 +2,11 @@ package com.dog_feliz.user_service.converter.crypto;
 
 import jakarta.persistence.Converter;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.springframework.context.annotation.Bean;
 
 @Converter
 public class StringCryptoConverter extends AbstractCryptoConverter<String> {
-    protected StringCryptoConverter(StandardPBEStringEncryptor encryptor) {
+    public StringCryptoConverter(StandardPBEStringEncryptor encryptor) {
         super(encryptor);
     }
 

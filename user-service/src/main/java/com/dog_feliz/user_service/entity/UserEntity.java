@@ -4,7 +4,9 @@ import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.converter.crypto.IntegerCryptoConverter;
 import com.dog_feliz.user_service.converter.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.constraints.*;
+import jakarta.validation.groups.ConvertGroup;
 
 import java.time.ZonedDateTime;
 
@@ -16,31 +18,18 @@ public class UserEntity {
     private Long id;
 
     @Convert(converter = StringCryptoConverter.class)
-    @Size(min = 5, max = 40)
     private String name;
 
     @Convert(converter = IntegerCryptoConverter.class)
-    @Min(value = 14)
     private String age;
 
     @Convert(converter = StringCryptoConverter.class)
-    @Size(min = 11, max = 11)
     private String document;
 
-    /**
-     * Accepted formats to phone field
-     * (11) 91234-5678,
-     * 11 91234-5678,
-     * 11 1234-5678,
-     * (21)1234-5678
-     */
     @Convert(converter = StringCryptoConverter.class)
-    @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$")
     private String phone;
 
     @Convert(converter = StringCryptoConverter.class)
-    @Size(min = 8, max = 100)
-    @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
     private String email;
 
     private String password;
@@ -82,6 +71,10 @@ public class UserEntity {
         return name;
     }
 
+    public String getAge() {
+        return age;
+    }
+
     public String getDocument() {
         return document;
     }
@@ -104,5 +97,20 @@ public class UserEntity {
 
     public ZonedDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", document='" + document + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", address=" + address +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

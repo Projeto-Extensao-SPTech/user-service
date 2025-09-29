@@ -5,7 +5,7 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
 @Converter
 public class DoubleCryptoConverter extends AbstractCryptoConverter<Double> {
-    protected DoubleCryptoConverter(StandardPBEStringEncryptor encryptor) {
+    public DoubleCryptoConverter(StandardPBEStringEncryptor encryptor) {
         super(encryptor);
     }
 

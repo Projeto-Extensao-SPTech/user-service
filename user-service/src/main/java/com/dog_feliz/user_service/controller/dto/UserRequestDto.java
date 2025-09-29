@@ -1,15 +1,34 @@
 package com.dog_feliz.user_service.controller.dto;
 
-public class UserRequestDto {
-    private String name;
-    private String document;
-    private String phone;
-    private AddressRequestDto address;
-    private String email;
-    private String password;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-    public UserRequestDto(String name, String document, String phone, AddressRequestDto address, String email, String password) {
+public class UserRequestDto {
+    @Size(min = 8, max = 40)
+    private final String name;
+    @Min(14)
+    private final Integer age;
+    @Size(min = 11, max = 11)
+    private final String document;
+    /**
+     * Accepted formats to phone field
+     * (11) 91234-5678,
+     * 11 91234-5678,
+     * 11 1234-5678,
+     * (21)1234-5678
+     */
+    @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$")
+    private final String phone;
+    private final AddressRequestDto address;
+    @Size(min = 8, max = 100)
+    @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
+    private final String email;
+    private final String password;
+
+    public UserRequestDto(String name, Integer age, String document, String phone, AddressRequestDto address, String email, String password) {
         this.name = name;
+        this.age = age;
         this.document = document;
         this.phone = phone;
         this.address = address;
@@ -21,47 +40,27 @@ public class UserRequestDto {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Integer getAge() {
+        return age;
     }
 
     public String getDocument() {
         return document;
     }
 
-    public void setDocument(String document) {
-        this.document = document;
-    }
-
     public String getPhone() {
         return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public AddressRequestDto getAddress() {
         return address;
     }
 
-    public void setAddress(AddressRequestDto address) {
-        this.address = address;
-    }
-
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

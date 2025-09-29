@@ -1,11 +1,17 @@
 package com.dog_feliz.user_service.controller.dto;
 
-public class AddressRequestDto {
-    private String zipCode;
-    private Integer number;
-    private String street;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 
-    public AddressRequestDto(Integer id, String zipCode, Integer number, String street) {
+public class AddressRequestDto {
+    @Size(min = 8, max = 8)
+    private final String zipCode;
+    @PositiveOrZero
+    private final Integer number;
+    @Size(min = 5, max = 40)
+    private final String street;
+
+    public AddressRequestDto(String zipCode, Integer number, String street) {
         this.zipCode = zipCode;
         this.number = number;
         this.street = street;
@@ -15,23 +21,11 @@ public class AddressRequestDto {
         return zipCode;
     }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
     public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
-    }
-
     public String getStreet() {
         return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
     }
 }

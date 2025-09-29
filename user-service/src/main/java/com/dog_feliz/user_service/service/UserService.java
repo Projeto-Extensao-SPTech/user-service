@@ -4,10 +4,12 @@ import com.dog_feliz.user_service.controller.dto.AddressResponseDto;
 import com.dog_feliz.user_service.controller.dto.AuthorizeRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
+import com.dog_feliz.user_service.converter.crypto.StringCryptoConverter;
 import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.entity.UserEntity;
 import com.dog_feliz.user_service.exception.AddressNotFoundById;
 import com.dog_feliz.user_service.exception.UnauthorizedUser;
+import com.dog_feliz.user_service.exception.UserNotFoundByEmail;
 import com.dog_feliz.user_service.exception.UserNotFoundById;
 import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
@@ -31,6 +33,9 @@ public class UserService {
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private StringCryptoConverter stringCryptoConverter;
+
     public List<UserResponseDto> getUsers(){
         List<UserEntity> users = userRepository.findAll();
         return users.stream().map(userEntity -> new UserResponseDto(userEntity)).toList();
@@ -43,9 +48,10 @@ public class UserService {
     }
 
     public UserResponseDto authorize(AuthorizeRequestDto authorizeRequestDto){
-        Optional<UserEntity> userEntity = userRepository.findByEmail(authorizeRequestDto.getEmail());
+        String emailEncrypted = stringCryptoConverter.encrypt(authorizeRequestDto.getEmail());
+        Optional<UserEntity> userEntity = userRepository.findByEmail(emailEncrypted);
         if (userEntity.isEmpty()) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+            throw new UserNotFoundByEmail(emailEncrypted);
         }
         if (!userEntity.get().getPassword().equals(authorizeRequestDto.getPassword())) {
             throw new UnauthorizedUser(authorizeRequestDto.getEmail(), authorizeRequestDto.getPassword());
