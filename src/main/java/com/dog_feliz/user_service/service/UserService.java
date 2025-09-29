@@ -60,7 +60,6 @@ public class UserService {
     }
 
     public UserResponseDto addUser(UserRequestDto userRequestDto){
-
         AddressEntity address = addressRepository.save(new AddressEntity(userRequestDto.getAddress()));
         UserEntity user = userRepository.save(new UserEntity(userRequestDto, address));
         return new UserResponseDto(user);

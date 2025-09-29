@@ -28,7 +28,7 @@ public class UserResponseDto {
     public UserResponseDto(UserEntity userEntity) {
         this.id = userEntity.getId();
         this.name = userEntity.getName();
-        this.age = Integer.parseInt(userEntity.getAge());
+        this.age = userEntity.getAge();
         this.document = userEntity.getName();
         this.phone = userEntity.getPhone();
         this.address = new AddressResponseDto(userEntity.getAddress());
