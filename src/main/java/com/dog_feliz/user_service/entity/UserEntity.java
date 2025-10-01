@@ -32,6 +32,7 @@ public class UserEntity {
     @Convert(converter = StringCryptoConverter.class)
     private String email;
 
+    @Convert(converter = StringCryptoConverter.class)
     private String password;
 
     @OneToOne(fetch = FetchType.LAZY)
