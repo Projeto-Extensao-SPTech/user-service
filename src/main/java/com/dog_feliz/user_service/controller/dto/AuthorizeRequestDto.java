@@ -1,8 +1,8 @@
 package com.dog_feliz.user_service.controller.dto;
 
 public class AuthorizeRequestDto {
-    private String email;
-    private String password;
+    private final String email;
+    private final String password;
 
     public AuthorizeRequestDto(String email, String password) {
         this.email = email;

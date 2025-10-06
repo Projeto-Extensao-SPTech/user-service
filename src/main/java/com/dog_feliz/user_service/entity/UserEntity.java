@@ -1,10 +1,13 @@
 package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
+import com.dog_feliz.user_service.converter.crypto.IntegerCryptoConverter;
+import com.dog_feliz.user_service.converter.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.validation.constraints.*;
+import jakarta.validation.groups.ConvertGroup;
+
 import java.time.ZonedDateTime;
 
 @Entity
@@ -14,46 +17,36 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    @Size(min = 5, max = 40)
+    @Convert(converter = StringCryptoConverter.class)
     private String name;
 
-    @Column(name = "document")
-    @Size(min = 11, max = 11)
+    @Convert(converter = IntegerCryptoConverter.class)
+    private Integer age;
+
+    @Convert(converter = StringCryptoConverter.class)
     private String document;
 
-    /**
-     * Accepted formats to phone field
-     * (11) 91234-5678,
-     * 11 91234-5678,
-     * 11 1234-5678,
-     * (21)1234-5678
-     */
-    @Column(name = "phone")
-    @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$")
+    @Convert(converter = StringCryptoConverter.class)
     private String phone;
 
-    @Column(name = "email")
-    @Size(min = 8, max = 100)
-    @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
+    @Convert(converter = StringCryptoConverter.class)
     private String email;
 
-    // Trabalhar na validação de senha e criptografia posteriormente
-    @Column(name = "password")
-    @NotNull
     private String password;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity address;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
-    public UserEntity(){}
+    public UserEntity() {
+    }
 
     public UserEntity(UserRequestDto userRequestDto, AddressEntity addressEntity) {
         this.name = userRequestDto.getName();
+        this.age = userRequestDto.getAge();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
         this.email = userRequestDto.getEmail();
@@ -64,6 +57,7 @@ public class UserEntity {
     public UserEntity(Long id, UserRequestDto userRequestDto, AddressEntity addressEntity) {
         this.id = id;
         this.name = userRequestDto.getName();
+        this.age = userRequestDto.getAge();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
         this.email = userRequestDto.getEmail();
@@ -77,6 +71,10 @@ public class UserEntity {
 
     public String getName() {
         return name;
+    }
+
+    public Integer getAge() {
+        return age;
     }
 
     public String getDocument() {
@@ -101,5 +99,20 @@ public class UserEntity {
 
     public ZonedDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", document='" + document + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", address=" + address +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

@@ -1,9 +1,9 @@
 package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.AddressRequestDto;
+import com.dog_feliz.user_service.converter.crypto.IntegerCryptoConverter;
+import com.dog_feliz.user_service.converter.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
 
 import java.time.ZonedDateTime;
 
@@ -14,13 +14,13 @@ public class AddressEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 8, max = 8)
+    @Convert(converter = StringCryptoConverter.class)
     private String zipCode;
 
-    @PositiveOrZero
+    @Convert(converter = IntegerCryptoConverter.class)
     private Integer number;
 
-    @Size(min = 5, max = 40)
+    @Convert(converter = StringCryptoConverter.class)
     private String street;
 
     @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
@@ -29,7 +29,7 @@ public class AddressEntity {
     @Column(name = "created_at")
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
-    public AddressEntity(){}
+    public AddressEntity() {}
 
     public AddressEntity(AddressRequestDto addressRequestDto) {
         this.number = addressRequestDto.getNumber();
@@ -66,5 +66,16 @@ public class AddressEntity {
 
     public ZonedDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "AddressEntity{" +
+                "id=" + id +
+                ", zipCode='" + zipCode + '\'' +
+                ", number=" + number +
+                ", street='" + street + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

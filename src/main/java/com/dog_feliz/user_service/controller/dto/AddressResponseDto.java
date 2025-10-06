@@ -35,31 +35,15 @@ public class AddressResponseDto {
         return zipCode;
     }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
     public Integer getNumber() {
         return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
     }
 
     public String getStreet() {
         return street;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
     public ZonedDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }
