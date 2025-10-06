@@ -48,13 +48,13 @@ public class UserService {
     }
 
     public UserResponseDto authorize(AuthorizeRequestDto authorizeRequestDto){
-        String emailEncrypted = stringCryptoConverter.encrypt(authorizeRequestDto.getEmail());
-        Optional<UserEntity> userEntity = userRepository.findByEmail(emailEncrypted);
+        String email = authorizeRequestDto.getEmail();
+        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         if (userEntity.isEmpty()) {
-            throw new UserNotFoundByEmail(emailEncrypted);
+            throw new UserNotFoundByEmail(email);
         }
         if (!userEntity.get().getPassword().equals(authorizeRequestDto.getPassword())) {
-            throw new UnauthorizedUser(authorizeRequestDto.getEmail(), authorizeRequestDto.getPassword());
+            throw new UnauthorizedUser(email, authorizeRequestDto.getPassword());
         }
         return new UserResponseDto(userEntity.get());
     }
