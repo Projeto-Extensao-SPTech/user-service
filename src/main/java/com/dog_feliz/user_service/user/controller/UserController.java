@@ -1,6 +1,7 @@
 package com.dog_feliz.user_service.user.controller;
 
-import com.dog_feliz.user_service.user.controller.dto.AuthorizeRequestDto;
+import com.dog_feliz.user_service.auth.controller.dto.AuthResponseDto;
+import com.dog_feliz.user_service.auth.service.JwtService;
 import com.dog_feliz.user_service.user.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.user.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.user.service.UserService;
@@ -16,6 +17,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtService jwtService;
+
     @GetMapping
     private ResponseEntity<List<UserResponseDto>> getUsers(){
         return ResponseEntity.ok(userService.getUsers());
@@ -26,20 +30,6 @@ public class UserController {
         @PathVariable Long id
     ){
         return ResponseEntity.ok(userService.getUserById(id));
-    }
-
-    @GetMapping("/authorize")
-    private ResponseEntity<UserResponseDto> authorize(
-        @RequestBody AuthorizeRequestDto authorizeRequestDto
-    ){
-        return ResponseEntity.ok(userService.authorize(authorizeRequestDto));
-    }
-
-    @PostMapping
-    private ResponseEntity<UserResponseDto> addUser(
-        @RequestBody UserRequestDto userRequest
-    ) {
-        return ResponseEntity.ok(userService.addUser(userRequest));
     }
 
     @PutMapping("/{id}")

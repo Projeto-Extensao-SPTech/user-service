@@ -2,11 +2,11 @@ package com.dog_feliz.user_service.shared.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class UnauthorizedUser extends RuntimeException {
+public class UnauthorizedUserException extends RuntimeException {
     private final HttpStatus status;
 
-    public UnauthorizedUser(String email, String password) {
-        super(String.format("Unauthorized user by email %s and password %s", email, password));
+    public UnauthorizedUserException(String message) {
+        super(message);
         status = HttpStatus.UNAUTHORIZED;
     }
 

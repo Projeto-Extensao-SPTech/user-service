@@ -1,10 +1,13 @@
-package com.dog_feliz.user_service.user.controller.dto;
+package com.dog_feliz.user_service.auth.controller.dto;
 
-public class AuthorizeRequestDto {
+import jakarta.validation.constraints.Email;
+
+public class AuthRequestDto {
+    @Email
     private final String email;
     private final String password;
 
-    public AuthorizeRequestDto(String email, String password) {
+    public AuthRequestDto(String email, String password) {
         this.email = email;
         this.password = password;
     }

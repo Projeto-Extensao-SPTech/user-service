@@ -1,5 +1,6 @@
 package com.dog_feliz.user_service.user.controller.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -22,7 +23,7 @@ public class UserRequestDto {
     private final String phone;
     private final AddressRequestDto address;
     @Size(min = 8, max = 100)
-    @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
+    @Email
     private final String email;
     private final String password;
 

@@ -2,11 +2,11 @@ package com.dog_feliz.user_service.shared.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class AddressNotFoundById extends RuntimeException {
+public class AddressNotFoundException extends RuntimeException {
     private final HttpStatus status;
 
-    public AddressNotFoundById(Long id) {
-        super(String.format("Address not found by Id %d", id));
+    public AddressNotFoundException(String message) {
+        super(message);
         this.status = HttpStatus.NOT_FOUND;
     }
 

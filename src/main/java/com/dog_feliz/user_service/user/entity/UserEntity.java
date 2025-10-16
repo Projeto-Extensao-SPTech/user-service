@@ -4,12 +4,16 @@ import com.dog_feliz.user_service.user.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.shared.converter.crypto.IntegerCryptoConverter;
 import com.dog_feliz.user_service.shared.converter.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "user_tb")
-public class UserEntity {
+public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,13 +46,13 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(UserRequestDto userRequestDto, AddressEntity addressEntity) {
+    public UserEntity(UserRequestDto userRequestDto, AddressEntity addressEntity, String passwordEncoded) {
         this.name = userRequestDto.getName();
         this.age = userRequestDto.getAge();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
         this.email = userRequestDto.getEmail();
-        this.password = userRequestDto.getPassword();
+        this.password = passwordEncoded;
         this.address = addressEntity;
     }
 
@@ -61,6 +65,16 @@ public class UserEntity {
         this.email = userRequestDto.getEmail();
         this.password = userRequestDto.getPassword();
         this.address = addressEntity;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
     }
 
     public Long getId() {
