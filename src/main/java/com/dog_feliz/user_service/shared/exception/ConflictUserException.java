@@ -7,7 +7,7 @@ public class ConflictUserException extends RuntimeException {
 
     public ConflictUserException(String message) {
         super(message);
-        this.status = HttpStatus.CONFLICT;;
+        this.status = HttpStatus.CONFLICT;
     }
 
     public HttpStatus getStatus() {

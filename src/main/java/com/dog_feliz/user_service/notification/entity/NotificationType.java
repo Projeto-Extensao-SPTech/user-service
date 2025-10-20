@@ -1,4 +1,4 @@
 package com.dog_feliz.user_service.notification.entity;
 
-public class NotificationController {
+public enum NotificationType {
 }
