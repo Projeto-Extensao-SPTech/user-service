@@ -13,6 +13,5 @@ public class AdoptionFairEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private ZonedDateTime date;
-    @Times
     private ZonedDateTime createdAt;
 }
