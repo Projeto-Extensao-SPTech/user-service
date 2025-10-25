@@ -1,6 +1,6 @@
 package com.dog_feliz.user_service.config;
 
-import com.dog_feliz.user_service.shared.converter.crypto.StringCryptoConverter;
+import com.dog_feliz.user_service.shared.crypto.StringCryptoConverter;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.salt.StringFixedSaltGenerator;
 import org.springframework.beans.factory.annotation.Value;

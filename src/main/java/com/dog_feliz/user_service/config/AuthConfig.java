@@ -1,7 +1,7 @@
 package com.dog_feliz.user_service.config;
 
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
-import com.dog_feliz.user_service.user.repository.UserRepository;
+import com.dog_feliz.user_service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
