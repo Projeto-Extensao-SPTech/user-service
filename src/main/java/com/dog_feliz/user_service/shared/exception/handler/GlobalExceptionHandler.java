@@ -1,10 +1,9 @@
 package com.dog_feliz.user_service.shared.exception.handler;
 
-import com.dog_feliz.user_service.shared.exception.AddressNotFoundException;
-import com.dog_feliz.user_service.shared.exception.ConflictUserException;
-import com.dog_feliz.user_service.shared.exception.UnauthorizedUserException;
-import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
+import com.dog_feliz.user_service.shared.exception.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -43,7 +42,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConflictUserException.class)
-    public ResponseEntity<Object> handleUserNotFoundByEmail(ConflictUserException ex) {
+    public ResponseEntity<Object> handleConflictUser(ConflictUserException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", ex.getStatus());
+        return ResponseEntity.status(ex.getStatus()).body(body);
+    }
+
+    @ExceptionHandler(MailSenderException.class)
+    public ResponseEntity<Object> handleMailSenderException(MailSenderException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("message", ex.getMessage());
         body.put("timestamp", LocalDateTime.now());
