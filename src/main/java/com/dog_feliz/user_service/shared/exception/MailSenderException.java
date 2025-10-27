@@ -8,7 +8,7 @@ public class MailSenderException extends MailException {
 
     public MailSenderException(String message) {
         super(message);
-        status = HttpStatus.BAD_GATEWAY;
+        status = HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
     public HttpStatus getStatus() {
