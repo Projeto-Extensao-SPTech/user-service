@@ -1,5 +1,6 @@
 package com.dog_feliz.user_service.config;
 
+import com.dog_feliz.user_service.service.EnvironmentService;
 import com.dog_feliz.user_service.shared.middleware.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,13 +21,16 @@ import java.util.List;
 public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final EnvironmentService environmentService;
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            AuthenticationProvider authenticationProvider
+            AuthenticationProvider authenticationProvider,
+            EnvironmentService environmentService
     ) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.environmentService = environmentService;
     }
 
     @Bean
@@ -54,8 +58,8 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:7000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedOrigins(environmentService.getProperty("cors.allowed-origins", List.class));
+        configuration.setAllowedMethods(environmentService.getProperty("cors.allowed-methods", List.class));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
