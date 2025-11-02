@@ -1,9 +1,10 @@
 package com.dog_feliz.user_service.shared.exception.handler;
 
 import com.dog_feliz.user_service.shared.exception.*;
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -57,5 +58,14 @@ public class GlobalExceptionHandler {
         body.put("timestamp", LocalDateTime.now());
         body.put("status", ex.getStatus());
         return ResponseEntity.status(ex.getStatus()).body(body);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getDetailMessageArguments());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", ex.getStatusCode());
+        return ResponseEntity.status(ex.getStatusCode()).body(body);
     }
 }

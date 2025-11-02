@@ -5,9 +5,7 @@ import java.time.ZonedDateTime;
 
 public class UserResponseDto {
     private final Long id;
-
     private final String name;
-    private final Integer age;
     private final String document;
     private final String phone;
     private final AddressResponseDto address;
@@ -17,7 +15,6 @@ public class UserResponseDto {
     public UserResponseDto(Long id, String name, Integer age, String document, String phone, AddressResponseDto address, String email, ZonedDateTime created_at) {
         this.id = id;
         this.name = name;
-        this.age = age;
         this.document = document;
         this.phone = phone;
         this.address = address;
@@ -28,7 +25,6 @@ public class UserResponseDto {
     public UserResponseDto(UserEntity userEntity) {
         this.id = userEntity.getId();
         this.name = userEntity.getName();
-        this.age = userEntity.getAge();
         this.document = userEntity.getName();
         this.phone = userEntity.getPhone();
         this.address = new AddressResponseDto(userEntity.getAddress());
@@ -42,10 +38,6 @@ public class UserResponseDto {
 
     public String getName() {
         return name;
-    }
-
-    public Integer getAge() {
-        return age;
     }
 
     public String getDocument() {
