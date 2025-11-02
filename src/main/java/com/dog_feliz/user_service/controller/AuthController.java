@@ -8,6 +8,7 @@ import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.UserEntity;
 import com.dog_feliz.user_service.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,13 +29,13 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> register(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> register(@RequestBody @Valid UserRequestDto userRequestDto) {
         UserResponseDto registeredUser = userService.addUser(userRequestDto);
         return ResponseEntity.ok(registeredUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> authenticate(@RequestBody AuthRequestDto authRequestDto) {
+    public ResponseEntity<AuthResponseDto> authenticate(@RequestBody @Valid AuthRequestDto authRequestDto) {
         UserEntity authenticatedUser = authService.authenticate(authRequestDto);
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
