@@ -21,9 +21,6 @@ public class UserEntity implements UserDetails {
     @Convert(converter = StringCryptoConverter.class)
     private String name;
 
-    @Convert(converter = IntegerCryptoConverter.class)
-    private Integer age;
-
     @Convert(converter = StringCryptoConverter.class)
     private String document;
 
@@ -48,7 +45,6 @@ public class UserEntity implements UserDetails {
 
     public UserEntity(UserRequestDto userRequestDto, AddressEntity addressEntity, String passwordEncoded) {
         this.name = userRequestDto.getName();
-        this.age = userRequestDto.getAge();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
         this.email = userRequestDto.getEmail();
@@ -59,7 +55,6 @@ public class UserEntity implements UserDetails {
     public UserEntity(Long id, UserRequestDto userRequestDto, AddressEntity addressEntity) {
         this.id = id;
         this.name = userRequestDto.getName();
-        this.age = userRequestDto.getAge();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
         this.email = userRequestDto.getEmail();
@@ -83,10 +78,6 @@ public class UserEntity implements UserDetails {
 
     public String getName() {
         return name;
-    }
-
-    public Integer getAge() {
-        return age;
     }
 
     public String getDocument() {
@@ -118,7 +109,6 @@ public class UserEntity implements UserDetails {
         return "UserEntity{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", age='" + age + '\'' +
                 ", document='" + document + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +

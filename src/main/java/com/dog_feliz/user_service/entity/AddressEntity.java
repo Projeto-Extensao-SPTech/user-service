@@ -10,38 +10,59 @@ import java.time.ZonedDateTime;
 @Entity
 @Table(name = "address_tb")
 public class AddressEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Convert(converter = StringCryptoConverter.class)
+    @Column(nullable = false)
     private String zipCode;
 
+    @Convert(converter = StringCryptoConverter.class)
+    @Column(nullable = false)
+    private String street;
+
     @Convert(converter = IntegerCryptoConverter.class)
+    @Column(nullable = false)
     private Integer number;
 
     @Convert(converter = StringCryptoConverter.class)
-    private String street;
+    private String complement;
+
+    @Convert(converter = StringCryptoConverter.class)
+    @Column(nullable = false)
+    private String city;
+
+    @Convert(converter = StringCryptoConverter.class)
+    @Column(nullable = false)
+    private String state;
+
+    @Convert(converter = StringCryptoConverter.class)
+    @Column(nullable = false)
+    private String country;
 
     @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
     private UserEntity user = null;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
     public AddressEntity() {}
 
-    public AddressEntity(AddressRequestDto addressRequestDto) {
-        this.number = addressRequestDto.getNumber();
-        this.street = addressRequestDto.getStreet();
-        this.zipCode = addressRequestDto.getZipCode();
+    public AddressEntity(AddressRequestDto dto) {
+        this.zipCode = dto.getZipCode();
+        this.street = dto.getStreet();
+        this.number = dto.getNumber();
+        this.complement = dto.getComplement();
+        this.city = dto.getCity();
+        this.state = dto.getState();
+        this.country = dto.getCountry();
     }
 
-    public AddressEntity(Long id, AddressRequestDto addressRequestDto) {
+    public AddressEntity(Long id, AddressRequestDto dto) {
+        this(dto);
         this.id = id;
-        this.number = addressRequestDto.getNumber();
-        this.street = addressRequestDto.getStreet();
-        this.zipCode = addressRequestDto.getZipCode();
     }
 
     public Long getId() {
@@ -52,12 +73,28 @@ public class AddressEntity {
         return zipCode;
     }
 
+    public String getStreet() {
+        return street;
+    }
+
     public Integer getNumber() {
         return number;
     }
 
-    public String getStreet() {
-        return street;
+    public String getComplement() {
+        return complement;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getCountry() {
+        return country;
     }
 
     public UserEntity getUser() {
@@ -73,8 +110,12 @@ public class AddressEntity {
         return "AddressEntity{" +
                 "id=" + id +
                 ", zipCode='" + zipCode + '\'' +
-                ", number=" + number +
                 ", street='" + street + '\'' +
+                ", number=" + number +
+                ", complement='" + complement + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", country='" + country + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }
