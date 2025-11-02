@@ -26,7 +26,7 @@ public class UserRequestDto {
     private final String email;
     private final String password;
 
-    public UserRequestDto(String name, String document, String phone, AddressRequestDto address, String email, String password) {
+    public UserRequestDto(String name, Integer age, String document, String phone, AddressRequestDto address, AddressRequestDto address1, String email, String password) {
         this.name = name;
         this.document = document;
         this.phone = phone;
