@@ -36,6 +36,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/h2-console/**").permitAll()
@@ -61,6 +62,8 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(environmentService.getProperty("cors.allowed-origins", List.class));
         configuration.setAllowedMethods(environmentService.getProperty("cors.allowed-methods", List.class));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
