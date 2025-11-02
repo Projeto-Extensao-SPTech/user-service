@@ -21,18 +21,18 @@ public class UserRequestDto {
      */
     @Pattern(regexp = "^\\(?\\d{2}\\)?\\s?9?\\d{4}-?\\d{4}$")
     private final String phone;
-    private final AddressRequestDto address;
+    private final String zipCode;
     @Size(min = 8, max = 100)
     @Email
     private final String email;
     private final String password;
 
-    public UserRequestDto(String name, Integer age, String document, String phone, AddressRequestDto address, String email, String password) {
+    public UserRequestDto(String name, Integer age, String document, String phone, String zipCode, String email, String password) {
         this.name = name;
         this.age = age;
         this.document = document;
         this.phone = phone;
-        this.address = address;
+        this.zipCode = zipCode;
         this.email = email;
         this.password = password;
     }
@@ -53,8 +53,8 @@ public class UserRequestDto {
         return phone;
     }
 
-    public AddressRequestDto getAddress() {
-        return address;
+    public String getZipCode() {
+        return zipCode;
     }
 
     public String getEmail() {
