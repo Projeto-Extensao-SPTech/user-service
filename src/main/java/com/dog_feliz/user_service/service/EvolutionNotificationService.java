@@ -15,19 +15,19 @@ import java.util.Map;
 public class EvolutionNotificationService {
 
     @Value("${evolution.api.url}")
-    private static String evolutionApiUrl;
+    private String evolutionApiUrl;
 
     @Value("${evolution.api.key}")
-    private static String apiInstanceKey;
+    private String apiInstanceKey;
 
     @Value("${evolution.instance.name}")
-    private static String instanceName;
+    private String instanceName;
 
     RestTemplate template = new RestTemplate();
 
-    public String sendMensage(String instanceName, String number, String message){
+    public String sendMessage(String instanceName, String number, String message){
 
-        String url = evolutionApiUrl  + "message/sendText" + instanceName;
+        String url = evolutionApiUrl  + "/message/sendText/" + instanceName;
 
         HashMap <String,Object> postResponse = new HashMap<>();
 
