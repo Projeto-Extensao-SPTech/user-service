@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -64,6 +65,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleValidationException(MethodArgumentNotValidException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("message", ex.getDetailMessageArguments());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", ex.getStatusCode());
+        return ResponseEntity.status(ex.getStatusCode()).body(body);
+    }
+
+    @ExceptionHandler(HttpServerErrorException.class)
+    public ResponseEntity<Object> handleHttpServerErrorException(HttpServerErrorException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
         body.put("timestamp", LocalDateTime.now());
         body.put("status", ex.getStatusCode());
         return ResponseEntity.status(ex.getStatusCode()).body(body);

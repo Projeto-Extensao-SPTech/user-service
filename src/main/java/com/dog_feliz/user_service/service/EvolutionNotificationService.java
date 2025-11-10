@@ -43,7 +43,6 @@ public class EvolutionNotificationService {
         ResponseEntity<String> response = template.postForEntity(url, request, String.class);
 
         return response.getBody();
-        
     }
 
 }
