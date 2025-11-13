@@ -1,5 +1,6 @@
 package com.dog_feliz.user_service.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class ShipmentRequestDto {
@@ -10,18 +11,19 @@ public class ShipmentRequestDto {
     private String services;
 
     public static class FromDto {
+        @JsonProperty("postal_code")
         private String postalCode;
 
         public String getPostalCode() {
             return postalCode;
         }
-
         public void setPostalCode(String postalCode) {
             this.postalCode = postalCode;
         }
     }
 
     public static class ToDto {
+        @JsonProperty("postal_code")
         private String postalCode;
 
         public String getPostalCode() {
@@ -39,7 +41,9 @@ public class ShipmentRequestDto {
         private double height;
         private double length;
         private double weight;
+
         private double insuranceValue;
+
         private int quantity;
 
         public String getId() { return id; }
@@ -66,6 +70,8 @@ public class ShipmentRequestDto {
 
     public static class OptionsDto {
         private boolean receipt;
+
+        @JsonProperty("own_hand")
         private boolean ownHand;
 
         public boolean isReceipt() { return receipt; }
