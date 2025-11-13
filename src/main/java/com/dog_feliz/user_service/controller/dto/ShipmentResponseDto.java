@@ -1,19 +1,27 @@
 package com.dog_feliz.user_service.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class ShipmentResponseDto {
     private int id;
     private String name;
     private String price;
+    @JsonProperty("custom_price")
     private String customPrice;
     private String discount;
     private String currency;
+    @JsonProperty("delivery_time")
     private int deliveryTime;
+    @JsonProperty("delivery_range")
     private DeliveryRangeDto deliveryRange;
+    @JsonProperty("custom_delivery_time")
     private int customDeliveryTime;
+    @JsonProperty("custom_delivery_range")
     private DeliveryRangeDto customDeliveryRange;
     private List<PackageDto> packages;
+    @JsonProperty("additional_services")
     private AdditionalServicesDto additionalServices;
     private CompanyDto company;
 
@@ -28,6 +36,7 @@ public class ShipmentResponseDto {
         private String format;
         private DimensionsDto dimensions;
         private String weight;
+        @JsonProperty("insurance_value")
         private String insuranceValue;
         private List<ProductDto> products;
     }

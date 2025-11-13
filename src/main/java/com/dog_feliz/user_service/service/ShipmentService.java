@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Service
 public class ShipmentService {
     @Autowired
@@ -15,7 +17,7 @@ public class ShipmentService {
 
     RestTemplate template = new RestTemplate();
 
-    public ShipmentResponseDto calculate(ShipmentRequestDto shipmentRequest) {
+    public List<ShipmentResponseDto> calculate(ShipmentRequestDto shipmentRequest) {
         String url = environmentService.getProperty("melhor-envio.api.url", String.class) + "/api/v2/me/shipment/calculate";
 
         HttpHeaders headers = new HttpHeaders();
@@ -26,8 +28,8 @@ public class ShipmentService {
 
         HttpEntity<ShipmentRequestDto> request = new HttpEntity<>(shipmentRequest, headers);
         try {
-            ResponseEntity<ShipmentResponseDto> response = template.postForEntity(url, request, ShipmentResponseDto.class);
-            return response.getBody();
+            ResponseEntity<List> response = template.postForEntity(url, request, List.class);
+            return (List<ShipmentResponseDto>) response.getBody();
         } catch (Exception e) {
             throw new HttpServerErrorException(HttpStatus.BAD_GATEWAY, e.getMessage());
         }
