@@ -1,6 +1,6 @@
 package com.dog_feliz.user_service.controller;
 
-import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
+import com.dog_feliz.user_service.controller.dto.MessageRequestDto;
 import com.dog_feliz.user_service.service.EvolutionNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ public class EvolutionNotificationController {
     }
 
     @PostMapping("/sendText/{instance}")
-    public ResponseEntity<String> sendMessage(@PathVariable String instance, @RequestBody NotificationRequestDto message){
+    public ResponseEntity<String> sendMessage(@PathVariable String instance, @RequestBody MessageRequestDto message){
         try {
             String response = service.sendMessage(instance, message.getNumber(), message.getText());
             return ResponseEntity.ok(response);
