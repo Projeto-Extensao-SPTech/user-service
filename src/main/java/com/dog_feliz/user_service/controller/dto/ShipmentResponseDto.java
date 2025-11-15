@@ -28,6 +28,14 @@ public class ShipmentResponseDto {
     public static class DeliveryRangeDto {
         private int min;
         private int max;
+
+        public int getMin() {
+            return min;
+        }
+
+        public int getMax() {
+            return max;
+        }
     }
 
     public static class PackageDto {
@@ -62,6 +70,14 @@ public class ShipmentResponseDto {
         private int id;
         private String name;
         private String picture;
+
+        public String getName() {
+            return name;
+        }
+
+        public String getPicture() {
+            return picture;
+        }
     }
 
     public int getId() {
