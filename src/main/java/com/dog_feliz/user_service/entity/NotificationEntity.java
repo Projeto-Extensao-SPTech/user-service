@@ -1,5 +1,6 @@
 package com.dog_feliz.user_service.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;
@@ -13,6 +14,10 @@ public class NotificationEntity {
 
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
+
+    @OneToOne
+    @JoinColumn(name = "adoption_fair_id")
+    private AdoptionFairEntity adoptionFair = null;
 
     private String description;
 
@@ -30,24 +35,16 @@ public class NotificationEntity {
         return notificationType;
     }
 
-    public void setNotificationType(NotificationType notificationType) {
-        this.notificationType = notificationType;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public AdoptionFairEntity getAdoptionFair() {
+        return adoptionFair;
     }
 
     public ZonedDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }
 
