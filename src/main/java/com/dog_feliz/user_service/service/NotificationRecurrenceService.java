@@ -1,0 +1,35 @@
+package com.dog_feliz.user_service.service;
+
+import com.dog_feliz.user_service.controller.dto.notification.AvailableRecurrence;
+import com.dog_feliz.user_service.entity.notification.NotificationEntity;
+import com.dog_feliz.user_service.entity.notification.NotificationRecurrenceEntity;
+import com.dog_feliz.user_service.repository.NotificationRecurrenceRepository;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Service
+public class NotificationRecurrenceService {
+    private final NotificationRecurrenceRepository notificationRecurrenceRepository;
+
+    public NotificationRecurrenceService(NotificationRecurrenceRepository notificationRecurrenceRepository) {
+        this.notificationRecurrenceRepository = notificationRecurrenceRepository;
+    }
+
+    public List<NotificationRecurrenceEntity> register(NotificationEntity notification, LocalDate eventDate, List<AvailableRecurrence> recurrences) {
+        List<LocalDate> recurrencesInDays = recurrences
+                .stream()
+                .map(recurrence -> getDateFromRecurrence(eventDate, recurrence))
+                .toList();
+
+        return recurrencesInDays
+                .stream()
+                .map(recurrence -> notificationRecurrenceRepository.save(new NotificationRecurrenceEntity(notification, recurrence)))
+                .toList();
+    }
+
+    private LocalDate getDateFromRecurrence(LocalDate eventDate, AvailableRecurrence recurrence) {
+        return eventDate.minusDays(recurrence.getValue());
+    }
+}
