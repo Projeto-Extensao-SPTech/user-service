@@ -3,8 +3,10 @@ package com.dog_feliz.user_service.service;
 import com.dog_feliz.user_service.controller.dto.notification.NotificationRequestDto;
 import com.dog_feliz.user_service.entity.AdoptionFairEntity;
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
+import com.dog_feliz.user_service.entity.notification.NotificationRecurrenceEntity;
 import com.dog_feliz.user_service.repository.AdoptionFairRepository;
 import com.dog_feliz.user_service.repository.NotificationRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,19 +16,20 @@ import java.util.List;
 
 @Service
 public class NotificationService {
-
     private final NotificationRepository notificationRepository;
     private final AdoptionFairRepository adoptionFairRepository;
     private final NotificationRecurrenceService notificationRecurrenceService;
+    private final EntityManager entityManager;
 
     public NotificationService(
             NotificationRepository notificationRepository,
             AdoptionFairRepository adoptionFairRepository,
-            NotificationRecurrenceService notificationRecurrenceService
+            NotificationRecurrenceService notificationRecurrenceService, EntityManager entityManager
     ) {
         this.notificationRepository = notificationRepository;
         this.adoptionFairRepository = adoptionFairRepository;
         this.notificationRecurrenceService = notificationRecurrenceService;
+        this.entityManager = entityManager;
     }
 
     @Transactional
@@ -42,12 +45,12 @@ public class NotificationService {
             notificationEntity = notificationRepository.save(new NotificationEntity(notificationRequest));
         }
 
-        notificationRecurrenceService.register(
+        List<NotificationRecurrenceEntity> notificationRecurrenceEntities = notificationRecurrenceService.register(
                 notificationEntity,
                 notificationRequest.getEventDate(),
                 notificationRequest.getRecurrences()
         );
-        return notificationEntity;
+        return new NotificationEntity(notificationEntity, notificationRecurrenceEntities);
     }
 
     public List<NotificationEntity> getTodayNotifications() {
