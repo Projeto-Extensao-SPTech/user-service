@@ -1,18 +1,18 @@
 package com.dog_feliz.user_service.controller.dto.notification;
 
-import com.dog_feliz.user_service.controller.dto.AddressRequestDto;
-import com.dog_feliz.user_service.entity.NotificationType;
+import com.dog_feliz.user_service.entity.notification.NotificationType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public class NotificationRequestDto {
     private NotificationType type;
-    @JsonProperty("event_date_time")
-    private ZonedDateTime eventDateTime;
+    @JsonProperty("adoption_fair_id")
+    private Long adoptionFairId;
     private String message;
-    private AddressRequestDto address;
+    @JsonProperty("event_date")
+    private LocalDate eventDate;
     private List<AvailableRecurrence> recurrences;
 
     public NotificationRequestDto() {
@@ -22,20 +22,20 @@ public class NotificationRequestDto {
         return type;
     }
 
-    public ZonedDateTime getEventDateTime() {
-        return eventDateTime;
+    public Long getAdoptionFairId() {
+        return adoptionFairId;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public AddressRequestDto getAddress() {
-        return address;
-    }
-
     public List<AvailableRecurrence> getRecurrences() {
         return recurrences;
+    }
+
+    public LocalDate getEventDate() {
+        return eventDate;
     }
 }
 

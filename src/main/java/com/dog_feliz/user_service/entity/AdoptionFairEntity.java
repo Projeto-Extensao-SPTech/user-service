@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "adoption_fair")
+@Table(name = "adoption_fair_tb")
 public class AdoptionFairEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

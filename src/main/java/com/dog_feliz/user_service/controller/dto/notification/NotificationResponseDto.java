@@ -1,37 +1,34 @@
 package com.dog_feliz.user_service.controller.dto.notification;
 
-import com.dog_feliz.user_service.controller.dto.AddressRequestDto;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.dog_feliz.user_service.entity.notification.NotificationEntity;
+import com.dog_feliz.user_service.entity.notification.NotificationType;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 public class NotificationResponseDto {
-    private String type;
-    @JsonProperty("event_date_time")
-    private ZonedDateTime eventDateTime;
+    private NotificationType type;
     private String message;
-    private AddressRequestDto address;
     private List<LocalDate> recurrences;
 
     public NotificationResponseDto() {
     }
 
-    public String getType() {
-        return type;
+    public NotificationResponseDto(NotificationEntity notificationEntity) {
+        this.type = notificationEntity.getNotificationType();
+        this.message = notificationEntity.getMessage();
+        this.recurrences = notificationEntity
+                .getNotificationRecurrence()
+                .stream()
+                .map(recurrence -> recurrence.getRecurrence())
+                .toList();
     }
 
-    public ZonedDateTime getEventDateTime() {
-        return eventDateTime;
+    public NotificationType getType() {
+        return type;
     }
 
     public String getMessage() {
         return message;
-    }
-
-    public AddressRequestDto getAddress() {
-        return address;
     }
 
     public List<LocalDate> getRecurrences() {
