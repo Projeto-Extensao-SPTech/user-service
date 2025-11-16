@@ -4,7 +4,9 @@ import com.dog_feliz.user_service.controller.dto.notification.NotificationReques
 import com.dog_feliz.user_service.entity.AdoptionFairEntity;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,8 +23,8 @@ public class NotificationEntity {
     @JoinColumn(name = "adoption_fair_id")
     private AdoptionFairEntity adoptionFair = null;
 
-    @OneToMany
-    private List<NotificationRecurrenceEntity> notificationRecurrence;
+    @OneToMany(mappedBy = "notification")
+    private List<NotificationRecurrenceEntity> notificationRecurrence = new ArrayList<>();
 
     private String message;
 
@@ -37,7 +39,19 @@ public class NotificationEntity {
     }
 
     public NotificationEntity(NotificationRequestDto notificationRequest, AdoptionFairEntity adoptionFair) {
+        this.notificationType = notificationRequest.getType();
+        this.message = notificationRequest.getMessage();
+        this.adoptionFair = adoptionFair;
+    }
 
+
+    public NotificationEntity(NotificationEntity notificationEntity, List<NotificationRecurrenceEntity> recurrences) {
+        this.id = notificationEntity.id;
+        this.notificationType = notificationEntity.getNotificationType();
+        this.message = notificationEntity.getMessage();
+        this.adoptionFair = notificationEntity.adoptionFair;
+        this.createdAt = notificationEntity.createdAt;
+        this.notificationRecurrence = recurrences;
     }
 
     public Long getId() {

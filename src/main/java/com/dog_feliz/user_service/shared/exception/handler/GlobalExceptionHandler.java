@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,5 +68,15 @@ public class GlobalExceptionHandler {
         body.put("timestamp", LocalDateTime.now());
         body.put("status", ex.getStatusCode());
         return ResponseEntity.status(ex.getStatusCode()).body(body);
+    }
+
+    @ExceptionHandler(InvocationTargetException.class)
+    public ResponseEntity<Object> handleValidationException(InvocationTargetException ex) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status);
+        return ResponseEntity.status(status).body(body);
     }
 }
