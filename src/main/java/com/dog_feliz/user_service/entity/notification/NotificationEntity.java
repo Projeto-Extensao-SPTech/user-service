@@ -4,7 +4,6 @@ import com.dog_feliz.user_service.controller.dto.notification.NotificationReques
 import com.dog_feliz.user_service.entity.AdoptionFairEntity;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class NotificationEntity {
     @JoinColumn(name = "adoption_fair_id")
     private AdoptionFairEntity adoptionFair = null;
 
-    @OneToMany(mappedBy = "notification")
+    @OneToMany(mappedBy = "notification", cascade = CascadeType.REMOVE)
     private List<NotificationRecurrenceEntity> notificationRecurrence = new ArrayList<>();
 
     private String message;

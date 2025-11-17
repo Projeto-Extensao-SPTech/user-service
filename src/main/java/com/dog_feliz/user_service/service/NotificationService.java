@@ -1,7 +1,6 @@
 package com.dog_feliz.user_service.service;
 
 import com.dog_feliz.user_service.controller.dto.notification.NotificationRequestDto;
-import com.dog_feliz.user_service.entity.AdoptionFairEntity;
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
 import com.dog_feliz.user_service.entity.notification.NotificationRecurrenceEntity;
 import com.dog_feliz.user_service.repository.AdoptionFairRepository;
@@ -12,14 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final AdoptionFairRepository adoptionFairRepository;
     private final NotificationRecurrenceService notificationRecurrenceService;
-    private final EntityManager entityManager;
 
     public NotificationService(
             NotificationRepository notificationRepository,
@@ -29,7 +29,6 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
         this.adoptionFairRepository = adoptionFairRepository;
         this.notificationRecurrenceService = notificationRecurrenceService;
-        this.entityManager = entityManager;
     }
 
     @Transactional
@@ -53,8 +52,24 @@ public class NotificationService {
         return new NotificationEntity(notificationEntity, notificationRecurrenceEntities);
     }
 
-    public List<NotificationEntity> getTodayNotifications() {
-        return notificationRepository.findTodayNotifications();
+    public List<NotificationEntity> getByRecurrenceDate(LocalDate date) {
+        return notificationRepository.findByRecurrenceDate(date);
+    }
+
+    public NotificationEntity getById(Long id) {
+        Optional<NotificationEntity> notificationEntity = notificationRepository.findById(id);
+        if (notificationEntity.isEmpty()) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Notification id not found");
+        }
+        return notificationEntity.get();
+    }
+
+    public List<NotificationEntity> getFutureNotifications() {
+        return notificationRepository.findByRecurrenceDateGreaterThan(LocalDate.now());
+    }
+
+    public void deleteById(Long id) {
+        notificationRepository.deleteById(id);
     }
 }
 
