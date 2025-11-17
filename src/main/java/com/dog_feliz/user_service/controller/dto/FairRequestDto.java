@@ -6,14 +6,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class FairDto {
+public class FairRequestDto {
     private LocalDate fairDate;
     private LocalDateTime fairHour;
     private AddressRequestDto address;
-    private List<MultipartFile> image;
+    private List<MultipartFile> images;
 
-    public FairDto(List<MultipartFile> image, AddressRequestDto address, LocalDateTime fairHour, LocalDate fairDate) {
-        this.image = image;
+    public FairRequestDto(List<MultipartFile> image, AddressRequestDto address, LocalDateTime fairHour, LocalDate fairDate) {
+        this.images = image;
         this.address = address;
         this.fairHour = fairHour;
         this.fairDate = fairDate;
@@ -44,10 +44,10 @@ public class FairDto {
     }
 
     public List<MultipartFile> getImage() {
-        return image;
+        return images;
     }
 
     public void setImage(List<MultipartFile> image) {
-        this.image = image;
+        this.images = image;
     }
 }

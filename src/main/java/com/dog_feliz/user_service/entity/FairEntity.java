@@ -1,9 +1,7 @@
 package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.AddressRequestDto;
-import com.dog_feliz.user_service.controller.dto.FairDto;
 import jakarta.persistence.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,18 +24,18 @@ public class FairEntity {
     @Column(nullable = false)
     private AddressRequestDto address;
 
-    private List<MultipartFile> image;
+    @OneToMany(mappedBy = "fair", cascade = CascadeType.ALL)
+    private List<FairImageEntity> images;
 
-    public FairEntity(FairDto dto) {
-        this.fairDate = dto.getFairDate();
-        this.fairHour = dto.getFairHour();
-        this.address = dto.getAddress();
-        this.image = dto.getImage();
+    public FairEntity() {
     }
 
-    public FairEntity(Long id, FairDto dto) {
-        this(dto);
+    public FairEntity(Long id, LocalDate fairDate, LocalDateTime fairHour, AddressRequestDto address, List<FairImageEntity> images) {
         this.id = id;
+        this.fairDate = fairDate;
+        this.fairHour = fairHour;
+        this.address = address;
+        this.images = images;
     }
 
     public Long getId() {
@@ -56,8 +54,28 @@ public class FairEntity {
         return address;
     }
 
-    public List<MultipartFile> getImage() {
-        return image;
+    public List<FairImageEntity> getImage() {
+        return images;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setFairDate(LocalDate fairDate) {
+        this.fairDate = fairDate;
+    }
+
+    public void setFairHour(LocalDateTime fairHour) {
+        this.fairHour = fairHour;
+    }
+
+    public void setAddress(AddressRequestDto address) {
+        this.address = address;
+    }
+
+    public void setImages(List<FairImageEntity> images) {
+        this.images = images;
     }
 
     @Override
@@ -67,7 +85,7 @@ public class FairEntity {
                 ", fairDate=" + fairDate +
                 ", fairHour=" + fairHour +
                 ", address=" + address +
-                ", image=" + image +
+                ", image=" + images +
                 '}';
     }
 }
