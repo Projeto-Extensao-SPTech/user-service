@@ -117,4 +117,7 @@ public class UserEntity implements UserDetails {
                 ", createdAt=" + createdAt +
                 '}';
     }
+
+    public void setUser(Long userId) {
+    }
 }

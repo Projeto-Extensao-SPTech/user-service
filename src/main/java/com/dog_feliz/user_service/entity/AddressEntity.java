@@ -121,4 +121,6 @@ public class AddressEntity {
                 ", createdAt=" + createdAt +
                 '}';
     }
+
+    public void setAddress(Long addressId){}
 }
