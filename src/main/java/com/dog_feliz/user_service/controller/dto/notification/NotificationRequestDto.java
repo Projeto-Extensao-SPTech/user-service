@@ -13,7 +13,7 @@ public class NotificationRequestDto {
     private String message;
     @JsonProperty("event_date")
     private LocalDate eventDate;
-    private List<AvailableRecurrence> recurrences;
+    private List<Integer> recurrences;
 
     public NotificationRequestDto() {
     }
@@ -30,7 +30,7 @@ public class NotificationRequestDto {
         return message;
     }
 
-    public List<AvailableRecurrence> getRecurrences() {
+    public List<Integer> getRecurrences() {
         return recurrences;
     }
 
