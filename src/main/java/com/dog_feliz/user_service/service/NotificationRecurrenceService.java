@@ -1,11 +1,9 @@
 package com.dog_feliz.user_service.service;
 
-import com.dog_feliz.user_service.controller.dto.notification.AvailableRecurrence;
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
 import com.dog_feliz.user_service.entity.notification.NotificationRecurrenceEntity;
 import com.dog_feliz.user_service.repository.NotificationRecurrenceRepository;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,11 +15,12 @@ public class NotificationRecurrenceService {
         this.notificationRecurrenceRepository = notificationRecurrenceRepository;
     }
 
-    public List<NotificationRecurrenceEntity> register(NotificationEntity notification, LocalDate eventDate, List<AvailableRecurrence> recurrences) {
+    public List<NotificationRecurrenceEntity> register(NotificationEntity notification, LocalDate eventDate, List<Integer> recurrences) {
         List<LocalDate> recurrencesInDays = recurrences
                 .stream()
                 .map(recurrence -> getDateFromRecurrence(eventDate, recurrence))
                 .toList();
+        recurrencesInDays.add(eventDate);
 
         return recurrencesInDays
                 .stream()
@@ -29,7 +28,7 @@ public class NotificationRecurrenceService {
                 .toList();
     }
 
-    private LocalDate getDateFromRecurrence(LocalDate eventDate, AvailableRecurrence recurrence) {
-        return eventDate.minusDays(recurrence.getValue());
+    private LocalDate getDateFromRecurrence(LocalDate eventDate, Integer recurrence) {
+        return eventDate.minusDays(recurrence);
     }
 }
