@@ -11,23 +11,22 @@ import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.shared.exception.AddressNotFoundException;
 import com.dog_feliz.user_service.shared.exception.SponsorNotFoundException;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class SponsorService {
-    @Autowired
-    private SponsorRepository sponsorRepository;
+    private final SponsorRepository sponsorRepository;
+    private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
+    public SponsorService(SponsorRepository sponsorRepository, UserRepository userRepository, AddressRepository addressRepository) {
+        this.sponsorRepository = sponsorRepository;
+        this.userRepository = userRepository;
+        this.addressRepository = addressRepository;
+    }
 
     public List<SponsorResponseDto> getSponsors(){
         List<SponsorEntity> sponsors = sponsorRepository.findAll();
@@ -37,26 +36,22 @@ public class SponsorService {
     public SponsorResponseDto getSponsorById(Long id){
         Optional<SponsorEntity> sponsorEntity = sponsorRepository.findById(id);
         if(sponsorEntity.isEmpty()) throw new SponsorNotFoundException("Patrocinador não encontrado com ID: %d".formatted(id));
-
         return new SponsorResponseDto(sponsorEntity.get());
     }
 
     public SponsorResponseDto addSponsor(SponsorRequestDto sponsorDto){
         UserEntity user = userRepository.findById(sponsorDto.getUserId())
-                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado com o ID: %d".formatted(sponsorDto.getUserId())));
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
 
         AddressEntity address = addressRepository.findById(sponsorDto.getAddressId())
-                .orElseThrow(() -> new AddressNotFoundException("Endereço não encontrado no ID: %d".formatted(sponsorDto.getAddressId())));
+                .orElseThrow(() -> new AddressNotFoundException("Endereço não encontrado"));
 
-        SponsorEntity newSponsor = new SponsorEntity();
-        newSponsor.setUser(user);
-        newSponsor.setAddress(address);
-        newSponsor.setName(sponsorDto.getName());
-        newSponsor.setDocument(sponsorDto.getDocument());
-        newSponsor.setDepartment(sponsorDto.getDepartment());
+        SponsorEntity newSponsor = new SponsorEntity(sponsorDto, user, address);
+        SponsorEntity saved = sponsorRepository.save(newSponsor);
 
-        return new SponsorResponseDto(newSponsor);
+        return new SponsorResponseDto(saved);
     }
+
 
     public SponsorResponseDto updateSponsor(Long id, SponsorRequestDto dto){
         SponsorEntity existingSponsor = sponsorRepository.findById(id)
@@ -78,13 +73,12 @@ public class SponsorService {
         return new SponsorResponseDto(updateSponsor);
     }
 
-    public HttpStatus deleteSponsor(Long id) {
+    public void deleteSponsor(Long id) {
         if (!sponsorRepository.existsById(id)) {
             throw new SponsorNotFoundException(
                     "Patrocinador não encontrado com ID: %d".formatted(id)
             );
         }
         sponsorRepository.deleteById(id);
-        return HttpStatus.NO_CONTENT;
     }
 }

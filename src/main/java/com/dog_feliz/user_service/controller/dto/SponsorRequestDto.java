@@ -17,7 +17,16 @@ public class SponsorRequestDto {
         this.department = department;
     }
 
+    public SponsorRequestDto() {
+    }
+
     public SponsorRequestDto(SponsorEntity sponsorEntity) {
+        if (sponsorEntity == null) return;
+        this.userId = sponsorEntity.getUser() != null ? sponsorEntity.getUser().getId() : null;
+        this.addressId = sponsorEntity.getAddress() != null ? sponsorEntity.getAddress().getId() : null;
+        this.name = sponsorEntity.getName();
+        this.document = sponsorEntity.getDocument();
+        this.department = sponsorEntity.getDepartment();
     }
 
     // GETTERS E SETTERS

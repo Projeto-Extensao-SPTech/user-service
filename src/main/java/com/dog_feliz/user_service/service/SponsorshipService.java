@@ -1,5 +1,6 @@
 package com.dog_feliz.user_service.service;
 
+import com.dog_feliz.user_service.controller.SponsorshipController;
 import com.dog_feliz.user_service.controller.dto.SponsorResponseDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipResponseDto;
@@ -29,6 +30,13 @@ public class SponsorshipService {
         return sponsorship.stream().map(sponsorshipEntity -> new SponsorshipResponseDto(sponsorshipEntity)).toList();
     }
 
+    public SponsorshipResponseDto getSponsorshipById(Long id){
+        SponsorshipEntity sponsorship = sponsorshipRepository.findById(id)
+                .orElseThrow(()-> new SponsorshipNotFoundException("Sponsorship não encontrado com o ID: %d".formatted(id)));
+
+        return new SponsorshipResponseDto(sponsorship);
+    }
+
     public SponsorshipResponseDto getSponsorshipBySponsorId(Long sponsorId){
         SponsorshipEntity sponsorship = sponsorshipRepository.findBySponsorId(sponsorId)
                 .orElseThrow(() -> new SponsorshipNotFoundException("Nenhum vínculo de patrocínio encontrado para o SponsorID: %d".formatted(sponsorId)));
@@ -36,7 +44,25 @@ public class SponsorshipService {
         return new SponsorshipResponseDto(sponsorship);
     }
 
-    public SponsorshipResponseDto updateSponsorhipBySponsorId(Long id, SponsorshipRequestDto dto){
+    public SponsorshipResponseDto addSponsorship(SponsorshipRequestDto dto) {
+        SponsorEntity sponsor = sponsorRepository.findById(dto.getSponsorId())
+                .orElseThrow(() -> new SponsorNotFoundException(
+                        "Patrocinador não encontrado com ID: %d".formatted(dto.getSponsorId())
+                ));
+
+        SponsorshipEntity sponsorship = new SponsorshipEntity();
+        sponsorship.setSponsor(sponsor);
+        sponsorship.setType(dto.getType());
+        sponsorship.setRecurrence(dto.getRecurrence());
+        sponsorship.setDescription(dto.getDescription());
+        sponsorship.setContext(dto.getContext());
+
+        SponsorshipEntity saved = sponsorshipRepository.save(sponsorship);
+        return new SponsorshipResponseDto(saved);
+    }
+
+
+    public SponsorshipResponseDto updateSponsorship(Long id, SponsorshipRequestDto dto){
         SponsorshipEntity existingSponsorship = sponsorshipRepository.findBySponsorId(id)
                 .orElseThrow(() -> new SponsorshipNotFoundException("Sponsorship não encontrado com o ID: %d".formatted(id)));
 

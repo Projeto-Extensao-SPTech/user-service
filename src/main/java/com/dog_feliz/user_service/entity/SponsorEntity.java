@@ -11,40 +11,28 @@ public class SponsorEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity address;
 
-    @Convert(converter = StringCryptoConverter.class)
     private String name;
 
-    @Convert(converter = StringCryptoConverter.class)
     private String document;
 
-    @Convert(converter = StringCryptoConverter.class)
     private String department;
 
     public SponsorEntity() {}
 
-    public SponsorEntity(SponsorRequestDto dto) {
-        this.user = new UserEntity();
-        this.user.setUser(dto.getUserId());
-
-        this.address = new AddressEntity();
-        this.address.setAddress(dto.getAddressId());
-
+    public SponsorEntity(SponsorRequestDto dto, UserEntity user, AddressEntity address) {
+        this.user = user;
+        this.address = address;
         this.name = dto.getName();
         this.document = dto.getDocument();
         this.department = dto.getDepartment();
-    }
-
-    public SponsorEntity(SponsorRequestDto dto, Long id){
-        this(dto);
-        this.id = id;
     }
 
     // GETTERS e SETTERS
