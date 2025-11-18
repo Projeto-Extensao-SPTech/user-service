@@ -2,8 +2,9 @@ package com.dog_feliz.user_service.service;
 
 import com.dog_feliz.user_service.controller.dto.FairRequestDto;
 import com.dog_feliz.user_service.controller.dto.FairResponseDto;
+import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.entity.FairEntity;
-import com.dog_feliz.user_service.entity.FairImageEntity;
+import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.FairRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.UUID;
+import java.util.Objects;
 
 @Service
 public class FairService {
@@ -24,8 +25,11 @@ public class FairService {
 
     FairRepository fairRepository;
 
-    public FairService(FairRepository fairRepository) {
+    AddressRepository addressRepository;
+
+    public FairService(FairRepository fairRepository, AddressRepository addressRepository) {
         this.fairRepository = fairRepository;
+        this.addressRepository = addressRepository;
     }
 
     public FairEntity createFair(FairRequestDto fairRequestDto) throws IOException {
@@ -33,31 +37,28 @@ public class FairService {
         FairEntity fair = new FairEntity();
 
         fair.setFairDate(fairRequestDto.getFairDate());
+
         fair.setFairHour(fairRequestDto.getFairHour());
-        fair.setAddress(fairRequestDto.getAddress());
+
+        AddressEntity address = addressRepository.save(new AddressEntity(fairRequestDto.getAddress()));
+
+        fair.setAddress(address);
 
         // Caso a pasta não exista na máquina, cria automaticamente
         Path uploadPath = Paths.get(uploadDir);
+
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        // Aqui convertemos o tipo MultipartFile para o tipo FairImageEntity e associamos
+        // Aqui convertemos o tipo MultipartFile e associamos
         for (MultipartFile file : fairRequestDto.getImage()) {
 
-            String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
-
-            Path filePath = uploadPath.resolve(filename);
+            Path filePath = uploadPath.resolve(Objects.requireNonNull(file.getOriginalFilename()));
 
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            FairImageEntity imageEntity = new FairImageEntity();
-
-            imageEntity.setImagePath(filePath.toString());
-
-            imageEntity.setFair(fair);
-
-            fair.getImage().add(imageEntity);
+            fair.getImages().add(filePath.toString());
         }
 
         return fairRepository.save(fair);

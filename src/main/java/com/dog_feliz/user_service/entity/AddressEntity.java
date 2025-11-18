@@ -48,6 +48,8 @@ public class AddressEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
+
+
     public AddressEntity() {}
 
     public AddressEntity(AddressRequestDto dto) {

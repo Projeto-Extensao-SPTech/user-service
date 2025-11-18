@@ -1,14 +1,14 @@
 package com.dog_feliz.user_service.entity;
 
-import com.dog_feliz.user_service.controller.dto.AddressRequestDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "feira")
+@Table(name = "fair")
 public class FairEntity {
 
     @Id
@@ -16,21 +16,24 @@ public class FairEntity {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate fairDate;
+    private LocalDate fairDate = null;
 
     @Column(nullable = false)
-    private LocalDateTime fairHour;
+    private LocalDateTime fairHour = null;
 
-    @Column(nullable = false)
-    private AddressRequestDto address;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private AddressEntity address;
 
-    @OneToMany(mappedBy = "fair", cascade = CascadeType.ALL)
-    private List<FairImageEntity> images;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "fair_images", joinColumns = @JoinColumn(name = "fair_id"))
+    @Column(name = "image_path")
+    private List<String> images = new ArrayList<>();
 
     public FairEntity() {
     }
 
-    public FairEntity(Long id, LocalDate fairDate, LocalDateTime fairHour, AddressRequestDto address, List<FairImageEntity> images) {
+    public FairEntity(Long id, LocalDate fairDate, LocalDateTime fairHour, AddressEntity address, List<String> images) {
         this.id = id;
         this.fairDate = fairDate;
         this.fairHour = fairHour;
@@ -50,11 +53,11 @@ public class FairEntity {
         return fairHour;
     }
 
-    public AddressRequestDto getAddress() {
+    public AddressEntity getAddress() {
         return address;
     }
 
-    public List<FairImageEntity> getImage() {
+    public List<String> getImages() {
         return images;
     }
 
@@ -70,11 +73,11 @@ public class FairEntity {
         this.fairHour = fairHour;
     }
 
-    public void setAddress(AddressRequestDto address) {
+    public void setAddress(AddressEntity address) {
         this.address = address;
     }
 
-    public void setImages(List<FairImageEntity> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
