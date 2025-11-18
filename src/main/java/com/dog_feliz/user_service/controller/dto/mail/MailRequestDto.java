@@ -1,15 +1,9 @@
-package com.dog_feliz.user_service.controller.dto;
+package com.dog_feliz.user_service.controller.dto.mail;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class EmailRequest {
-
-    @NotBlank(message = "Recipient email cannot be empty")
-    @Email(message = "Invalid email format")
-    private final String to;
-
+public class MailRequestDto {
     @NotBlank(message = "Subject cannot be empty")
     @Size(max = 100, message = "Subject cannot exceed 100 characters")
     private final String subject;
@@ -21,15 +15,10 @@ public class EmailRequest {
     @Size(max = 255, message = "Attachment filename cannot exceed 255 characters")
     private final String attachment;
 
-    public EmailRequest(String to, String subject, String content, String attachment) {
-        this.to = to;
+    public MailRequestDto(String subject, String content, String attachment) {
         this.subject = subject;
         this.content = content;
         this.attachment = attachment;
-    }
-
-    public String getTo() {
-        return to;
     }
 
     public String getSubject() {

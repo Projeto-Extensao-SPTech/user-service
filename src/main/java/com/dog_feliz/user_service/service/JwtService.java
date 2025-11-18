@@ -1,5 +1,6 @@
 package com.dog_feliz.user_service.service;
 
+import com.dog_feliz.user_service.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,7 +34,15 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        UserEntity userEntity = (UserEntity) userDetails;
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("id", userEntity.getId());
+        extraClaims.put("name", userEntity.getName());
+        extraClaims.put("phone", userEntity.getPhone());
+        extraClaims.put("mail_address", userEntity.getMailAddress());
+        extraClaims.put("document", userEntity.getDocument());
+        extraClaims.put("receive_notifications", userEntity.getReceiveNotifications());
+        return generateToken(extraClaims, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {

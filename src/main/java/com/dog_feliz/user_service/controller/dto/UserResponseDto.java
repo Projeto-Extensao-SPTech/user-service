@@ -1,6 +1,8 @@
 package com.dog_feliz.user_service.controller.dto;
 
 import com.dog_feliz.user_service.entity.UserEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.ZonedDateTime;
 
 public class UserResponseDto {
@@ -9,16 +11,17 @@ public class UserResponseDto {
     private final String document;
     private final String phone;
     private final AddressResponseDto address;
-    private final String email;
+    @JsonProperty("mail_address")
+    private final String mailAddress;
     private final ZonedDateTime created_at;
 
-    public UserResponseDto(Long id, String name, Integer age, String document, String phone, AddressResponseDto address, String email, ZonedDateTime created_at) {
+    public UserResponseDto(Long id, String name, String document, String phone, AddressResponseDto address, String mailAddress, ZonedDateTime created_at) {
         this.id = id;
         this.name = name;
         this.document = document;
         this.phone = phone;
         this.address = address;
-        this.email = email;
+        this.mailAddress = mailAddress;
         this.created_at = created_at;
     }
 
@@ -28,7 +31,7 @@ public class UserResponseDto {
         this.document = userEntity.getName();
         this.phone = userEntity.getPhone();
         this.address = new AddressResponseDto(userEntity.getAddress());
-        this.email = userEntity.getEmail();
+        this.mailAddress = userEntity.getMailAddress();
         this.created_at = userEntity.getCreatedAt();
     }
 
@@ -52,8 +55,8 @@ public class UserResponseDto {
         return address;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMailAddress() {
+        return mailAddress;
     }
 
     public ZonedDateTime getCreated_at() {

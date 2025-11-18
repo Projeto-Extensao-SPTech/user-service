@@ -1,7 +1,6 @@
 package com.dog_feliz.user_service.shared.exception.handler;
 
 import com.dog_feliz.user_service.shared.exception.*;
-import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,7 +34,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> handleUserNotFoundByEmail(UserNotFoundException ex) {
+    public ResponseEntity<Object> handleUserNotFoundByMailAddress(UserNotFoundException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("message", ex.getMessage());
         body.put("timestamp", LocalDateTime.now());
@@ -70,8 +69,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatusCode()).body(body);
     }
 
-    @ExceptionHandler(InvocationTargetException.class)
-    public ResponseEntity<Object> handleValidationException(InvocationTargetException ex) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handleValidationException(RuntimeException ex) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         Map<String, Object> body = new HashMap<>();
         body.put("message", ex.getMessage());

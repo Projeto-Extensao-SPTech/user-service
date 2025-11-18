@@ -19,12 +19,12 @@ public class AuthService {
     public UserEntity authenticate(AuthRequestDto authRequestDto) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        authRequestDto.getEmail(),
+                        authRequestDto.getMailAddress(),
                         authRequestDto.getPassword()
                 )
         );
 
-        return userRepository.findByEmail(authRequestDto.getEmail())
+        return userRepository.findByMailAddress(authRequestDto.getMailAddress())
                 .orElseThrow();
     }
 }
