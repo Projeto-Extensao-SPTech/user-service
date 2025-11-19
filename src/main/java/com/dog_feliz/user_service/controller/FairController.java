@@ -9,7 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -25,10 +29,10 @@ public class FairController {
     @PostMapping(value = "/cadastrar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FairEntity> createFair(
             @RequestPart("fair") FairRequestDto dto,
-            @RequestPart("imagem") MultipartFile[] imagens
-            ) throws IOException {
+            @RequestPart("imagem") MultipartFile[] image
+    ) throws IOException {
 
-        dto.setImage(List.of(imagens));
+        dto.setImage(List.of(image));
         FairEntity fair = fairService.createFair(dto);
 
         return ResponseEntity.ok(fair);
@@ -42,4 +46,20 @@ public class FairController {
         return ResponseEntity.ok(fair);
     }
 
+    @GetMapping(
+            value = "/images/{fileName}",
+            produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE }
+    )
+    public ResponseEntity<byte[]> getImage(@PathVariable String fileName) throws IOException {
+
+        Path imagePath = Paths.get("uploads/fair/").resolve(fileName);
+
+        if (!Files.exists(imagePath)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        byte[] imageBytes = Files.readAllBytes(imagePath);
+
+        return ResponseEntity.ok().body(imageBytes);
+    }
 }
