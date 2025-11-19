@@ -72,4 +72,8 @@ public class FairService {
         return new FairResponseDto(fair);
 
     }
+
+    public void deleteFair(Long id){
+       fairRepository.deleteById(id);
+    }
 }

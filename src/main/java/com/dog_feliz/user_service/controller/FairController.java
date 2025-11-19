@@ -62,4 +62,9 @@ public class FairController {
 
         return ResponseEntity.ok().body(imageBytes);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteFair(@PathVariable Long id){
+        fairService.deleteFair(id);
+    }
 }
