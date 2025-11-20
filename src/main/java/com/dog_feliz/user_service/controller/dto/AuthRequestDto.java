@@ -1,19 +1,21 @@
 package com.dog_feliz.user_service.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 
 public class AuthRequestDto {
     @Email
-    private final String email;
+    @JsonProperty("mail_address")
+    private final String mailAddress;
     private final String password;
 
-    public AuthRequestDto(String email, String password) {
-        this.email = email;
+    public AuthRequestDto(String mailAddress, String password) {
+        this.mailAddress = mailAddress;
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMailAddress() {
+        return mailAddress;
     }
 
     public String getPassword() {
