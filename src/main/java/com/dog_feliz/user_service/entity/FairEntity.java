@@ -25,6 +25,8 @@ public class FairEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
+    private Integer interest = 0;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "fair_images", joinColumns = @JoinColumn(name = "fair_id"))
     @Column(name = "image_path")
@@ -33,11 +35,12 @@ public class FairEntity {
     public FairEntity() {
     }
 
-    public FairEntity(Long id, LocalDate fairDate, LocalDateTime fairHour, AddressEntity address, List<String> images) {
+    public FairEntity(Long id, LocalDate fairDate, LocalDateTime fairHour, AddressEntity address, Integer interest, List<String> images) {
         this.id = id;
         this.fairDate = fairDate;
         this.fairHour = fairHour;
         this.address = address;
+        this.interest = interest;
         this.images = images;
     }
 
@@ -55,6 +58,14 @@ public class FairEntity {
 
     public AddressEntity getAddress() {
         return address;
+    }
+
+    public Integer getInterest() {
+        return interest;
+    }
+
+    public void setInterest(Integer interest) {
+        this.interest = interest;
     }
 
     public List<String> getImages() {

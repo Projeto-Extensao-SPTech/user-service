@@ -12,6 +12,7 @@ public class FairResponseDto {
     private LocalDate fairDate;
     private LocalDateTime fairHour;
     private AddressResponseDto address;
+    private Integer interest;
     private List<String> images;
 
     public FairResponseDto(){}
@@ -21,6 +22,7 @@ public class FairResponseDto {
         this.fairDate = entity.getFairDate();
         this.fairHour = entity.getFairHour();
         this.address = new AddressResponseDto(entity.getAddress());
+        this.interest = entity.getInterest();
         this.images = entity.getImages();
     }
 
@@ -54,6 +56,14 @@ public class FairResponseDto {
 
     public void setAddress(AddressResponseDto address) {
         this.address = address;
+    }
+
+    public Integer getInterest() {
+        return interest;
+    }
+
+    public void setInterest(Integer interest) {
+        this.interest = interest;
     }
 
     public List<String> getImages() {

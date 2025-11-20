@@ -63,8 +63,20 @@ public class FairController {
         return ResponseEntity.ok().body(imageBytes);
     }
 
+    //TODO fazer exceptions personalizadas
+
     @DeleteMapping("/{id}")
     public void deleteFair(@PathVariable Long id){
         fairService.deleteFair(id);
+    }
+
+    @PatchMapping("/{id}")
+    public void insertInterest(@PathVariable Long id){
+        try {
+            fairService.insertInterest(id);
+        }
+        catch (Exception e){
+            throw new RuntimeException("Não foi possível atualizar o campo de interesse pela feira");
+        }
     }
 }
