@@ -1,4 +1,4 @@
-package com.dog_feliz.user_service.controller.dto.mail;
+package com.dog_feliz.user_service.controller.dto;
 
 import java.time.ZonedDateTime;
 

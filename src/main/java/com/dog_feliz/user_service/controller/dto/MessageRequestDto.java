@@ -1,7 +1,6 @@
 package com.dog_feliz.user_service.controller.dto;
 
 public class MessageRequestDto {
-
     private String number;
     private String text;
 

@@ -1,6 +1,6 @@
 package com.dog_feliz.user_service.entity.notification;
 
-import com.dog_feliz.user_service.controller.dto.notification.NotificationRequestDto;
+import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
 import com.dog_feliz.user_service.entity.AdoptionFairEntity;
 import jakarta.persistence.*;
 

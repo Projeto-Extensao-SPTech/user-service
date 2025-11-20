@@ -1,4 +1,4 @@
-package com.dog_feliz.user_service.controller.dto.notification;
+package com.dog_feliz.user_service.controller.dto;
 
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
 import com.dog_feliz.user_service.entity.notification.NotificationType;

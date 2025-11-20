@@ -1,7 +1,7 @@
 package com.dog_feliz.user_service.controller;
 
-import com.dog_feliz.user_service.controller.dto.mail.MailRequestDto;
-import com.dog_feliz.user_service.controller.dto.mail.MailResponseDto;
+import com.dog_feliz.user_service.controller.dto.MailRequestDto;
+import com.dog_feliz.user_service.controller.dto.MailResponseDto;
 import com.dog_feliz.user_service.service.mail.factory.MailSenderFactory;
 import com.dog_feliz.user_service.service.mail.strategy.MailSenderStrategy;
 import com.dog_feliz.user_service.shared.exception.MailSenderException;
