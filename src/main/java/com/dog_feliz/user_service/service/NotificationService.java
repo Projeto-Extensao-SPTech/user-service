@@ -1,7 +1,7 @@
 package com.dog_feliz.user_service.service;
 
-import com.dog_feliz.user_service.controller.dto.mail.MailRequestDto;
-import com.dog_feliz.user_service.controller.dto.notification.NotificationRequestDto;
+import com.dog_feliz.user_service.controller.dto.MailRequestDto;
+import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
 import com.dog_feliz.user_service.entity.notification.NotificationRecurrenceEntity;
 import com.dog_feliz.user_service.repository.AdoptionFairRepository;

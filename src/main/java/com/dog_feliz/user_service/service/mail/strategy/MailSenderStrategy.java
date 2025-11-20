@@ -1,6 +1,6 @@
 package com.dog_feliz.user_service.service.mail.strategy;
 
-import com.dog_feliz.user_service.controller.dto.mail.MailRequestDto;
+import com.dog_feliz.user_service.controller.dto.MailRequestDto;
 import jakarta.mail.MessagingException;
 
 import java.util.List;

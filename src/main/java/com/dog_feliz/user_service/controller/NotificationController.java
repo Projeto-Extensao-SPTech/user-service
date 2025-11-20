@@ -1,7 +1,7 @@
 package com.dog_feliz.user_service.controller;
 
-import com.dog_feliz.user_service.controller.dto.notification.NotificationRequestDto;
-import com.dog_feliz.user_service.controller.dto.notification.NotificationResponseDto;
+import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
+import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
 import com.dog_feliz.user_service.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
