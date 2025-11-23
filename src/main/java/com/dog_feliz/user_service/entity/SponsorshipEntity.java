@@ -1,7 +1,9 @@
 package com.dog_feliz.user_service.entity;
 
+import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Entity
 @Table(name = "sponsorship_tb")
@@ -10,18 +12,29 @@ public class SponsorshipEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sponsor_id", referencedColumnName = "id", nullable = false)
-    private SponsorEntity sponsor;
+    private UserEntity sponsor;
 
     private String type;
+    
     private LocalDateTime recurrence;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(columnDefinition = "json")
-    private String context;
+    private String department;
+
+    public SponsorshipEntity() {
+    }
+
+    public SponsorshipEntity(UserEntity sponsor, SponsorshipRequestDto dto) {
+        this.sponsor = sponsor;
+        this.type = dto.getType();
+        this.recurrence = dto.getRecurrence();
+        this.description = dto.getDescription();
+        this.department = dto.getDepartment();
+    }
 
     // GETTERS E SETTERS
     public Long getId() {
@@ -32,11 +45,11 @@ public class SponsorshipEntity {
         this.id = id;
     }
 
-    public SponsorEntity getSponsor() {
+    public UserEntity getSponsor() {
         return sponsor;
     }
 
-    public void setSponsor(SponsorEntity sponsor) {
+    public void setSponsor(UserEntity sponsor) {
         this.sponsor = sponsor;
     }
 
@@ -64,11 +77,11 @@ public class SponsorshipEntity {
         this.description = description;
     }
 
-    public String getContext() {
-        return context;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

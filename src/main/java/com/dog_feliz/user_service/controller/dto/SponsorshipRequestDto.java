@@ -1,8 +1,7 @@
 package com.dog_feliz.user_service.controller.dto;
 
-import org.springframework.cglib.core.Local;
+import com.dog_feliz.user_service.entity.SponsorshipEntity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class SponsorshipRequestDto {
@@ -10,8 +9,28 @@ public class SponsorshipRequestDto {
     private String type;
     private LocalDateTime recurrence;
     private String description;
-    private String context;
+    private String department;
 
+    public SponsorshipRequestDto(Long sponsorId, String type, LocalDateTime recurrence, String description, String context, String department) {
+        this.sponsorId = sponsorId;
+        this.type = type;
+        this.recurrence = recurrence;
+        this.description = description;
+        this.department = department;
+    }
+
+    public SponsorshipRequestDto(){}
+
+    public SponsorshipRequestDto(SponsorshipEntity sponsorshipEntity){
+        if(sponsorshipEntity == null) return;
+        this.sponsorId = sponsorshipEntity.getSponsor() != null ? sponsorshipEntity.getSponsor().getId() : null;
+        this.type = sponsorshipEntity.getType();
+        this.recurrence = sponsorshipEntity.getRecurrence();
+        this.description = sponsorshipEntity.getDescription();
+        this.department = sponsorshipEntity.getDepartment();
+    }
+
+    // GETTERS E SETTERS
     public Long getSponsorId() {
         return sponsorId;
     }
@@ -44,11 +63,11 @@ public class SponsorshipRequestDto {
         this.description = description;
     }
 
-    public String getContext() {
-        return context;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setDepartment(String department){
+        this.department = department;
     }
 }

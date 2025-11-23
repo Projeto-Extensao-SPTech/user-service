@@ -1,5 +1,6 @@
 package com.dog_feliz.user_service.controller;
 
+import com.dog_feliz.user_service.controller.dto.SponsorResponseDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipResponseDto;
 import com.dog_feliz.user_service.service.SponsorshipService;
@@ -23,8 +24,9 @@ public class SponsorshipController {
     // CREATE
     @PostMapping
     public ResponseEntity<SponsorshipResponseDto> addSponsorship(@RequestBody SponsorshipRequestDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(sponsorshipService.addSponsorship(dto));
+        System.out.println("DTO:" + dto);
+        SponsorshipResponseDto response = sponsorshipService.addSponsorship(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // READ ALL
@@ -51,7 +53,7 @@ public class SponsorshipController {
             @PathVariable Long id,
             @RequestBody SponsorshipRequestDto dto
     ) {
-        return ResponseEntity.ok(sponsorshipService.updateSponsorship(id, dto));
+        return ResponseEntity.status(HttpStatus.OK).body(sponsorshipService.updateSponsorship(id, dto));
     }
 
     // DELETE
