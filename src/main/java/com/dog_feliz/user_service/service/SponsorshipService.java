@@ -4,7 +4,6 @@ import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipResponseDto;
 import com.dog_feliz.user_service.entity.SponsorshipEntity;
 import com.dog_feliz.user_service.entity.UserEntity;
-import com.dog_feliz.user_service.repository.SponsorRepository;
 import com.dog_feliz.user_service.repository.SponsorshipRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.shared.exception.SponsorshipNotFoundException;
@@ -17,19 +16,12 @@ import java.util.List;
 @Service
 public class SponsorshipService {
 
-    private final SponsorshipRepository sponsorshipRepository;
-    private final SponsorRepository sponsorRepository;
-    private final UserRepository userRepository;
+    @Autowired
+    private SponsorshipRepository sponsorshipRepository;
 
-    public SponsorshipService(
-            SponsorshipRepository sponsorshipRepository,
-            SponsorRepository sponsorRepository,
-            UserRepository userRepository
-    ) {
-        this.sponsorshipRepository = sponsorshipRepository;
-        this.sponsorRepository = sponsorRepository;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
+
     public List<SponsorshipResponseDto> getAllSponsorships() {
         List<SponsorshipEntity> sponsorship = sponsorshipRepository.findAll();
         return sponsorship.stream().map(sponsorshipEntity -> new SponsorshipResponseDto(sponsorshipEntity)).toList();
