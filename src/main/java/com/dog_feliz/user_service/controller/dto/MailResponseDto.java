@@ -2,11 +2,11 @@ package com.dog_feliz.user_service.controller.dto;
 
 import java.time.ZonedDateTime;
 
-public class EmailResponse {
+public class MailResponseDto {
     private final String to;
     private final ZonedDateTime sent_at = ZonedDateTime.now();
 
-    public EmailResponse(String to) {
+    public MailResponseDto(String to) {
         this.to = to;
     }
 

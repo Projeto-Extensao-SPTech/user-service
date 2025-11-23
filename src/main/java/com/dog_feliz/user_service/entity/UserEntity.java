@@ -1,7 +1,6 @@
 package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
-import com.dog_feliz.user_service.shared.crypto.IntegerCryptoConverter;
 import com.dog_feliz.user_service.shared.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,8 +26,9 @@ public class UserEntity implements UserDetails {
     @Convert(converter = StringCryptoConverter.class)
     private String phone;
 
+    @Column(name = "mail_address")
     @Convert(converter = StringCryptoConverter.class)
-    private String email;
+    private String mailAddress;
 
     @Convert(converter = StringCryptoConverter.class)
     private String password;
@@ -36,6 +36,9 @@ public class UserEntity implements UserDetails {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity address;
+
+    @Column(name = "receive_notifications")
+    private Boolean receiveNotifications = true;
 
     @Column(name = "created_at", updatable = false)
     private final ZonedDateTime createdAt = ZonedDateTime.now();
@@ -47,7 +50,7 @@ public class UserEntity implements UserDetails {
         this.name = userRequestDto.getName();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
-        this.email = userRequestDto.getEmail();
+        this.mailAddress = userRequestDto.getMailAddress();
         this.password = passwordEncoded;
         this.address = addressEntity;
     }
@@ -57,14 +60,14 @@ public class UserEntity implements UserDetails {
         this.name = userRequestDto.getName();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
-        this.email = userRequestDto.getEmail();
+        this.mailAddress = userRequestDto.getMailAddress();
         this.password = userRequestDto.getPassword();
         this.address = addressEntity;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return mailAddress;
     }
 
     @Override
@@ -92,8 +95,8 @@ public class UserEntity implements UserDetails {
         return address;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMailAddress() {
+        return mailAddress;
     }
 
     public String getPassword() {
@@ -111,13 +114,20 @@ public class UserEntity implements UserDetails {
                 ", name='" + name + '\'' +
                 ", document='" + document + '\'' +
                 ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
+                ", mailAddress='" + mailAddress + '\'' +
                 ", password='" + password + '\'' +
                 ", address=" + address +
                 ", createdAt=" + createdAt +
                 '}';
     }
 
-    public void setUser(Long userId) {
+    public void setUser(Long userId) {}
+  
+    public Boolean getReceiveNotifications() {
+        return receiveNotifications;
+    }
+
+    public void setReceiveNotifications(Boolean receiveNotifications) {
+        this.receiveNotifications = receiveNotifications;
     }
 }

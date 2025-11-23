@@ -6,7 +6,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 public class AddressRequestDto {
-
     @NotBlank
     @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "O CEP deve estar no formato 00000-000 ou 00000000")
     private final String zipCode;
@@ -38,7 +37,6 @@ public class AddressRequestDto {
             Integer number,
             String street,
             String complement,
-            String neighborhood,
             String city,
             String state,
             String country
