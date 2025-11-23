@@ -1,17 +1,15 @@
 package com.dog_feliz.user_service.service;
 
-import com.dog_feliz.user_service.controller.SponsorshipController;
-import com.dog_feliz.user_service.controller.dto.SponsorResponseDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipResponseDto;
-import com.dog_feliz.user_service.entity.SponsorEntity;
 import com.dog_feliz.user_service.entity.SponsorshipEntity;
+import com.dog_feliz.user_service.entity.UserEntity;
 import com.dog_feliz.user_service.repository.SponsorRepository;
 import com.dog_feliz.user_service.repository.SponsorshipRepository;
-import com.dog_feliz.user_service.shared.exception.SponsorNotFoundException;
+import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.shared.exception.SponsorshipNotFoundException;
+import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,64 +23,78 @@ public class SponsorshipService {
     @Autowired
     private SponsorRepository sponsorRepository;
 
-    public List<SponsorshipResponseDto> getAllSponsorships(){
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<SponsorshipResponseDto> getAllSponsorships() {
         List<SponsorshipEntity> sponsorship = sponsorshipRepository.findAll();
         return sponsorship.stream().map(sponsorshipEntity -> new SponsorshipResponseDto(sponsorshipEntity)).toList();
     }
 
-    public SponsorshipResponseDto getSponsorshipById(Long id){
+    public SponsorshipResponseDto getSponsorshipById(Long id) {
         SponsorshipEntity sponsorship = sponsorshipRepository.findById(id)
-                .orElseThrow(()-> new SponsorshipNotFoundException("Sponsorship não encontrado com o ID: %d".formatted(id)));
+                .orElseThrow(() ->
+                        new SponsorshipNotFoundException("Sponsorship não encontrado com o ID: %d".formatted(id))
+                );
 
         return new SponsorshipResponseDto(sponsorship);
     }
 
-    public SponsorshipResponseDto getSponsorshipBySponsorId(Long sponsorId){
+    public SponsorshipResponseDto getSponsorshipBySponsorId(Long sponsorId) {
         SponsorshipEntity sponsorship = sponsorshipRepository.findBySponsorId(sponsorId)
-                .orElseThrow(() -> new SponsorshipNotFoundException("Nenhum vínculo de patrocínio encontrado para o SponsorID: %d".formatted(sponsorId)));
+                .orElseThrow(() ->
+                        new SponsorshipNotFoundException("Nenhum vínculo encontrado para o sponsorId: %d".formatted(sponsorId))
+                );
 
         return new SponsorshipResponseDto(sponsorship);
     }
 
     public SponsorshipResponseDto addSponsorship(SponsorshipRequestDto dto) {
-        SponsorEntity sponsor = sponsorRepository.findById(dto.getSponsorId())
-                .orElseThrow(() -> new SponsorNotFoundException(
-                        "Patrocinador não encontrado com ID: %d".formatted(dto.getSponsorId())
-                ));
+        UserEntity sponsor = userRepository.findById(dto.getSponsorId())
+                .orElseThrow(() ->
+                        new UserNotFoundException("Usuário patrocinador não encontrado: %d".formatted(dto.getSponsorId()))
+                );
 
-        SponsorshipEntity sponsorship = new SponsorshipEntity();
+        SponsorshipEntity sponsorship = new SponsorshipEntity(sponsor, dto);
         sponsorship.setSponsor(sponsor);
         sponsorship.setType(dto.getType());
         sponsorship.setRecurrence(dto.getRecurrence());
         sponsorship.setDescription(dto.getDescription());
-        sponsorship.setContext(dto.getContext());
+        sponsorship.setDepartment(dto.getDepartment());
 
         SponsorshipEntity saved = sponsorshipRepository.save(sponsorship);
+
         return new SponsorshipResponseDto(saved);
     }
 
+    public SponsorshipResponseDto updateSponsorship(Long id, SponsorshipRequestDto dto) {
+        SponsorshipEntity existing = sponsorshipRepository.findById(id)
+                .orElseThrow(() ->
+                        new SponsorshipNotFoundException("Sponsorship não encontrado com o ID: %d".formatted(id))
+                );
 
-    public SponsorshipResponseDto updateSponsorship(Long id, SponsorshipRequestDto dto){
-        SponsorshipEntity existingSponsorship = sponsorshipRepository.findBySponsorId(id)
-                .orElseThrow(() -> new SponsorshipNotFoundException("Sponsorship não encontrado com o ID: %d".formatted(id)));
+        UserEntity sponsor = userRepository.findById(dto.getSponsorId())
+                .orElseThrow(() ->
+                        new UserNotFoundException("Usuário não encontrado: %d".formatted(dto.getSponsorId()))
+                );
 
-        SponsorEntity sponsor = sponsorRepository.findById(dto.getSponsorId())
-                .orElseThrow(() -> new SponsorNotFoundException("Sponsor não encontrado com ID: %d".formatted(dto.getSponsorId())));
+        existing.setSponsor(sponsor);
+        existing.setType(dto.getType());
+        existing.setRecurrence(dto.getRecurrence());
+        existing.setDescription(dto.getDescription());
+        existing.setDepartment(dto.getDepartment());
 
-        existingSponsorship.setSponsor(sponsor);
-        existingSponsorship.setType(dto.getType());
-        existingSponsorship.setRecurrence(dto.getRecurrence());
-        existingSponsorship.setDescription(dto.getDescription());
-        existingSponsorship.setContext(dto.getContext());
+        SponsorshipEntity saved = sponsorshipRepository.save(existing);
 
-        return new SponsorshipResponseDto(existingSponsorship);
+        return new SponsorshipResponseDto(saved);
     }
 
-    public HttpStatus deleteSponsorship (Long id){
-        if(!sponsorRepository.existsById(id)){
+    public void deleteSponsorship(Long id) {
+        if (!sponsorshipRepository.existsById(id)) {
             throw new SponsorshipNotFoundException("Sponsorship não encontrada com ID: %d".formatted(id));
         }
-        sponsorRepository.deleteById(id);
-        return HttpStatus.NO_CONTENT;
+
+        sponsorshipRepository.deleteById(id);
     }
+
 }

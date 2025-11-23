@@ -25,7 +25,7 @@ public class UserResponseDto {
     public UserResponseDto(UserEntity userEntity) {
         this.id = userEntity.getId();
         this.name = userEntity.getName();
-        this.document = userEntity.getName();
+        this.document = userEntity.getDocument();
         this.phone = userEntity.getPhone();
         this.address = new AddressResponseDto(userEntity.getAddress());
         this.email = userEntity.getEmail();
