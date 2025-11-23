@@ -23,8 +23,7 @@ server:
 
 jasypt:
     encryptor:
-        password: "my-secret"
-        fixed-salt: "12345678"
+        password: ${JASYPT_ENCRYPTOR_PASSWORD}
 
 security:
     jwt:
