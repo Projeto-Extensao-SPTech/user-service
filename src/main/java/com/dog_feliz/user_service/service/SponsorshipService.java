@@ -16,12 +16,19 @@ import java.util.List;
 @Service
 public class SponsorshipService {
 
-    @Autowired
-    private SponsorshipRepository sponsorshipRepository;
+    private final SponsorshipRepository sponsorshipRepository;
+    private final SponsorRepository sponsorRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
+    public SponsorshipService(
+            SponsorshipRepository sponsorshipRepository,
+            SponsorRepository sponsorRepository,
+            UserRepository userRepository
+    ) {
+        this.sponsorshipRepository = sponsorshipRepository;
+        this.sponsorRepository = sponsorRepository;
+        this.userRepository = userRepository;
+    }
     public List<SponsorshipResponseDto> getAllSponsorships() {
         List<SponsorshipEntity> sponsorship = sponsorshipRepository.findAll();
         return sponsorship.stream().map(sponsorshipEntity -> new SponsorshipResponseDto(sponsorshipEntity)).toList();
