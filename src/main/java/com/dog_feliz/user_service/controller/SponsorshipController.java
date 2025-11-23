@@ -1,6 +1,5 @@
 package com.dog_feliz.user_service.controller;
 
-import com.dog_feliz.user_service.controller.dto.SponsorResponseDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipResponseDto;
 import com.dog_feliz.user_service.service.SponsorshipService;
