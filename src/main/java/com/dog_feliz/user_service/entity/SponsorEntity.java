@@ -1,7 +1,7 @@
 package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.SponsorRequestDto;
-import com.dog_feliz.user_service.shared.crypto.StringCryptoConverter;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import jakarta.persistence.*;
 
 @Entity
