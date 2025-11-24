@@ -1,12 +1,7 @@
 package com.dog_feliz.user_service.controller.dto;
 
 import com.dog_feliz.user_service.entity.SponsorshipEntity;
-import com.dog_feliz.user_service.entity.UserEntity;
-import io.swagger.v3.core.util.Json;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
-import java.time.LocalDateTime;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 
 public class SponsorshipResponseDto {
     private Long id;

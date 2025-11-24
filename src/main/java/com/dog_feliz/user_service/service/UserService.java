@@ -5,7 +5,7 @@ import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.AddressEntity;
-import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.shared.exception.AddressNotFoundException;
 import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.UserRepository;

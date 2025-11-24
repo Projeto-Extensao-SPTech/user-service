@@ -6,7 +6,7 @@ import com.dog_feliz.user_service.service.AuthService;
 import com.dog_feliz.user_service.service.JwtService;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
-import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

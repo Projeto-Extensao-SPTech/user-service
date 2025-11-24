@@ -3,13 +3,12 @@ package com.dog_feliz.user_service.service;
 import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipResponseDto;
 import com.dog_feliz.user_service.entity.SponsorshipEntity;
-import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.repository.SponsorRepository;
 import com.dog_feliz.user_service.repository.SponsorshipRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.shared.exception.SponsorshipNotFoundException;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
