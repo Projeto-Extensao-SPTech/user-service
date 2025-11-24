@@ -29,7 +29,7 @@ public class SponsorshipResponseDto {
             this.sponsor = new SponsorInfoDto(
                     user.getId(),
                     user.getName(),
-                    user.getEmail(),
+                    user.getMailAddress(),
                     user.getPhone()
             );
         } else {
