@@ -43,7 +43,7 @@ public class SponsorshipService {
         return new SponsorshipResponseDto(sponsorship);
     }
 
-    public SponsorshipResponseDto getSponsorshipBySponsorId(Long sponsorId) {
+    public SponsorshipResponseDto getSponsorshipsBySponsorId(Long sponsorId) {
         SponsorshipEntity sponsorship = sponsorshipRepository.findBySponsorId(sponsorId)
                 .orElseThrow(() ->
                         new SponsorshipNotFoundException("Nenhum vínculo encontrado para o sponsorId: %d".formatted(sponsorId))

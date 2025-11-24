@@ -40,13 +40,11 @@ public class SponsorshipController {
         return ResponseEntity.ok(sponsorshipService.getSponsorshipById(id));
     }
 
-    /*
-    READ BY SPONSOR ID
+    // READ BY SPONSOR ID
     @GetMapping("/by-sponsor/{sponsorId}")
     public ResponseEntity<List<SponsorshipResponseDto>> getBySponsorId(@PathVariable Long sponsorId) {
-        return ResponseEntity.ok(sponsorshipService.getSponsorshipsBySponsorId(sponsorId));
+        return ResponseEntity.ok(Collections.singletonList(sponsorshipService.getSponsorshipsBySponsorId(sponsorId)));
     }
-    */
 
     // UPDATE
     @PutMapping("/{id}")
