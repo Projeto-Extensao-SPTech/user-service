@@ -121,6 +121,8 @@ public class UserEntity implements UserDetails {
                 '}';
     }
 
+    public void setUser(Long userId) {}
+  
     public Boolean getReceiveNotifications() {
         return receiveNotifications;
     }
