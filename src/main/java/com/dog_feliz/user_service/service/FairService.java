@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -67,11 +68,19 @@ public class FairService {
     }
 
     public FairResponseDto getFair(Long id) {
-
         FairEntity fair = fairRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Feira não encontrada com o id: " + id));
 
         return new FairResponseDto(fair);
+    }
+
+    public List<FairResponseDto> getAllFair() {
+
+        List<FairEntity> fairs = fairRepository.findAll();
+
+        return fairs.stream()
+                .map(FairResponseDto::new)
+                .toList();
 
     }
 
@@ -82,7 +91,7 @@ public class FairService {
     public void insertInterest(Long id) {
 
         FairEntity fair = fairRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Feira não encontrada"));
+                .orElseThrow(() -> new RuntimeException("Feira não encontrada"));
 
         var valueInterest = fair.getInterest();
 
@@ -91,6 +100,5 @@ public class FairService {
         fair.setInterest(valueInterest);
 
         fairRepository.save(fair);
-
     }
 }

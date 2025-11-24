@@ -48,7 +48,7 @@ public class FairController {
 
     @GetMapping(
             value = "/images/{fileName}",
-            produces = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE }
+            produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE}
     )
     public ResponseEntity<byte[]> getImage(@PathVariable String fileName) throws IOException {
 
@@ -63,19 +63,24 @@ public class FairController {
         return ResponseEntity.ok().body(imageBytes);
     }
 
-    //TODO fazer exceptions personalizadas
+    @GetMapping()
+    public ResponseEntity<List<FairResponseDto>> getAllFairs() {
+
+        List<FairResponseDto> fairs = fairService.getAllFair();
+
+        return ResponseEntity.ok(fairs);
+    }
 
     @DeleteMapping("/{id}")
-    public void deleteFair(@PathVariable Long id){
+    public void deleteFair(@PathVariable Long id) {
         fairService.deleteFair(id);
     }
 
     @PatchMapping("/{id}")
-    public void insertInterest(@PathVariable Long id){
+    public void insertInterest(@PathVariable Long id) {
         try {
             fairService.insertInterest(id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Não foi possível atualizar o campo de interesse pela feira");
         }
     }
