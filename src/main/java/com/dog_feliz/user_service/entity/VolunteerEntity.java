@@ -13,27 +13,26 @@ public class VolunteerEntity {
     private Long id;
     private String message;
     private LocalDate availableDate;
-    @Column(name = "fk_user_volunteer")
     @ManyToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private Long fkUserVolunteer;
+    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
+    private AddressEntity address;
 
     public VolunteerEntity() {
     }
 
-    public VolunteerEntity(Long id, String message, LocalDate availableDate, Long fk_user_volunteer) {
+    public VolunteerEntity(Long id, String message, LocalDate availableDate, AddressEntity address) {
         this.id = id;
         this.message = message;
         this.availableDate = availableDate;
-        this.fkUserVolunteer = fk_user_volunteer;
+        this.address = address;
     }
 
-    public Long getFk_user_volunteer() {
-        return fkUserVolunteer;
+    public AddressEntity getAddress() {
+        return address;
     }
 
-    public void setFk_user_volunteer(Long fk_user_volunteer) {
-        this.fkUserVolunteer = fk_user_volunteer;
+    public void setAddress(AddressEntity address) {
+        this.address = address;
     }
 
     public Long getId() {
