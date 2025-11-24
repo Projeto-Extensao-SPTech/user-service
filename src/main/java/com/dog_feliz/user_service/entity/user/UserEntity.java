@@ -1,6 +1,7 @@
-package com.dog_feliz.user_service.entity;
+package com.dog_feliz.user_service.entity.user;
 
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
+import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.shared.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,9 @@ public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private UserType type;
 
     @Convert(converter = StringCryptoConverter.class)
     private String name;
@@ -47,6 +51,7 @@ public class UserEntity implements UserDetails {
     }
 
     public UserEntity(UserRequestDto userRequestDto, AddressEntity addressEntity, String passwordEncoded) {
+        this.type = userRequestDto.getType();
         this.name = userRequestDto.getName();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
@@ -57,6 +62,7 @@ public class UserEntity implements UserDetails {
 
     public UserEntity(Long id, UserRequestDto userRequestDto, AddressEntity addressEntity) {
         this.id = id;
+        this.type = userRequestDto.getType();
         this.name = userRequestDto.getName();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
@@ -77,6 +83,10 @@ public class UserEntity implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public UserType getType() {
+        return type;
     }
 
     public String getName() {
@@ -111,16 +121,20 @@ public class UserEntity implements UserDetails {
     public String toString() {
         return "UserEntity{" +
                 "id=" + id +
+                ", type=" + type +
                 ", name='" + name + '\'' +
                 ", document='" + document + '\'' +
                 ", phone='" + phone + '\'' +
                 ", mailAddress='" + mailAddress + '\'' +
                 ", password='" + password + '\'' +
                 ", address=" + address +
+                ", receiveNotifications=" + receiveNotifications +
                 ", createdAt=" + createdAt +
                 '}';
     }
 
+    public void setUser(Long userId) {}
+  
     public Boolean getReceiveNotifications() {
         return receiveNotifications;
     }

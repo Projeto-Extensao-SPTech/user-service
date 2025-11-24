@@ -4,7 +4,7 @@ import com.dog_feliz.user_service.controller.dto.SponsorRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorResponseDto;
 import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.entity.SponsorEntity;
-import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.SponsorRepository;
 import com.dog_feliz.user_service.repository.UserRepository;

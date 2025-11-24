@@ -1,6 +1,7 @@
 package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

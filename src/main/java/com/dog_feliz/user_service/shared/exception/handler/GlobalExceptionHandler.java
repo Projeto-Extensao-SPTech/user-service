@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
         body.put("status", status);
         return ResponseEntity.status(status).body(body);
     }
-
+      
     @ExceptionHandler(HttpServerErrorException.class)
     public ResponseEntity<Object> handleHttpServerErrorException(HttpServerErrorException ex) {
         Map<String, Object> body = new HashMap<>();

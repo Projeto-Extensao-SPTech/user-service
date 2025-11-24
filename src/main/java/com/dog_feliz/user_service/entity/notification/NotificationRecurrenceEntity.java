@@ -7,7 +7,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "notification_recurrence_tb")
 public class NotificationRecurrenceEntity {
-
     @EmbeddedId
     private NotificationRecurrenceId id;
 

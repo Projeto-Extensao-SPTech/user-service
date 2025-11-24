@@ -3,12 +3,12 @@ package com.dog_feliz.user_service.service;
 import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipResponseDto;
 import com.dog_feliz.user_service.entity.SponsorshipEntity;
-import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
+import com.dog_feliz.user_service.repository.SponsorRepository;
 import com.dog_feliz.user_service.repository.SponsorshipRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.shared.exception.SponsorshipNotFoundException;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,12 +16,19 @@ import java.util.List;
 @Service
 public class SponsorshipService {
 
-    @Autowired
-    private SponsorshipRepository sponsorshipRepository;
+    private final SponsorshipRepository sponsorshipRepository;
+    private final SponsorRepository sponsorRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
+    public SponsorshipService(
+            SponsorshipRepository sponsorshipRepository,
+            SponsorRepository sponsorRepository,
+            UserRepository userRepository
+    ) {
+        this.sponsorshipRepository = sponsorshipRepository;
+        this.sponsorRepository = sponsorRepository;
+        this.userRepository = userRepository;
+    }
     public List<SponsorshipResponseDto> getAllSponsorships() {
         List<SponsorshipEntity> sponsorship = sponsorshipRepository.findAll();
         return sponsorship.stream().map(sponsorshipEntity -> new SponsorshipResponseDto(sponsorshipEntity)).toList();
@@ -36,7 +43,7 @@ public class SponsorshipService {
         return new SponsorshipResponseDto(sponsorship);
     }
 
-    public SponsorshipResponseDto getSponsorshipBySponsorId(Long sponsorId) {
+    public SponsorshipResponseDto getSponsorshipsBySponsorId(Long sponsorId) {
         SponsorshipEntity sponsorship = sponsorshipRepository.findBySponsorId(sponsorId)
                 .orElseThrow(() ->
                         new SponsorshipNotFoundException("Nenhum vínculo encontrado para o sponsorId: %d".formatted(sponsorId))

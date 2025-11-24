@@ -1,7 +1,7 @@
 package com.dog_feliz.user_service.service.mail.strategy;
 
 import com.dog_feliz.user_service.controller.dto.MailRequestDto;
-import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.service.UserService;
 import com.dog_feliz.user_service.service.mail.MailSenderAvailable;
 import jakarta.mail.MessagingException;

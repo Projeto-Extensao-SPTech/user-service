@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class NotificationRequestDto {
-    @NotBlank(message = "O tipo da notificação é obrigatório.")
+    @NotNull(message = "O tipo da notificação é obrigatório.")
     private NotificationType type;
 
     @JsonProperty("adoption_fair_id")

@@ -1,7 +1,5 @@
 package com.dog_feliz.user_service.controller.dto;
 
-import com.dog_feliz.user_service.entity.UserEntity;
-
 public class SponsorInfoDto {
     private Long id;
     private String name;
