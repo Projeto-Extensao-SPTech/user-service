@@ -3,10 +3,7 @@ package com.dog_feliz.user_service.controller.dto;
 import com.dog_feliz.user_service.entity.user.UserType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public class UserRequestDto {
     @NotNull(message = "O tipo do usuário é obrigatório.")
@@ -31,6 +28,7 @@ public class UserRequestDto {
     @Valid
     private final AddressRequestDto address;
 
+    @NotNull
     @Size(min = 8, max = 100)
     @Email
     @JsonProperty("mail_address")
