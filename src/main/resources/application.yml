@@ -1,0 +1,79 @@
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+
+server:
+  port: 7000
+
+jasypt:
+  encryptor:
+    password: "my-secret"
+    fixed-salt: "12345678"
+
+security:
+  jwt:
+    secret-key: "186ef76e9d6a723ecb570d4d9c287487d001e5d35f7ed4a313350a407950318e"
+    expiration-time: 3600000
+
+mail:
+  gmail:
+    host: smtp.gmail.com
+    port: 587
+    username: lucasaiello19@gmail.com
+    password: wyvqlhssrzrvhgzx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  outlook:
+    host: smtp.office365.com
+    port: 587
+    username: lucas.eduardo.aiello@outlook.com
+    password: usbsjufjcqcoblno
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+cors:
+  allowed-origins:
+    - http://localhost:7000
+    - http://localhost:5173
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+
+evolution:
+  api:
+    url: http://localhost:8081/
+    key: abrigoDogFeliz
+  instance:
+    name: api-manager
+
+melhor-envio:
+  api:
+    url: https://sandbox.melhorenvio.com.br
+    client-id: 7418
+    secret: CRIJeXLsZ6uoZe7zjHDonIQyP9BrDlajmkjxtaSF
+    user-agent: Dog Feliz Spring Boot Service (lucasaiello19@gmail.com)
+    token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI3NDE4IiwianRpIjoiNWM0MTc3OTE0NWQyYjFiOTM0YTZlMDBlOWIwOTA2OTdhY2E0NzdhMzE4OWEyODgwNThlMGNkMWFkZjgyNjM4MzNmMWY3NTcyODlhZDVjNTUiLCJpYXQiOjE3NjI5ODY4MjAuNzgzMjYsIm5iZiI6MTc2Mjk4NjgyMC43ODMyNjIsImV4cCI6MTc2NTU3ODgyMC43NjAzOTIsInN1YiI6ImEwNTFhOTBjLTI5OTItNGM3MS1iNWYxLTlmMjE5ODJhZDljMSIsInNjb3BlcyI6WyJzaGlwcGluZy1jYWxjdWxhdGUiXX0.g6W9I1AKI7kRJZ8q2veynYLba33SgiYqG0hyyC2A4E1Qs1Ntg_TvpnHw3aMk17cXkceYHetxLVz2iZ8igbyYdVNqkBRNZjuOZ2py5YDl_rprNTUsVldMRrzwjT3y7mvGI8v8wei0SOEV6NQkeSVVXYUwE7kXwFkVuJVrJb2dNHh2wYubjNJxQTYEx3StK2sRMROJVgf406hyBLWWAP_l2_2TgVt1n1MUIb8Agf1IlFGX-71_qV6TRcCYnA292L4PJeC3oAgREIKU9mm6Q9RXar5STekr7xxKmBsQ7sAc44p0iCiG5gJl8Y3rkmqYAOuVU1cEA7dPYy_n0sDbr4gRXdNE24pWqd2YKx31JyAPpjvewQegqVW1rXWMAIavYNm0s_ywMFNDADKtZtFfr6dDFS4R67r2R-s82yNcacW55imj8969wX1Lr3XW5xBgsLJzYKULZvNxwXsY33RAQIYrN4l4IoJYmPB0Hnjxo215nTPVbBQKqKiUl9qQ21fD3r3GYhBzMQZzJ5IaOyXF0XTyw4pH94pizqbnoqT3y15Ue6To9w3-REUm5TdWGLd_k6RsTk-boAexjPh2aXyWpqMxnmA8lfBt95Rdh5qEdyqlLR7Kf6Em_B_1IJtAOQfHoaxS9PuSY_a7ukdD_P5s8XN6TrIHaVJ13_LL1YCSzkJGlgE
