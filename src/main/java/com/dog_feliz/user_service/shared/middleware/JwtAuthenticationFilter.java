@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,14 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        if (path.startsWith("/auth")
-                || path.startsWith("/images")
-                || path.startsWith("/h2-console")
-                || path.startsWith("/swagger")
-                || path.startsWith("/v3")
-                || path.startsWith("/feiras")
-                || path.startsWith("/message")
-        ) {
+
+        if (isPublicPath(path)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -60,28 +53,43 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             final String jwt = authHeader.substring(7);
-            final String userMailAddress = jwtService.extractUsername(jwt);
+            final String username = jwtService.extractUsername(jwt);
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-            if (userMailAddress != null && authentication == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userMailAddress);
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
+
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
                     );
 
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
 
             filterChain.doFilter(request, response);
-        } catch (Exception exception) {
-            handlerExceptionResolver.resolveException(request, response, null, exception);
+        } catch (Exception ex) {
+            handlerExceptionResolver.resolveException(request, response, null, ex);
         }
+    }
+
+    private boolean isPublicPath(String path) {
+        return path.startsWith("/auth")
+                || path.startsWith("/h2-console")
+                || path.startsWith("/swagger")
+                || path.startsWith("/v3")
+                || path.startsWith("/webjars")
+                || path.startsWith("/message")
+                || path.startsWith("/feiras/images")
+                || path.startsWith("/images")
+                || path.startsWith("/feiras");
     }
 }

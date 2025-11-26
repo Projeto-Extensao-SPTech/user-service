@@ -69,4 +69,4 @@ evolution:
       name: api-manager
 
 uploads:
-  path: upload/fair
+  path: uploads/fair

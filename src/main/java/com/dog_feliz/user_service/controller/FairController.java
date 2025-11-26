@@ -4,7 +4,7 @@ import com.dog_feliz.user_service.controller.dto.FairRequestDto;
 import com.dog_feliz.user_service.controller.dto.FairResponseDto;
 import com.dog_feliz.user_service.entity.FairEntity;
 import com.dog_feliz.user_service.service.FairService;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +21,6 @@ import java.util.List;
 @RequestMapping("/feiras")
 public class FairController {
 
-    @Value("${uploads.path}")
-    private String uploadDir;
 
     FairService fairService;
 
@@ -50,10 +48,12 @@ public class FairController {
         return ResponseEntity.ok(fair);
     }
 
-    @GetMapping("/images/{fileName}")
+    @GetMapping(
+            value = "/images/{fileName}",
+            produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE}
+    )
     public ResponseEntity<byte[]> getImage(@PathVariable String fileName) throws IOException {
-
-        Path imagePath = Paths.get(uploadDir).resolve(fileName);
+        Path imagePath = Paths.get("uploads/fair/").resolve(fileName);
 
         if (!Files.exists(imagePath)) {
             return ResponseEntity.notFound().build();
@@ -61,16 +61,14 @@ public class FairController {
 
         byte[] imageBytes = Files.readAllBytes(imagePath);
 
-        String mimeType = Files.probeContentType(imagePath);
-        if (mimeType == null) {
-            mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
-        }
+        String contentType = Files.probeContentType(imagePath);
 
         return ResponseEntity
                 .ok()
-                .contentType(MediaType.parseMediaType(mimeType))
+                .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(imageBytes);
     }
+
 
     @GetMapping()
     public ResponseEntity<List<FairResponseDto>> getAllFairs() {
