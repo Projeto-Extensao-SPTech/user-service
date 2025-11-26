@@ -61,7 +61,7 @@ public class FairService {
 
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            fair.getImages().add(filePath.toString());
+            fair.getImages().add(file.getOriginalFilename());
         }
 
         return fairRepository.save(fair);

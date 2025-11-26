@@ -49,7 +49,8 @@ public class SecurityConfig {
                         "/swagger-resources/**",
                         "/webjars/**",
                         "/message/**",
-                        "/feira/**"
+                        "/feiras/**",
+                        "/images/**"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()
