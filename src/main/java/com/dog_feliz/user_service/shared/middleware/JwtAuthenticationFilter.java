@@ -89,7 +89,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || path.startsWith("/webjars")
                 || path.startsWith("/message")
                 || path.startsWith("/feiras/images")
-                || path.startsWith("/images")
-                || path.startsWith("/feiras");
+                || path.startsWith("/images");
     }
 }

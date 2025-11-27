@@ -69,7 +69,6 @@ public class FairController {
                 .body(imageBytes);
     }
 
-
     @GetMapping()
     public ResponseEntity<List<FairResponseDto>> getAllFairs() {
 
