@@ -19,8 +19,8 @@ public class AuthConfig {
 
     @Bean
     UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found by requested email"));
+        return username -> userRepository.findByMailAddress(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found by requested mail address"));
     }
 
     @Bean

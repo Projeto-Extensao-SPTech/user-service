@@ -1,7 +1,7 @@
-package com.dog_feliz.user_service.entity;
+package com.dog_feliz.user_service.entity.user;
 
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
-import com.dog_feliz.user_service.shared.crypto.IntegerCryptoConverter;
+import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.shared.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,11 +18,11 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private UserType type;
+
     @Convert(converter = StringCryptoConverter.class)
     private String name;
-
-    @Convert(converter = IntegerCryptoConverter.class)
-    private Integer age;
 
     @Convert(converter = StringCryptoConverter.class)
     private String document;
@@ -30,8 +30,9 @@ public class UserEntity implements UserDetails {
     @Convert(converter = StringCryptoConverter.class)
     private String phone;
 
+    @Column(name = "mail_address")
     @Convert(converter = StringCryptoConverter.class)
-    private String email;
+    private String mailAddress;
 
     @Convert(converter = StringCryptoConverter.class)
     private String password;
@@ -40,6 +41,9 @@ public class UserEntity implements UserDetails {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity address;
 
+    @Column(name = "receive_notifications")
+    private Boolean receiveNotifications = true;
+
     @Column(name = "created_at", updatable = false)
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
@@ -47,29 +51,29 @@ public class UserEntity implements UserDetails {
     }
 
     public UserEntity(UserRequestDto userRequestDto, AddressEntity addressEntity, String passwordEncoded) {
+        this.type = userRequestDto.getType();
         this.name = userRequestDto.getName();
-        this.age = userRequestDto.getAge();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
-        this.email = userRequestDto.getEmail();
+        this.mailAddress = userRequestDto.getMailAddress();
         this.password = passwordEncoded;
         this.address = addressEntity;
     }
 
     public UserEntity(Long id, UserRequestDto userRequestDto, AddressEntity addressEntity) {
         this.id = id;
+        this.type = userRequestDto.getType();
         this.name = userRequestDto.getName();
-        this.age = userRequestDto.getAge();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
-        this.email = userRequestDto.getEmail();
+        this.mailAddress = userRequestDto.getMailAddress();
         this.password = userRequestDto.getPassword();
         this.address = addressEntity;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return mailAddress;
     }
 
     @Override
@@ -81,12 +85,12 @@ public class UserEntity implements UserDetails {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public UserType getType() {
+        return type;
     }
 
-    public Integer getAge() {
-        return age;
+    public String getName() {
+        return name;
     }
 
     public String getDocument() {
@@ -101,8 +105,8 @@ public class UserEntity implements UserDetails {
         return address;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMailAddress() {
+        return mailAddress;
     }
 
     public String getPassword() {
@@ -117,14 +121,25 @@ public class UserEntity implements UserDetails {
     public String toString() {
         return "UserEntity{" +
                 "id=" + id +
+                ", type=" + type +
                 ", name='" + name + '\'' +
-                ", age='" + age + '\'' +
                 ", document='" + document + '\'' +
                 ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
+                ", mailAddress='" + mailAddress + '\'' +
                 ", password='" + password + '\'' +
                 ", address=" + address +
+                ", receiveNotifications=" + receiveNotifications +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    public void setUser(Long userId) {}
+  
+    public Boolean getReceiveNotifications() {
+        return receiveNotifications;
+    }
+
+    public void setReceiveNotifications(Boolean receiveNotifications) {
+        this.receiveNotifications = receiveNotifications;
     }
 }

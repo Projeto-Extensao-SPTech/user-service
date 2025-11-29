@@ -5,7 +5,7 @@ import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.AddressEntity;
-import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.shared.exception.AddressNotFoundException;
 import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
@@ -40,7 +40,7 @@ public class UserService {
     }
 
     public UserResponseDto addUser(UserRequestDto userRequestDto){
-        if (userRepository.findByEmail(userRequestDto.getEmail()).isPresent()) throw new ConflictUserException("Already exists an user with requested email");
+        if (userRepository.findByMailAddress(userRequestDto.getMailAddress()).isPresent()) throw new ConflictUserException("Already exists an user with requested email");
         AddressEntity address = addressRepository.save(new AddressEntity(userRequestDto.getAddress()));
         UserEntity user = userRepository.save(new UserEntity(userRequestDto, address, passwordEncoder.encode(userRequestDto.getPassword())));
         return new UserResponseDto(user);
@@ -61,5 +61,9 @@ public class UserService {
 
     public void deleteUser(Long id){
         userRepository.deleteById(id);
+    }
+
+    public List<UserEntity> getUsersForNotification() {
+        return userRepository.findByReceiveNotificationsTrue();
     }
 }
