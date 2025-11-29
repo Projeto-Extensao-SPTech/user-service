@@ -7,14 +7,12 @@ import java.time.LocalDateTime;
 public class SponsorshipRequestDto {
     private Long sponsorId;
     private String type;
-    private LocalDateTime recurrence;
     private String description;
     private String department;
 
     public SponsorshipRequestDto(Long sponsorId, String type, LocalDateTime recurrence, String description, String context, String department) {
         this.sponsorId = sponsorId;
         this.type = type;
-        this.recurrence = recurrence;
         this.description = description;
         this.department = department;
     }
@@ -25,7 +23,6 @@ public class SponsorshipRequestDto {
         if(sponsorshipEntity == null) return;
         this.sponsorId = sponsorshipEntity.getSponsor() != null ? sponsorshipEntity.getSponsor().getId() : null;
         this.type = sponsorshipEntity.getType();
-        this.recurrence = sponsorshipEntity.getRecurrence();
         this.description = sponsorshipEntity.getDescription();
         this.department = sponsorshipEntity.getDepartment();
     }
@@ -45,14 +42,6 @@ public class SponsorshipRequestDto {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public LocalDateTime getRecurrence() {
-        return recurrence;
-    }
-
-    public void setRecurrence(LocalDateTime recurrence) {
-        this.recurrence = recurrence;
     }
 
     public String getDescription() {

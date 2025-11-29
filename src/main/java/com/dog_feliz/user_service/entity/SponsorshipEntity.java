@@ -17,8 +17,6 @@ public class SponsorshipEntity {
     private UserEntity sponsor;
 
     private String type;
-    
-    private LocalDateTime recurrence;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -31,7 +29,6 @@ public class SponsorshipEntity {
     public SponsorshipEntity(UserEntity sponsor, SponsorshipRequestDto dto) {
         this.sponsor = sponsor;
         this.type = dto.getType();
-        this.recurrence = dto.getRecurrence();
         this.description = dto.getDescription();
         this.department = dto.getDepartment();
     }
@@ -59,14 +56,6 @@ public class SponsorshipEntity {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public LocalDateTime getRecurrence() {
-        return recurrence;
-    }
-
-    public void setRecurrence(LocalDateTime recurrence) {
-        this.recurrence = recurrence;
     }
 
     public String getDescription() {

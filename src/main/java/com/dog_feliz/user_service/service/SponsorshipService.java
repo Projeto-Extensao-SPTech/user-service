@@ -17,7 +17,6 @@ import java.util.List;
 public class SponsorshipService {
 
     private final SponsorshipRepository sponsorshipRepository;
-    private final SponsorRepository sponsorRepository;
     private final UserRepository userRepository;
 
     public SponsorshipService(
@@ -26,7 +25,6 @@ public class SponsorshipService {
             UserRepository userRepository
     ) {
         this.sponsorshipRepository = sponsorshipRepository;
-        this.sponsorRepository = sponsorRepository;
         this.userRepository = userRepository;
     }
     public List<SponsorshipResponseDto> getAllSponsorships() {
@@ -61,12 +59,10 @@ public class SponsorshipService {
         SponsorshipEntity sponsorship = new SponsorshipEntity(sponsor, dto);
         sponsorship.setSponsor(sponsor);
         sponsorship.setType(dto.getType());
-        sponsorship.setRecurrence(dto.getRecurrence());
         sponsorship.setDescription(dto.getDescription());
         sponsorship.setDepartment(dto.getDepartment());
 
         SponsorshipEntity saved = sponsorshipRepository.save(sponsorship);
-
         return new SponsorshipResponseDto(saved);
     }
 
@@ -83,7 +79,6 @@ public class SponsorshipService {
 
         existing.setSponsor(sponsor);
         existing.setType(dto.getType());
-        existing.setRecurrence(dto.getRecurrence());
         existing.setDescription(dto.getDescription());
         existing.setDepartment(dto.getDepartment());
 
