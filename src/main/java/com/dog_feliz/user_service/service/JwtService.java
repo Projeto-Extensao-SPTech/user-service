@@ -43,6 +43,7 @@ public class JwtService {
         extraClaims.put("mail_address", userEntity.getMailAddress());
         extraClaims.put("document", userEntity.getDocument());
         extraClaims.put("receive_notifications", userEntity.getReceiveNotifications());
+        extraClaims.put("is_admin", userEntity.getIsAdmin());
         return generateToken(extraClaims, userDetails);
     }
 
@@ -54,11 +55,7 @@ public class JwtService {
         return jwtExpiration;
     }
 
-    private String buildToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails,
-            long expiration
-    ) {
+    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
