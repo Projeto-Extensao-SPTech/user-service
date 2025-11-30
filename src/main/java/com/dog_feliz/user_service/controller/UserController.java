@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
     @Autowired
     private UserService userService;
 
@@ -37,6 +36,14 @@ public class UserController {
         @RequestBody UserRequestDto userRequest
     ) {
         return ResponseEntity.ok(userService.updateUser(id, userRequest));
+    }
+
+    @PatchMapping("/notification/{userId}/{receiveNotification}")
+    private void updateReceiveNotification(
+        @PathVariable Long userId,
+        @PathVariable Boolean receiveNotification
+    ) {
+        userService.updateReceiveNotification(userId, receiveNotification);
     }
 
     @DeleteMapping("/{id}")

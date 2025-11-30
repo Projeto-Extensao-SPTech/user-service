@@ -132,8 +132,6 @@ public class UserEntity implements UserDetails {
                 ", createdAt=" + createdAt +
                 '}';
     }
-
-    public void setUser(Long userId) {}
   
     public Boolean getReceiveNotifications() {
         return receiveNotifications;
