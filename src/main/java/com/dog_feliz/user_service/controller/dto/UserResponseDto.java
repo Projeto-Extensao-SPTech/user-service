@@ -1,6 +1,6 @@
 package com.dog_feliz.user_service.controller.dto;
 
-import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.ZonedDateTime;

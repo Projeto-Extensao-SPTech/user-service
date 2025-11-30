@@ -1,6 +1,6 @@
 package com.dog_feliz.user_service.service;
 
-import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -37,6 +37,7 @@ public class JwtService {
         UserEntity userEntity = (UserEntity) userDetails;
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("id", userEntity.getId());
+        extraClaims.put("user_type", userEntity.getType());
         extraClaims.put("name", userEntity.getName());
         extraClaims.put("phone", userEntity.getPhone());
         extraClaims.put("mail_address", userEntity.getMailAddress());

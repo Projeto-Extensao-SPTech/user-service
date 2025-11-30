@@ -3,12 +3,12 @@ package com.dog_feliz.user_service.service;
 import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipResponseDto;
 import com.dog_feliz.user_service.entity.SponsorshipEntity;
-import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
+import com.dog_feliz.user_service.repository.SponsorRepository;
 import com.dog_feliz.user_service.repository.SponsorshipRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.shared.exception.SponsorshipNotFoundException;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +17,6 @@ import java.util.List;
 public class SponsorshipService {
 
     private final SponsorshipRepository sponsorshipRepository;
-    private final SponsorRepository sponsorRepository;
     private final UserRepository userRepository;
 
     public SponsorshipService(
@@ -26,7 +25,6 @@ public class SponsorshipService {
             UserRepository userRepository
     ) {
         this.sponsorshipRepository = sponsorshipRepository;
-        this.sponsorRepository = sponsorRepository;
         this.userRepository = userRepository;
     }
     public List<SponsorshipResponseDto> getAllSponsorships() {
@@ -43,7 +41,7 @@ public class SponsorshipService {
         return new SponsorshipResponseDto(sponsorship);
     }
 
-    public SponsorshipResponseDto getSponsorshipBySponsorId(Long sponsorId) {
+    public SponsorshipResponseDto getSponsorshipsBySponsorId(Long sponsorId) {
         SponsorshipEntity sponsorship = sponsorshipRepository.findBySponsorId(sponsorId)
                 .orElseThrow(() ->
                         new SponsorshipNotFoundException("Nenhum vínculo encontrado para o sponsorId: %d".formatted(sponsorId))
@@ -61,12 +59,10 @@ public class SponsorshipService {
         SponsorshipEntity sponsorship = new SponsorshipEntity(sponsor, dto);
         sponsorship.setSponsor(sponsor);
         sponsorship.setType(dto.getType());
-        sponsorship.setRecurrence(dto.getRecurrence());
         sponsorship.setDescription(dto.getDescription());
         sponsorship.setDepartment(dto.getDepartment());
 
         SponsorshipEntity saved = sponsorshipRepository.save(sponsorship);
-
         return new SponsorshipResponseDto(saved);
     }
 
@@ -83,7 +79,6 @@ public class SponsorshipService {
 
         existing.setSponsor(sponsor);
         existing.setType(dto.getType());
-        existing.setRecurrence(dto.getRecurrence());
         existing.setDescription(dto.getDescription());
         existing.setDepartment(dto.getDepartment());
 

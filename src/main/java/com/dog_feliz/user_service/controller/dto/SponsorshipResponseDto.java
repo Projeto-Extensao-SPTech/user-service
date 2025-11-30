@@ -1,26 +1,19 @@
 package com.dog_feliz.user_service.controller.dto;
 
 import com.dog_feliz.user_service.entity.SponsorshipEntity;
-import com.dog_feliz.user_service.entity.UserEntity;
-import io.swagger.v3.core.util.Json;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
-import java.time.LocalDateTime;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 
 public class SponsorshipResponseDto {
     private Long id;
     private String type;
     private String department;
     private String description;
-    private String recurrence;
     private SponsorInfoDto sponsor;
 
     public SponsorshipResponseDto(SponsorshipEntity entity) {
         this.id = entity.getId();
         this.type = entity.getType();
         this.department = entity.getDepartment();
-        this.recurrence = entity.getRecurrence() != null ? entity.getRecurrence().toString() : null;
         this.description = entity.getDescription();
 
         if (entity.getSponsor() != null) {
@@ -29,7 +22,7 @@ public class SponsorshipResponseDto {
             this.sponsor = new SponsorInfoDto(
                     user.getId(),
                     user.getName(),
-                    user.getEmail(),
+                    user.getMailAddress(),
                     user.getPhone()
             );
         } else {
@@ -55,14 +48,6 @@ public class SponsorshipResponseDto {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getRecurrence() {
-        return recurrence;
-    }
-
-    public void setRecurrence(String recurrence) {
-        this.recurrence = recurrence;
     }
 
     public String getDescription() {
