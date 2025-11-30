@@ -2,17 +2,16 @@ package com.dog_feliz.user_service.service;
 
 import com.dog_feliz.user_service.controller.dto.VolunteerRequestDto;
 import com.dog_feliz.user_service.controller.dto.VolunteerResponseDto;
-import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.entity.VolunteerEntity;
-import com.dog_feliz.user_service.repository.AddressRepository;
+import com.dog_feliz.user_service.entity.user.UserEntity;
+import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.repository.VolunteerRepository;
-import com.dog_feliz.user_service.shared.exception.AddressNotFoundException;
+import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import com.dog_feliz.user_service.shared.exception.VolunteerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 
 @Service
 public class VolunteerService {
@@ -21,17 +20,14 @@ public class VolunteerService {
     private VolunteerRepository volunteerRepository;
 
     @Autowired
-    private AddressRepository addressRepository;
-
+    private UserRepository userRepository;
 
     public List<VolunteerResponseDto> getVolunteers() {
-        List<VolunteerEntity> volunteers = volunteerRepository.findAll();
-        return volunteers.stream()
+        return volunteerRepository.findAll()
+                .stream()
                 .map(VolunteerResponseDto::new)
                 .toList();
     }
-
-
 
     public VolunteerResponseDto getVolunteerById(Long id) {
         VolunteerEntity volunteer = volunteerRepository.findById(id)
@@ -42,15 +38,14 @@ public class VolunteerService {
     }
 
     public VolunteerResponseDto addVolunteer(VolunteerRequestDto dto) {
-        AddressEntity address = addressRepository.findById(dto.getAddressId())
+        UserEntity userEntity = userRepository.findById(dto.getUserId())
                 .orElseThrow(() ->
-                        new AddressNotFoundException("Address not found by id %d".formatted(dto.getAddressId())));
+                        new UserNotFoundException("User not found by id %d".formatted(dto.getUserId())));
 
         VolunteerEntity volunteer = new VolunteerEntity(
-                null,
                 dto.getMessage(),
                 dto.getAvailableDate(),
-                address
+                userEntity
         );
 
         volunteerRepository.save(volunteer);
@@ -58,23 +53,27 @@ public class VolunteerService {
     }
 
     public VolunteerResponseDto updateVolunteer(Long id, VolunteerRequestDto dto) {
-        VolunteerEntity volunteer = volunteerRepository.findById(id)
+
+        VolunteerEntity existing = volunteerRepository.findById(id)
                 .orElseThrow(() ->
                         new VolunteerNotFoundException("Volunteer not found by id %d".formatted(id)));
 
-        AddressEntity address = addressRepository.findById(dto.getAddressId())
+        UserEntity userEntity = userRepository.findById(dto.getUserId())
                 .orElseThrow(() ->
-                        new AddressNotFoundException("Address not found by id %d".formatted(dto.getAddressId())));
+                        new UserNotFoundException("User not found by id %d".formatted(dto.getUserId())));
 
-        volunteer.setMessage(dto.getMessage());
-        volunteer.setAvailableDate(dto.getAvailableDate());
-        volunteer.setAddress(address);
 
-        volunteerRepository.save(volunteer);
+        VolunteerEntity updated = new VolunteerEntity(
+                existing.getId(),           // ID existente
+                dto.getMessage(),
+                dto.getAvailableDate(),
+                userEntity
+        );
 
-        return new VolunteerResponseDto(volunteer);
+        volunteerRepository.save(updated);
+
+        return new VolunteerResponseDto(updated);
     }
-
 
     public void deleteVolunteer(Long id) {
         if (!volunteerRepository.existsById(id)) {

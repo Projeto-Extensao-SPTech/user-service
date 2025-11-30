@@ -6,7 +6,7 @@ public class VolunteerRequestDto {
 
     private String message;
     private LocalDate availableDate;
-    private Long addressId;
+    private Long userId;
 
     public String getMessage() {
         return message;
@@ -16,7 +16,7 @@ public class VolunteerRequestDto {
         return availableDate;
     }
 
-    public Long getAddressId() {
-        return addressId;
+    public Long getUserId() {
+        return userId;
     }
 }

@@ -8,13 +8,13 @@ public class VolunteerResponseDto {
     private Long id;
     private String message;
     private LocalDate availableDate;
-    private Long addressId;
+    private Long userId;
 
-    public VolunteerResponseDto(Long id, String message, LocalDate availableDate, Long addressId) {
+    public VolunteerResponseDto(Long id, String message, LocalDate availableDate, Long userId) {
         this.id = id;
         this.message = message;
         this.availableDate = availableDate;
-        this.addressId = addressId;
+        this.userId = userId;
     }
 
     public VolunteerResponseDto(VolunteerEntity entity) {
@@ -22,11 +22,11 @@ public class VolunteerResponseDto {
         this.message = entity.getMessage();
         this.availableDate = entity.getAvailableDate();
 
-        this.addressId = entity.getAddress().getId();
+        this.userId = entity.getUserEntity().getId();
     }
 
     public Long getId() { return id; }
     public String getMessage() { return message; }
     public LocalDate getAvailableDate() { return availableDate; }
-    public Long getAddressId() { return addressId; }
+    public Long getUserId() { return userId; }
 }
