@@ -1,7 +1,8 @@
 package com.dog_feliz.user_service.entity.notification;
 
+import com.dog_feliz.user_service.controller.dto.FairResponseDto;
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
-import com.dog_feliz.user_service.entity.AdoptionFairEntity;
+import com.dog_feliz.user_service.entity.FairEntity;
 import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;
@@ -19,8 +20,8 @@ public class NotificationEntity {
     private NotificationType notificationType;
 
     @OneToOne
-    @JoinColumn(name = "adoption_fair_id")
-    private AdoptionFairEntity adoptionFair = null;
+    @JoinColumn(name = "fair_id")
+    private FairEntity fair = null;
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.REMOVE)
     private List<NotificationRecurrenceEntity> notificationRecurrence = new ArrayList<>();
@@ -37,10 +38,10 @@ public class NotificationEntity {
         this.message = notificationRequest.getMessage();
     }
 
-    public NotificationEntity(NotificationRequestDto notificationRequest, AdoptionFairEntity adoptionFair) {
+    public NotificationEntity(NotificationRequestDto notificationRequest, FairEntity fairEntity) {
         this.notificationType = notificationRequest.getType();
         this.message = notificationRequest.getMessage();
-        this.adoptionFair = adoptionFair;
+        this.fair = fairEntity;
     }
 
 
@@ -48,7 +49,7 @@ public class NotificationEntity {
         this.id = notificationEntity.id;
         this.notificationType = notificationEntity.getNotificationType();
         this.message = notificationEntity.getMessage();
-        this.adoptionFair = notificationEntity.adoptionFair;
+        this.fair = notificationEntity.fair;
         this.createdAt = notificationEntity.createdAt;
         this.notificationRecurrence = recurrences;
     }
@@ -69,8 +70,8 @@ public class NotificationEntity {
         return message;
     }
 
-    public AdoptionFairEntity getAdoptionFair() {
-        return adoptionFair;
+    public FairEntity getFair() {
+        return fair;
     }
 
     public List<NotificationRecurrenceEntity> getNotificationRecurrence() {

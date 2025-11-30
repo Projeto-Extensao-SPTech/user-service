@@ -4,7 +4,7 @@ import com.dog_feliz.user_service.controller.dto.MailRequestDto;
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
 import com.dog_feliz.user_service.entity.notification.NotificationRecurrenceEntity;
-import com.dog_feliz.user_service.repository.AdoptionFairRepository;
+import com.dog_feliz.user_service.repository.FairRepository;
 import com.dog_feliz.user_service.repository.NotificationRepository;
 import com.dog_feliz.user_service.service.mail.MailSenderAvailable;
 import com.dog_feliz.user_service.service.mail.strategy.MailSenderStrategy;
@@ -21,20 +21,24 @@ import java.util.Optional;
 @Service
 public class NotificationService {
     private final NotificationRepository notificationRepository;
-    private final AdoptionFairRepository adoptionFairRepository;
+
     private final NotificationRecurrenceService notificationRecurrenceService;
+
     @Qualifier(MailSenderAvailable.GMAIL_SENDER)
     private final MailSenderStrategy mailSender;
 
+    private final FairRepository fairRepository;
+
     public NotificationService(
             NotificationRepository notificationRepository,
-            AdoptionFairRepository adoptionFairRepository,
-            NotificationRecurrenceService notificationRecurrenceService, MailSenderStrategy mailSender
+            NotificationRecurrenceService notificationRecurrenceService,
+            MailSenderStrategy mailSender,
+            FairRepository fairRepository
     ) {
         this.notificationRepository = notificationRepository;
-        this.adoptionFairRepository = adoptionFairRepository;
         this.notificationRecurrenceService = notificationRecurrenceService;
         this.mailSender = mailSender;
+        this.fairRepository = fairRepository;
     }
 
     @Transactional
@@ -42,12 +46,12 @@ public class NotificationService {
         notificationRecurrenceService.validateNotificationRecurrence(notificationRequest.getEventDate(), notificationRequest.getRecurrences());
 
         NotificationEntity notificationEntity;
-        Long adoptionFairId = notificationRequest.getAdoptionFairId();
+        Long fairId = notificationRequest.getFairId();
 
-        if (adoptionFairId != null) {
-            var adoptionFair = adoptionFairRepository.findById(adoptionFairId)
-                    .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Adoption fair id not found in notification register"));
-            notificationEntity = notificationRepository.save(new NotificationEntity(notificationRequest, adoptionFair));
+        if (fairId != null) {
+            var fair = fairRepository.findById(fairId)
+                    .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Fair id not found in notification register"));
+            notificationEntity = notificationRepository.save(new NotificationEntity(notificationRequest, fair));
         } else {
             notificationEntity = notificationRepository.save(new NotificationEntity(notificationRequest));
         }
@@ -87,7 +91,7 @@ public class NotificationService {
     }
 
     private MailRequestDto toMailRequest(NotificationEntity notification) {
-        // adjust attachment field when is an adoption fair notification to send image
+        // adjust attachment field when is a fair notification to send image
         return new MailRequestDto(
                 notification.getNotificationType().getDescription(),
                 notification.getMessage(),

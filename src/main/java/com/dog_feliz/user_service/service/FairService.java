@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -82,6 +83,14 @@ public class FairService {
                 .map(FairResponseDto::new)
                 .toList();
 
+    }
+
+    public List<FairResponseDto> getFutureFairs() {
+        List<FairEntity> fairs =  fairRepository.findByFairDateGreaterThan(LocalDate.now());
+        return fairs
+                .stream()
+                .map(FairResponseDto::new)
+                .toList();
     }
 
     public void deleteFair(Long id) {

@@ -45,7 +45,7 @@ public class SecurityConfig {
                         "/webjars/**",
                         "/message/**",
                         "/images/**",
-                        "/feiras/images/**"
+                        "/feiras/images/**",
                         "/message/**",
                         "/mails/gmail/default"
                 ).permitAll()
