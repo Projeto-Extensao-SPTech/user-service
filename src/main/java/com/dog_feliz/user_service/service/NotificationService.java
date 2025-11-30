@@ -39,6 +39,8 @@ public class NotificationService {
 
     @Transactional
     public NotificationEntity register(NotificationRequestDto notificationRequest) {
+        notificationRecurrenceService.validateNotificationRecurrence(notificationRequest.getEventDate(), notificationRequest.getRecurrences());
+
         NotificationEntity notificationEntity;
         Long adoptionFairId = notificationRequest.getAdoptionFairId();
 

@@ -9,5 +9,6 @@ public interface MailSenderStrategy {
     void sendSimpleMail(MailRequestDto mailRequest, String to);
     void sendMailWithAttachment(MailRequestDto mailRequest, String to) throws MessagingException;
     void sendBulkMail(List<MailRequestDto> mailRequestDto);
+    String mailAddressTo(String mailAddress);
 }
 

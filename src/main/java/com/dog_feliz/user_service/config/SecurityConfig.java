@@ -48,7 +48,8 @@ public class SecurityConfig {
                         "/v3/api-docs",
                         "/swagger-resources/**",
                         "/webjars/**",
-                        "/message/**"
+                        "/message/**",
+                        "/mails/gmail/default"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()
