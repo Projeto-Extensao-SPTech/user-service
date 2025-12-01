@@ -8,6 +8,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -26,10 +27,13 @@ public class GmailSenderStrategy implements MailSenderStrategy {
     @Autowired
     private UserService userService;
 
+    @Value("${mail.gmail.username}")
+    private String defaultMailAddress;
+
     @Override
     public void sendSimpleMail(MailRequestDto mailRequest, String to) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
+        message.setTo(mailAddressTo(to));
         message.setSubject(mailRequest.getSubject());
         message.setText(mailRequest.getContent());
         sender.send(message);
@@ -40,7 +44,7 @@ public class GmailSenderStrategy implements MailSenderStrategy {
         MimeMessage message = sender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(to);
+        helper.setTo(mailAddressTo(to));
         helper.setSubject(mailRequest.getSubject());
         helper.setText(mailRequest.getContent());
 
@@ -58,5 +62,10 @@ public class GmailSenderStrategy implements MailSenderStrategy {
         for (MailRequestDto mailRequest : mailRequests) {
             usersForNotification.forEach(user -> this.sendSimpleMail(mailRequest, user.getMailAddress()));
         }
+    }
+
+    @Override
+    public String mailAddressTo(String mailAddress) {
+        return mailAddress.equalsIgnoreCase("default") ? defaultMailAddress : mailAddress;
     }
 }

@@ -99,4 +99,14 @@ public class GlobalExceptionHandler {
         body.put("status", status);
         return ResponseEntity.status(status).body(body);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status);
+        return ResponseEntity.status(status).body(body);
+    }
 }

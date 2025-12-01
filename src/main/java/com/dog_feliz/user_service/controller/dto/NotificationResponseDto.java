@@ -2,13 +2,18 @@ package com.dog_feliz.user_service.controller.dto;
 
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
 import com.dog_feliz.user_service.entity.notification.NotificationType;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class NotificationResponseDto {
     private NotificationType type;
     private String message;
     private List<LocalDate> recurrences;
+    @JsonProperty("created_at")
+    private ZonedDateTime createdAt;
 
     public NotificationResponseDto() {
     }
@@ -21,6 +26,7 @@ public class NotificationResponseDto {
                 .stream()
                 .map(recurrence -> recurrence.getRecurrence())
                 .toList();
+        this.createdAt = notificationEntity.getCreatedAt();
     }
 
     public NotificationType getType() {
@@ -33,5 +39,9 @@ public class NotificationResponseDto {
 
     public List<LocalDate> getRecurrences() {
         return recurrences;
+    }
+
+    public ZonedDateTime getCreatedAt() {
+        return createdAt;
     }
 }

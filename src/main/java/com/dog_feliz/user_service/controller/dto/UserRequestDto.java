@@ -36,7 +36,10 @@ public class UserRequestDto {
 
     private final String password;
 
-    public UserRequestDto(UserType type, String name, String document, String phone, AddressRequestDto address, String mailAddress, String password) {
+    @JsonProperty("isAdmin")
+    private final Boolean isAdmin;
+
+    public UserRequestDto(UserType type, String name, String document, String phone, AddressRequestDto address, String mailAddress, String password, Boolean isAdmin) {
         this.type = type;
         this.name = name;
         this.document = document;
@@ -44,6 +47,7 @@ public class UserRequestDto {
         this.address = address;
         this.mailAddress = mailAddress;
         this.password = password;
+        this.isAdmin = isAdmin;
     }
 
     public UserType getType() {
@@ -73,4 +77,6 @@ public class UserRequestDto {
     public String getPassword() {
         return password;
     }
+
+    public Boolean getIsAdmin() { return isAdmin; }
 }

@@ -40,7 +40,7 @@ public class AuthController {
         UserEntity authenticatedUser = authService.authenticate(authRequestDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
-        AuthResponseDto authResponseDto = new AuthResponseDto(jwtToken, jwtService.getExpirationTime());
+        AuthResponseDto authResponseDto = new AuthResponseDto(jwtToken, jwtService.getExpirationTime(), authenticatedUser);
         return ResponseEntity.ok(authResponseDto);
     }
 }

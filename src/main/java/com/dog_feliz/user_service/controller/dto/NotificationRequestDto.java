@@ -2,7 +2,10 @@ package com.dog_feliz.user_service.controller.dto;
 
 import com.dog_feliz.user_service.entity.notification.NotificationType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,10 +14,10 @@ public class NotificationRequestDto {
     @NotNull(message = "O tipo da notificação é obrigatório.")
     private NotificationType type;
 
-    @JsonProperty("adoption_fair_id")
+    @JsonProperty("fair_id")
     @NotNull(message = "O ID da feira de adoção é obrigatório.")
     @Positive(message = "O ID da feira deve ser um número positivo.")
-    private Long adoptionFairId;
+    private Long fairId;
 
     @Size(max = 255, message = "A mensagem deve ter no máximo 255 caracteres.")
     private String message;
@@ -39,8 +42,8 @@ public class NotificationRequestDto {
         return type;
     }
 
-    public Long getAdoptionFairId() {
-        return adoptionFairId;
+    public Long getFairId() {
+        return fairId;
     }
 
     public String getMessage() {

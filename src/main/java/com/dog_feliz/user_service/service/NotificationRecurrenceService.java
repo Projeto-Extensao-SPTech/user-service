@@ -5,11 +5,13 @@ import com.dog_feliz.user_service.entity.notification.NotificationRecurrenceEnti
 import com.dog_feliz.user_service.repository.NotificationRecurrenceRepository;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class NotificationRecurrenceService {
+
     private final NotificationRecurrenceRepository notificationRecurrenceRepository;
 
     public NotificationRecurrenceService(NotificationRecurrenceRepository notificationRecurrenceRepository) {
@@ -17,14 +19,30 @@ public class NotificationRecurrenceService {
     }
 
     public List<NotificationRecurrenceEntity> register(NotificationEntity notification, LocalDate eventDate, List<Integer> recurrences) {
-        List<LocalDate> recurrencesInDays = new ArrayList<>();
-        recurrencesInDays.add(eventDate);
-        recurrences.forEach(recurrence -> recurrencesInDays.add(getDateFromRecurrence(eventDate, recurrence)));
-
+        Set<LocalDate> recurrencesInDays = buildRecurrenceDates(eventDate, recurrences);
         return recurrencesInDays
                 .stream()
-                .map(recurrence -> notificationRecurrenceRepository.save(new NotificationRecurrenceEntity(notification, recurrence)))
+                .map(date -> notificationRecurrenceRepository.save(new NotificationRecurrenceEntity(notification, date)))
                 .toList();
+    }
+
+    public void validateNotificationRecurrence(LocalDate eventDate, List<Integer> recurrences) {
+        LocalDate today = LocalDate.now();
+        if (eventDate.isBefore(today)) {
+            throw new IllegalArgumentException("O dia do evento deve ser posterior ao dia atual!");
+        }
+
+        Set<LocalDate> recurrencesInDays = buildRecurrenceDates(eventDate, recurrences);
+        if (recurrencesInDays.stream().anyMatch(rec -> rec.isBefore(today))) {
+            throw new IllegalArgumentException("A data de recorrência deve ser posterior ao dia atual!");
+        }
+    }
+
+    private Set<LocalDate> buildRecurrenceDates(LocalDate eventDate, List<Integer> recurrences) {
+        Set<LocalDate> dates = new HashSet<>();
+        dates.add(eventDate);
+        recurrences.forEach(r -> dates.add(getDateFromRecurrence(eventDate, r)));
+        return dates;
     }
 
     private LocalDate getDateFromRecurrence(LocalDate eventDate, Integer recurrence) {

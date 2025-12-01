@@ -17,7 +17,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -36,8 +35,8 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers(
-                        "/auth/**",
                         "/h2-console/**",
+                        "/auth/**",
                         "/swagger-ui.html",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
@@ -46,7 +45,9 @@ public class SecurityConfig {
                         "/webjars/**",
                         "/message/**",
                         "/images/**",
-                        "/feiras/images/**"
+                        "/feiras/images/**",
+                        "/message/**",
+                        "/mails/gmail/default"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()

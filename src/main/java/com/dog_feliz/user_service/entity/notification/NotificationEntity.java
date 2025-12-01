@@ -1,9 +1,11 @@
 package com.dog_feliz.user_service.entity.notification;
 
+import com.dog_feliz.user_service.controller.dto.FairResponseDto;
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
-import com.dog_feliz.user_service.entity.AdoptionFairEntity;
+import com.dog_feliz.user_service.entity.FairEntity;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +21,16 @@ public class NotificationEntity {
     private NotificationType notificationType;
 
     @OneToOne
-    @JoinColumn(name = "adoption_fair_id")
-    private AdoptionFairEntity adoptionFair = null;
+    @JoinColumn(name = "fair_id")
+    private FairEntity fair = null;
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.REMOVE)
     private List<NotificationRecurrenceEntity> notificationRecurrence = new ArrayList<>();
 
     private String message;
+
+    @Column(name = "event_date", nullable = false)
+    private LocalDate eventDate;
 
     private ZonedDateTime createdAt = ZonedDateTime.now();
 
@@ -35,12 +40,14 @@ public class NotificationEntity {
     public NotificationEntity(NotificationRequestDto notificationRequest) {
         this.notificationType = notificationRequest.getType();
         this.message = notificationRequest.getMessage();
+        this.eventDate = notificationRequest.getEventDate();
     }
 
-    public NotificationEntity(NotificationRequestDto notificationRequest, AdoptionFairEntity adoptionFair) {
+    public NotificationEntity(NotificationRequestDto notificationRequest, FairEntity fairEntity) {
         this.notificationType = notificationRequest.getType();
         this.message = notificationRequest.getMessage();
-        this.adoptionFair = adoptionFair;
+        this.eventDate = notificationRequest.getEventDate();
+        this.fair = fairEntity;
     }
 
 
@@ -48,7 +55,8 @@ public class NotificationEntity {
         this.id = notificationEntity.id;
         this.notificationType = notificationEntity.getNotificationType();
         this.message = notificationEntity.getMessage();
-        this.adoptionFair = notificationEntity.adoptionFair;
+        this.eventDate = notificationEntity.getEventDate();
+        this.fair = notificationEntity.fair;
         this.createdAt = notificationEntity.createdAt;
         this.notificationRecurrence = recurrences;
     }
@@ -69,12 +77,16 @@ public class NotificationEntity {
         return message;
     }
 
-    public AdoptionFairEntity getAdoptionFair() {
-        return adoptionFair;
+    public FairEntity getFair() {
+        return fair;
     }
 
     public List<NotificationRecurrenceEntity> getNotificationRecurrence() {
         return notificationRecurrence;
+    }
+
+    public LocalDate getEventDate() {
+        return eventDate;
     }
 
     public ZonedDateTime getCreatedAt() {

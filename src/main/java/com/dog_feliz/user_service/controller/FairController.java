@@ -21,7 +21,6 @@ import java.util.List;
 @RequestMapping("/feiras")
 public class FairController {
 
-
     FairService fairService;
 
     public FairController(FairService service) {
@@ -75,6 +74,14 @@ public class FairController {
         List<FairResponseDto> fairs = fairService.getAllFair();
 
         return ResponseEntity.ok(fairs);
+    }
+
+    @GetMapping("/future")
+    public ResponseEntity<List<FairResponseDto>> getFutureFairs() {
+        List<FairResponseDto> fairs = fairService.getFutureFairs();
+        return fairs.isEmpty()
+                ? ResponseEntity.status(204).body(fairs)
+                : ResponseEntity.ok(fairs);
     }
 
     @DeleteMapping("/{id}")

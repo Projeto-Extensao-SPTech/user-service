@@ -37,7 +37,7 @@ public class UserEntity implements UserDetails {
     @Convert(converter = StringCryptoConverter.class)
     private String password;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity address;
 
@@ -46,6 +46,9 @@ public class UserEntity implements UserDetails {
 
     @Column(name = "created_at", updatable = false)
     private final ZonedDateTime createdAt = ZonedDateTime.now();
+
+    @Column(name = "is_admin")
+    private Boolean isAdmin = false;
 
     public UserEntity() {
     }
@@ -58,6 +61,7 @@ public class UserEntity implements UserDetails {
         this.mailAddress = userRequestDto.getMailAddress();
         this.password = passwordEncoded;
         this.address = addressEntity;
+        this.isAdmin = userRequestDto.getIsAdmin() != null ? userRequestDto.getIsAdmin() : false;
     }
 
     public UserEntity(Long id, UserRequestDto userRequestDto, AddressEntity addressEntity) {
@@ -132,8 +136,6 @@ public class UserEntity implements UserDetails {
                 ", createdAt=" + createdAt +
                 '}';
     }
-
-    public void setUser(Long userId) {}
   
     public Boolean getReceiveNotifications() {
         return receiveNotifications;
@@ -141,5 +143,13 @@ public class UserEntity implements UserDetails {
 
     public void setReceiveNotifications(Boolean receiveNotifications) {
         this.receiveNotifications = receiveNotifications;
+    }
+
+    public Boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }

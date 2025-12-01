@@ -18,7 +18,6 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -47,10 +46,8 @@ public class UserService {
     }
 
     public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto){
-        Optional<UserEntity> userEntity = userRepository.findById(id);
-        if (userEntity.isEmpty()) throw new UserNotFoundException("User not found by id %d".formatted(id));
-
-        Long addressId = userEntity.get().getAddress().getId();
+        UserEntity userEntity = verifyUserId(id);
+        Long addressId = userEntity.getAddress().getId();
         Optional<AddressEntity> addressEntity = addressRepository.findById(addressId);
         if (addressEntity.isEmpty()) throw new AddressNotFoundException("Address not found by id %d".formatted(addressId));
 
@@ -59,11 +56,23 @@ public class UserService {
         return new UserResponseDto(userUpdated);
     }
 
+    public void updateReceiveNotification(Long userId, Boolean receiveNotification) {
+        UserEntity userEntity = verifyUserId(userId);
+        userEntity.setReceiveNotifications(receiveNotification);
+        userRepository.save(userEntity);
+    }
+
     public void deleteUser(Long id){
         userRepository.deleteById(id);
     }
 
     public List<UserEntity> getUsersForNotification() {
         return userRepository.findByReceiveNotificationsTrue();
+    }
+
+    private UserEntity verifyUserId(Long userId) {
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if (userEntity.isEmpty()) throw new UserNotFoundException("User not found by id %d".formatted(userId));
+        return userEntity.get();
     }
 }
