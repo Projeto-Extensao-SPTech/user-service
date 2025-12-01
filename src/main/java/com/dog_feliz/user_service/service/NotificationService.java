@@ -10,6 +10,8 @@ import com.dog_feliz.user_service.service.mail.MailSenderAvailable;
 import com.dog_feliz.user_service.service.mail.strategy.MailSenderStrategy;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -76,8 +78,8 @@ public class NotificationService {
         return notificationEntity.get();
     }
 
-    public List<NotificationEntity> getFutureNotifications() {
-        return notificationRepository.findByRecurrenceDateGreaterThan(LocalDate.now());
+    public List<NotificationEntity> getAllNotifications() {
+        return notificationRepository.findAll();
     }
 
     public void deleteById(Long id) {

@@ -24,8 +24,8 @@ public class NotificationController {
     }
 
     @GetMapping
-    private ResponseEntity<List<NotificationResponseDto>> getFutureNotifications() {
-        List<NotificationEntity> notifications = notificationService.getFutureNotifications();
+    private ResponseEntity<List<NotificationResponseDto>> getAllNotifications() {
+        List<NotificationEntity> notifications = notificationService.getAllNotifications();
         return notifications.isEmpty()
                 ? ResponseEntity.status(204).body(null)
                 : ResponseEntity.ok(
@@ -36,7 +36,7 @@ public class NotificationController {
         );
     }
 
-    @GetMapping("/{date}")
+    @GetMapping("/date/{date}")
     private ResponseEntity<List<NotificationResponseDto>> getByRecurrenceDate(@PathVariable LocalDate date) {
         List<NotificationEntity> notifications = notificationService.getByRecurrenceDate(date);
         return notifications.isEmpty()

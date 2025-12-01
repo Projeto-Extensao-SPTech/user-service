@@ -1,6 +1,8 @@
 package com.dog_feliz.user_service.repository;
 
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,7 +24,7 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
 
     @Query(
             value = """
-            SELECT * FROM notification_tb n
+            SELECT DISTINCT n.* FROM notification_tb n
             JOIN notification_recurrence_tb nr
             ON n.id = nr.notification_id
             WHERE nr.recurrence > :date
