@@ -62,6 +62,11 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
+    public void updatePassword(Long userId, String newPassword) {
+        UserEntity userEntity = verifyUserId(userId);
+        userRepository.save(new UserEntity(userEntity, passwordEncoder.encode(newPassword)));
+    }
+
     public void deleteUser(Long id){
         userRepository.deleteById(id);
     }
