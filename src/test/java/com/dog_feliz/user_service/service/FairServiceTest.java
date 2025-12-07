@@ -13,9 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +45,7 @@ public class FairServiceTest {
     }
 
     @Test
-    @DisplayName("Dado uma chamada para criar uma feira de adoção, deve criar uma feira de adoção nova e retornar com sucesso")
+    @DisplayName("Dado uma chamada para criar uma feira, deve criar e retornar com sucesso")
     void createFair() throws IOException {
         AddressEntity savedAddress = new AddressEntity();
         when(addressRepository.save(any())).thenReturn(savedAddress);
@@ -58,13 +60,29 @@ public class FairServiceTest {
 
         assertNotNull(fair);
         assertEquals(1L, fair.getId());
-
         verify(addressRepository, times(1)).save(any());
         verify(fairRepository, times(1)).save(any());
     }
 
+
     @Test
-    @DisplayName("Dado uma chamada para buscar uma feira de adoção pelo ID, quando buscar pelo ID correto, deve retornar com sucesso a feira")
+    @DisplayName("Dado uma chamada para criar feira, quando ocorrer erro no upload da imagem deve lançar exceção")
+    void createFairException() throws IOException {
+
+        MockMultipartFile failingFile = mock(MockMultipartFile.class);
+        when(failingFile.getOriginalFilename()).thenReturn("image.png");
+        when(failingFile.getInputStream()).thenThrow(new IOException("Erro ao ler arquivo"));
+
+        FairRequestDto request = fairStub.createNewFair();
+        request.setImage(List.of(failingFile));
+
+        when(addressRepository.save(any())).thenReturn(new AddressEntity());
+
+        assertThrows(IOException.class, () -> fairService.createFair(request));
+    }
+
+    @Test
+    @DisplayName("Dado uma chamada para buscar feira por ID, quando existir deve retornar")
     void getFair() {
         AddressEntity address = fairStub.createAddressEntity(1L);
         FairEntity fair = fairStub.createFairEntity(10L, address);
@@ -77,40 +95,89 @@ public class FairServiceTest {
         assertEquals(10L, response.getId());
     }
 
+
     @Test
-    @DisplayName("Dado uma chamada para buscar todas as feiras de adoção criadas, quando buscar pelas feiras, deve retornar com sucesso todas as feiras")
+    @DisplayName("Dado uma chamada para buscar feira por ID, quando não existir deve lançar erro")
+    void getFairException() {
+        when(fairRepository.findById(999L)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> fairService.getFair(999L));
+
+        assertTrue(exception.getMessage().contains("Feira não encontrada com o id: 999"));
+    }
+
+
+    @Test
+    @DisplayName("Dado uma chamada para buscar todas as feiras, deve retornar todas as feiras")
     void getAllFairs() {
         AddressEntity address = fairStub.createAddressEntity(10L);
-        FairEntity firstFair = fairStub.createFairEntity(1L, address);
-        FairEntity secondFair = fairStub.createFairEntity(1L, address);
+        FairEntity f1 = fairStub.createFairEntity(1L, address);
+        FairEntity f2 = fairStub.createFairEntity(2L, address);
 
-        when(fairRepository.findAll()).thenReturn(List.of(firstFair, secondFair));
+        when(fairRepository.findAll()).thenReturn(List.of(f1, f2));
 
-        List<FairResponseDto> fairList = fairService.getAllFair();
+        List<FairResponseDto> fairs = fairService.getAllFair();
 
-        assertEquals(2, fairList.size());
+        assertEquals(2, fairs.size());
     }
 
     @Test
-    @DisplayName("Dado uma chamada para inserir/demonstrar interesse na feira de adoção disponível, deve registrar o interesse com sucesso")
+    @DisplayName("Dado uma chamada para buscar feiras futuras, deve retornar apenas as futuras")
+    void getFutureFairs() {
+        AddressEntity address = fairStub.createAddressEntity(1L);
+
+        FairEntity futureFair = fairStub.createFairEntity(1L, address);
+        futureFair.setFairDate(LocalDate.now().plusDays(2));
+
+        when(fairRepository.findByFairDateGreaterThan(LocalDate.now()))
+                .thenReturn(List.of(futureFair));
+
+        List<FairResponseDto> fairs = fairService.getFutureFairs();
+
+        assertEquals(1, fairs.size());
+    }
+
+    @Test
+    @DisplayName("Dado uma chamada para buscar feiras futuras, quando não houver deve retornar lista vazia")
+    void getFutureFairsEmpty() {
+        when(fairRepository.findByFairDateGreaterThan(LocalDate.now()))
+                .thenReturn(List.of());
+
+        List<FairResponseDto> fairs = fairService.getFutureFairs();
+
+        assertTrue(fairs.isEmpty());
+    }
+
+
+    @Test
+    @DisplayName("Dado uma chamada para inserir interesse, deve incrementar corretamente")
     void testInsertInterest() {
         AddressEntity address = fairStub.createAddressEntity(1L);
         FairEntity fair = fairStub.createFairEntity(1L, address);
-
-        fair.setInterest(3);
+        fair.setInterest(5);
 
         when(fairRepository.findById(1L)).thenReturn(Optional.of(fair));
 
         fairService.insertInterest(1L);
 
-        assertEquals(4, fair.getInterest());
+        assertEquals(6, fair.getInterest());
         verify(fairRepository, times(1)).save(fair);
     }
 
     @Test
-    @DisplayName("Dado uma chamada para deletar uma feira pelo ID, quando buscar a feira deve validar que deletou corretamente")
-    void deleteFair() {
+    @DisplayName("Dado uma chamada para inserir interesse, quando a feira não existir deve lançar erro")
+    void testInsertInterestException() {
+        when(fairRepository.findById(999L)).thenReturn(Optional.empty());
 
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> fairService.insertInterest(999L));
+
+        assertEquals("Feira não encontrada", exception.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("Dado uma chamada para deletar feira, deve chamar o método do repository corretamente")
+    void deleteFair() {
         doNothing().when(fairRepository).deleteById(10L);
 
         fairService.deleteFair(10L);
@@ -118,6 +185,44 @@ public class FairServiceTest {
         verify(fairRepository, times(1)).deleteById(10L);
     }
 
+    @Test
+    @DisplayName("Deve criar a feira com múltiplas imagens corretamente")
+    void createFairContentMultipleImageFiles() throws IOException {
 
+        AddressEntity savedAddress = new AddressEntity();
+        when(addressRepository.save(any())).thenReturn(savedAddress);
+
+        FairEntity savedFair = new FairEntity();
+        savedFair.setId(1L);
+        when(fairRepository.save(any())).thenReturn(savedFair);
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "image1",
+                "foto1.png",
+                "image/png",
+                "conteudo1".getBytes()
+        );
+
+        MockMultipartFile file2 = new MockMultipartFile(
+                "image2",
+                "foto2.png",
+                "image/png",
+                "conteudo2".getBytes()
+        );
+
+        FairRequestDto request = fairStub.createNewFair();
+        request.setImage(List.of(file1, file2));
+
+        FairEntity fair = fairService.createFair(request);
+
+        assertNotNull(fair);
+        assertEquals(1L, fair.getId());
+
+        verify(addressRepository, times(1)).save(any());
+        verify(fairRepository, times(1)).save(any());
+
+        assertEquals("foto1.png", request.getImage().get(0).getOriginalFilename());
+        assertEquals("foto2.png", request.getImage().get(1).getOriginalFilename());
+    }
 
 }
