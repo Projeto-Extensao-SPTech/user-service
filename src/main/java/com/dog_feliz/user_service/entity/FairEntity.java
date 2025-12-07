@@ -29,7 +29,7 @@ public class FairEntity {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "fair_images", joinColumns = @JoinColumn(name = "fair_id"))
-    @Column(name = "image_path")
+    @Column(name = "image_path", nullable = false)
     private List<String> images = new ArrayList<>();
 
     public FairEntity() {

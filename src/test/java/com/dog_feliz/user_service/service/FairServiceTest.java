@@ -1,24 +1,21 @@
 package com.dog_feliz.user_service.service;
 
-import com.dog_feliz.user_service.controller.dto.AddressRequestDto;
 import com.dog_feliz.user_service.controller.dto.FairRequestDto;
 import com.dog_feliz.user_service.controller.dto.FairResponseDto;
 import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.entity.FairEntity;
 import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.FairRepository;
+import com.dog_feliz.user_service.stub.FairStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +33,9 @@ public class FairServiceTest {
     @InjectMocks
     private FairService fairService;
 
+    @InjectMocks
+    private FairStub fairStub;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
@@ -52,7 +52,7 @@ public class FairServiceTest {
         savedFair.setId(1L);
         when(fairRepository.save(any())).thenReturn(savedFair);
 
-        FairRequestDto request = buildNewFair();
+        FairRequestDto request = fairStub.createNewFair();
 
         FairEntity fair = fairService.createFair(request);
 
@@ -66,8 +66,8 @@ public class FairServiceTest {
     @Test
     @DisplayName("Dado uma chamada para buscar uma feira de adoção pelo ID, quando buscar pelo ID correto, deve retornar com sucesso a feira")
     void getFair() {
-        AddressEntity address = createAddressEntity(1L);
-        FairEntity fair = createFairEntity(10L, address);
+        AddressEntity address = fairStub.createAddressEntity(1L);
+        FairEntity fair = fairStub.createFairEntity(10L, address);
 
         when(fairRepository.findById(10L)).thenReturn(Optional.of(fair));
 
@@ -80,9 +80,9 @@ public class FairServiceTest {
     @Test
     @DisplayName("Dado uma chamada para buscar todas as feiras de adoção criadas, quando buscar pelas feiras, deve retornar com sucesso todas as feiras")
     void getAllFairs() {
-        AddressEntity address = createAddressEntity(10L);
-        FairEntity firstFair = createFairEntity(1L, address);
-        FairEntity secondFair = createFairEntity(1L, address);
+        AddressEntity address = fairStub.createAddressEntity(10L);
+        FairEntity firstFair = fairStub.createFairEntity(1L, address);
+        FairEntity secondFair = fairStub.createFairEntity(1L, address);
 
         when(fairRepository.findAll()).thenReturn(List.of(firstFair, secondFair));
 
@@ -94,8 +94,8 @@ public class FairServiceTest {
     @Test
     @DisplayName("Dado uma chamada para inserir/demonstrar interesse na feira de adoção disponível, deve registrar o interesse com sucesso")
     void testInsertInterest() {
-        AddressEntity address = createAddressEntity(1L);
-        FairEntity fair = createFairEntity(1L, address);
+        AddressEntity address = fairStub.createAddressEntity(1L);
+        FairEntity fair = fairStub.createFairEntity(1L, address);
 
         fair.setInterest(3);
 
@@ -107,44 +107,15 @@ public class FairServiceTest {
         verify(fairRepository, times(1)).save(fair);
     }
 
-    private static FairRequestDto buildNewFair() {
-        MockMultipartFile file = new MockMultipartFile(
-                "image",
-                "foto.png",
-                "image/png",
-                "conteudo".getBytes()
-        );
-        AddressRequestDto adress = new AddressRequestDto(
-                "03992231",
-                120,
-                "Rua do birobiro",
-                "Bloco zezinho",
-                "SP Garoa",
-                "SP",
-                "Brasil"
-        );
+    @Test
+    @DisplayName("Dado uma chamada para deletar uma feira pelo ID, quando buscar a feira deve validar que deletou corretamente")
+    void deleteFair() {
 
-        FairRequestDto request = new FairRequestDto();
-        request.setFairDate(LocalDate.of(2025, 12, 2));
-        request.setFairHour(LocalDateTime.of(2025, 12, 2, 12, 30));
-        request.setAddress(adress);
-        request.setImage(List.of(file));
-        return request;
-    }
+        doNothing().when(fairRepository).deleteById(10L);
 
-    //TODO Possibilidade de fazer um STUB de tudo isso. Verei de fazer ao decorrer do desenvolvimento
-    private FairEntity createFairEntity(Long id, AddressEntity address){
-        FairEntity fair = new FairEntity();
-        fair.setId(id);
-        fair.setAddress(address);
+        fairService.deleteFair(10L);
 
-        return fair;
-    }
-
-    private AddressEntity createAddressEntity(Long id){
-        AddressEntity address = new AddressEntity();
-        address.setAddress(id);
-        return address;
+        verify(fairRepository, times(1)).deleteById(10L);
     }
 
 
