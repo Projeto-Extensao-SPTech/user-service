@@ -1,5 +1,6 @@
 package com.dog_feliz.user_service.controller;
 
+import com.dog_feliz.user_service.controller.dto.UpdatePasswordRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.service.UserService;
@@ -35,12 +36,20 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(id, userRequest));
     }
 
-    @PatchMapping("/notification/{userId}/{receiveNotification}")
+    @PatchMapping("/notification/{id}/{receiveNotification}")
     private void updateReceiveNotification(
         @PathVariable Long userId,
         @PathVariable Boolean receiveNotification
     ) {
         userService.updateReceiveNotification(userId, receiveNotification);
+    }
+
+    @PatchMapping("/{id}")
+    private void updatePassword(
+        @PathVariable Long id,
+        @RequestBody UpdatePasswordRequestDto updatePasswordRequestDto
+    ) {
+        userService.updatePassword(id, updatePasswordRequestDto.password());
     }
 
     @DeleteMapping("/{id}")
