@@ -1,16 +1,19 @@
 package com.dog_feliz.user_service.config;
 
+import com.dog_feliz.user_service.shared.exception.UnauthorizedUserException;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import com.dog_feliz.user_service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Configuration
 public class AuthConfig {
@@ -20,7 +23,7 @@ public class AuthConfig {
     @Bean
     UserDetailsService userDetailsService() {
         return username -> userRepository.findByMailAddress(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found by requested mail address"));
+                .orElseThrow(() -> new UnauthorizedUserException("Usuário não permitido, verifique suas credenciais"));
     }
 
     @Bean
