@@ -56,7 +56,7 @@ public class DashboardService {
             if (count[i] > count[maxIndex]) maxIndex = i;
         }
 
-        String[] days = {"Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"};
+        String[] days = {"","Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"};
         return new DashboardVolunteerKpiDto(days[maxIndex], (long) count[maxIndex]);
     }
 

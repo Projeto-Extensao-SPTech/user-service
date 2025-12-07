@@ -33,7 +33,7 @@ mail:
     host: smtp.gmail.com
     port: 587
     username: lucasaiello19@gmail.com
-    password: rzvuymyfukhcirbi
+    password: wyvqlhssrzrvhgzx
     properties:
       mail:
         smtp:
