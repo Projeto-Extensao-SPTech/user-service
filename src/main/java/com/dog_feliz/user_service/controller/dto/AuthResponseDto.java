@@ -13,10 +13,12 @@ public class AuthResponseDto {
     private final String document;
     private final String phone;
     private final String mailAddress;
-    @JsonProperty("isAdmin")
+    @JsonProperty("is_admin")
     private final Boolean isAdmin;
+    @JsonProperty("receive_notification")
+    private final Boolean receiveNotification;
 
-    public AuthResponseDto(Long id, String token, Long expires_at, UserType type, String name, String document, String phone, String mailAddress, Boolean isAdmin) {
+    public AuthResponseDto(Long id, String token, Long expires_at, UserType type, String name, String document, String phone, String mailAddress, Boolean isAdmin, Boolean receiveNotification) {
         this.token = token;
         this.expires_at = expires_at;
         this.type = type;
@@ -26,6 +28,7 @@ public class AuthResponseDto {
         this.mailAddress = mailAddress;
         this.id = id;
         this.isAdmin = isAdmin;
+        this.receiveNotification = receiveNotification;
     }
 
     public AuthResponseDto(String token, Long expires_at, UserEntity user) {
@@ -38,6 +41,7 @@ public class AuthResponseDto {
         this.mailAddress = user.getMailAddress();
         this.id = user.getId();
         this.isAdmin = user.getIsAdmin();
+        this.receiveNotification = user.getReceiveNotifications();
     }
 
     public String getMailAddress() {
@@ -71,4 +75,8 @@ public class AuthResponseDto {
     public Long getId() { return id; }
 
     public Boolean getIsAdmin() { return isAdmin; }
+
+    public Boolean getReceiveNotification() {
+        return receiveNotification;
+    }
 }
