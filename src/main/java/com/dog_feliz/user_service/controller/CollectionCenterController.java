@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/collection-centers")
 public class CollectionCenterController {
@@ -18,6 +19,7 @@ public class CollectionCenterController {
 
     @GetMapping
     public ResponseEntity<List<CollectionCenterResponseDto>> listAll() {
-        return ResponseEntity.ok(service.getAllCenters());
+        List<CollectionCenterResponseDto> centers = service.getAllCenters();
+        return ResponseEntity.ok(centers);
     }
 }

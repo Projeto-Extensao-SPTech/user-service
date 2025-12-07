@@ -49,14 +49,14 @@ public class DonationEntity {
 
     // Construtor Inteligente (Recebe DTO + ID do Usuário)
     public DonationEntity(DonationRequestDto dto, Long userId) {
-        this.userId = userId.intValue(); // Convertendo Long do User para Integer do Banco
+        this.userId = userId.intValue();
         this.collectionCenterId = dto.getCollectionCenterId();
         this.name = dto.getName();
         this.type = dto.getType();
         this.amount = dto.getAmount();
         this.description = dto.getDescription();
         this.shippingMethod = dto.getShippingMethod();
-        this.state = dto.getState(); // Valor padrão inicial
+        this.state = dto.getState();
     }
 
 
@@ -71,4 +71,5 @@ public class DonationEntity {
     public String getDescription() { return description; }
     public String getShippingMethod() { return shippingMethod; }
     public ZonedDateTime getCreatedAt() { return createdAt; }
+
 }
