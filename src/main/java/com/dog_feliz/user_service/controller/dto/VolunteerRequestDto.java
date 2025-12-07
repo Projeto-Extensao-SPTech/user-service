@@ -19,4 +19,9 @@ public class VolunteerRequestDto {
     public Long getUserId() {
         return userId;
     }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
 }
