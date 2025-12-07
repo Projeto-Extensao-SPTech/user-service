@@ -49,7 +49,6 @@ public class SecurityConfig {
                                 "/messages/**",
                                 "/images/**",
                                 "/feiras/images/**",
-                                "/messages/**",
                                 "/mails/gmail/default"
                         ).permitAll()
                         .anyRequest().authenticated()
