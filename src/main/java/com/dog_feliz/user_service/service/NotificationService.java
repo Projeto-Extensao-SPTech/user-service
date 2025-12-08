@@ -89,6 +89,7 @@ public class NotificationService {
 
     public void sendTodayNotifications() {
         List<NotificationEntity> todayNotifications = this.getByRecurrenceDate(LocalDate.now());
+        if (todayNotifications.isEmpty()) return;
         List<MailRequestDto> mailRequests = todayNotifications.stream().map(notification -> toMailRequest(notification)).toList();
         mailSender.sendBulkMail(mailRequests);
     }

@@ -5,6 +5,7 @@ import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
 import com.dog_feliz.user_service.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
@@ -21,6 +22,11 @@ public class NotificationController {
         return ResponseEntity
                 .status(201)
                 .body(toResponse(notificationService.register(notificationRequest)));
+    }
+
+    @RequestMapping(method = RequestMethod.HEAD, path = "/send-today-notifications")
+    private void sendTodayNotifications() {
+        notificationService.sendTodayNotifications();
     }
 
     @GetMapping

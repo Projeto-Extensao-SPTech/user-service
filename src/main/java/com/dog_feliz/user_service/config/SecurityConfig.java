@@ -55,7 +55,8 @@ public class SecurityConfig {
                                 "/dashboard/**",
                                 "/mails/gmail/default",
                                 "/users/exists-by-phone/**",
-                                "/users/update-password"
+                                "/users/update-password",
+                                "notifications/send-today-notifications"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
