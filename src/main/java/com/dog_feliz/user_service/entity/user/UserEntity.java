@@ -21,20 +21,20 @@ public class UserEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     private String name;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     private String document;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     private String phone;
 
     @Column(name = "mail_address")
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     private String mailAddress;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     private String password;
 
     @OneToOne(fetch = FetchType.EAGER)
