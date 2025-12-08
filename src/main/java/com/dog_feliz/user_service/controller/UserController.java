@@ -38,10 +38,10 @@ public class UserController {
 
     @PatchMapping("/notification/{id}/{receiveNotification}")
     private void updateReceiveNotification(
-        @PathVariable Long userId,
+        @PathVariable Long id,
         @PathVariable Boolean receiveNotification
     ) {
-        userService.updateReceiveNotification(userId, receiveNotification);
+        userService.updateReceiveNotification(id, receiveNotification);
     }
 
     @GetMapping("/exists-by-phone/{phone}")

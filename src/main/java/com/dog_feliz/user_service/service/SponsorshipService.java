@@ -4,7 +4,6 @@ import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipResponseDto;
 import com.dog_feliz.user_service.entity.SponsorshipEntity;
 import com.dog_feliz.user_service.entity.user.UserEntity;
-import com.dog_feliz.user_service.repository.SponsorRepository;
 import com.dog_feliz.user_service.repository.SponsorshipRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.shared.exception.SponsorshipNotFoundException;
@@ -21,7 +20,6 @@ public class SponsorshipService {
 
     public SponsorshipService(
             SponsorshipRepository sponsorshipRepository,
-            SponsorRepository sponsorRepository,
             UserRepository userRepository
     ) {
         this.sponsorshipRepository = sponsorshipRepository;
