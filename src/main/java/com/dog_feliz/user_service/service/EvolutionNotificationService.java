@@ -25,7 +25,7 @@ public class EvolutionNotificationService {
     @Value("${evolution.instance.name}")
     private String instanceName;
 
-    @Value("${evolution.admin-number}") // <--- NOVO: Pega o número do admin do YAML
+    @Value("${evolution.admin-number}")
     private String adminNumber;
 
     @Autowired
@@ -53,7 +53,6 @@ public class EvolutionNotificationService {
 
     public void sendDonationNotification(DonationEntity donation, String donorName) {
         try {
-            // 1. Monta a mensagem formatada com emojis
             String messageText = String.format(
                     "🐶 *Nova Doação Recebida!* 🐶\n\n" +
                             "👤 *Doador:* %s\n" +
@@ -69,13 +68,11 @@ public class EvolutionNotificationService {
                     donation.getShippingMethod()
             );
 
-            // 2. Chama o seu método genérico usando o número do Admin e a instância padrão
             sendMessage(this.instanceName, adminNumber, messageText);
 
             System.out.println("✅ Notificação de WhatsApp enviada com sucesso!");
 
         } catch (Exception e) {
-            // Loga o erro mas não para a aplicação
             System.err.println("❌ Falha ao enviar WhatsApp: " + e.getMessage());
         }
     }

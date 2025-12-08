@@ -184,7 +184,8 @@ evolution:
     url: http://localhost:8081/
     key: abrigoDogFeliz
   instance:
-    name: Evolution-teste-api
+    name: evolution_api
+
 
   admin-number: "5511930144580"
 
