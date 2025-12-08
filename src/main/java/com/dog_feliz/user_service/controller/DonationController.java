@@ -30,7 +30,7 @@ public class DonationController {
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<Object> createDonation(
             @RequestHeader("Authorization") String token,
-            @ModelAttribute @Valid DonationRequestDto donationRequest // Usa @ModelAttribute para ler Form-Data
+            @ModelAttribute @Valid DonationRequestDto donationRequest
     ) {
         try {
 

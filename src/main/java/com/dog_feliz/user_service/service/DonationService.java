@@ -23,13 +23,13 @@ public class DonationService {
     private DonationRepository donationRepository;
 
     @Autowired
-    private EvolutionNotificationService evolutionNotificationService; // Serviço de WhatsApp
+    private EvolutionNotificationService evolutionNotificationService;
 
     @Autowired
-    private UserRepository userRepository; // Para buscar o nome do doador
+    private UserRepository userRepository;
 
 
-    private final String UPLOAD_DIR = "uploads/";
+    private final String UPLOAD_DIR = "uploads/donations/";
 
     public DonationResponseDto createDonation(DonationRequestDto requestDto, Long userId) {
         String imagePath = null;
@@ -51,7 +51,6 @@ public class DonationService {
         return new DonationResponseDto(savedDonation);
     }
 
-    // Método auxiliar para salvar o arquivo no disco
     private String saveImage(MultipartFile file) {
         try {
 
