@@ -16,30 +16,30 @@ public class AddressEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Convert(converter = StringCryptoConverter.class)
+    //@Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String zipCode;
 
-    @Convert(converter = StringCryptoConverter.class)
+    //@Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String street;
 
-    @Convert(converter = IntegerCryptoConverter.class)
+    //@Convert(converter = IntegerCryptoConverter.class)
     @Column(nullable = false)
     private Integer number;
 
-    @Convert(converter = StringCryptoConverter.class)
+    //@Convert(converter = StringCryptoConverter.class)
     private String complement;
 
-    @Convert(converter = StringCryptoConverter.class)
+    //@Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String city;
 
-    @Convert(converter = StringCryptoConverter.class)
+    //@Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String state;
 
-    @Convert(converter = StringCryptoConverter.class)
+    //@Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String country;
 
