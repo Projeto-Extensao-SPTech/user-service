@@ -1,0 +1,17 @@
+package com.dog_feliz.user_service.controller.dto;
+
+public class WhatsappDonationsDto {
+
+    private String number;
+    private String text;
+
+    public WhatsappDonationsDto(String number, String text) {
+        this.number = number;
+        this.text = text;
+    }
+
+    public String getNumber() { return number; }
+    public void setNumber(String number) { this.number = number; }
+    public String getText() { return text; }
+    public void setText(String text) { this.text = text; }
+}
