@@ -38,18 +38,24 @@ public class UserController {
 
     @PatchMapping("/notification/{id}/{receiveNotification}")
     private void updateReceiveNotification(
-        @PathVariable Long userId,
+        @PathVariable Long id,
         @PathVariable Boolean receiveNotification
     ) {
-        userService.updateReceiveNotification(userId, receiveNotification);
+        userService.updateReceiveNotification(id, receiveNotification);
     }
 
-    @PatchMapping("/{id}")
+    @GetMapping("/exists-by-phone/{phone}")
+    private Boolean existsByPhone(
+        @PathVariable String phone
+    ) {
+        return userService.existsByPhone(phone);
+    }
+
+    @PatchMapping("update-password")
     private void updatePassword(
-        @PathVariable Long id,
         @RequestBody UpdatePasswordRequestDto updatePasswordRequestDto
     ) {
-        userService.updatePassword(id, updatePasswordRequestDto.password());
+        userService.updatePassword(updatePasswordRequestDto);
     }
 
     @DeleteMapping("/{id}")

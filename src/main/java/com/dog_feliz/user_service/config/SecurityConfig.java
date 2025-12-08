@@ -51,7 +51,10 @@ public class SecurityConfig {
                                 "/feiras/images/**",
                                 "/messages/**",
                                 "/mails/gmail/default",
-                                "/dashboard/**"
+                                "/dashboard/**",
+                                "/mails/gmail/default",
+                                "/users/exists-by-phone/**",
+                                "/users/update-password/"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

@@ -11,7 +11,9 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByMailAddress(String mailAddress);
+    Optional<UserEntity> findByPhone(String phone);
     List<UserEntity> findByReceiveNotificationsTrue();
+    Boolean existsByPhone(String phone);
 
     @Query("""
     SELECT TO_CHAR(u.createdAt, 'YYYY-MM') AS month,
