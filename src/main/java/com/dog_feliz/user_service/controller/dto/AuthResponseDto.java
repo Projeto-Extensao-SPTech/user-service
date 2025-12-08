@@ -12,6 +12,7 @@ public class AuthResponseDto {
     private final String name;
     private final String document;
     private final String phone;
+    @JsonProperty("mail_address")
     private final String mailAddress;
     @JsonProperty("is_admin")
     private final Boolean isAdmin;
