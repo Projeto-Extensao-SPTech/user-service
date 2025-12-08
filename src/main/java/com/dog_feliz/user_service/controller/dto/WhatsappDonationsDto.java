@@ -10,7 +10,6 @@ public class WhatsappDonationsDto {
         this.text = text;
     }
 
-    // Getters e Setters
     public String getNumber() { return number; }
     public void setNumber(String number) { this.number = number; }
     public String getText() { return text; }

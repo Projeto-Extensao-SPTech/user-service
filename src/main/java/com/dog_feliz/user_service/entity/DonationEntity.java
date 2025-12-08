@@ -47,7 +47,7 @@ public class DonationEntity {
     @Column(name = "created_at", updatable = false)
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
-    // Construtor vazio (Obrigatório JPA)
+
     public DonationEntity() {}
 
 
@@ -65,7 +65,6 @@ public class DonationEntity {
     }
 
 
-    // Getters (apenas leitura para resposta da API, se precisar de Setters adicione depois)
     public Integer getId() { return id; }
     public Integer getUserId() { return userId; }
     public Integer getCollectionCenterId() { return collectionCenterId; }

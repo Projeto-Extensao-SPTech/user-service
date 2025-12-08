@@ -14,7 +14,6 @@ public class DonationResponseDto {
     private final String shippingMethod;
     private final ZonedDateTime createdAt;
 
-    // Construtor que converte Entidade -> DTO
     public DonationResponseDto(DonationEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
@@ -26,7 +25,7 @@ public class DonationResponseDto {
         this.createdAt = entity.getCreatedAt();
     }
 
-    // Getters
+
     public Integer getId() { return id; }
     public String getName() { return name; }
     public String getType() { return type; }

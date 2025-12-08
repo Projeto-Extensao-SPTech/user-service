@@ -29,13 +29,10 @@ public class DonationRequestDto {
 
     private Integer collectionCenterId;
 
-    // --- MUDANÇA: Apenas UM arquivo (não é List) ---
     private MultipartFile image;
 
-    // Construtor Vazio (Obrigatório para @ModelAttribute funcionar)
     public DonationRequestDto() {}
 
-    // --- Getters e Setters (Obrigatórios para o upload funcionar) ---
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
@@ -57,7 +54,6 @@ public class DonationRequestDto {
     public Integer getCollectionCenterId() { return collectionCenterId; }
     public void setCollectionCenterId(Integer collectionCenterId) { this.collectionCenterId = collectionCenterId; }
 
-    // Get/Set da Imagem Única
     public MultipartFile getImage() { return image; }
     public void setImage(MultipartFile image) { this.image = image; }
 }

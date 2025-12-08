@@ -9,14 +9,12 @@ public class CollectionCenterResponseDto {
     private final String name;
     private final AddressEntity address; // Enviamos o objeto completo do endereço
 
-    // Construtor que converte a Entidade do banco para este DTO
     public CollectionCenterResponseDto(CollectionCenterEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.address = entity.getAddress();
     }
 
-    // Getters (O Jackson usa isso para criar o JSON)
     public Integer getId() {
         return id;
     }

@@ -13,16 +13,13 @@ public class CollectionCenterEntity {
     @Column(length = 40, nullable = false)
     private String name;
 
-    // Relacionamento com a tabela de Endereços
     @OneToOne
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private AddressEntity address;
 
-    // Construtor vazio (obrigatório JPA)
     public CollectionCenterEntity() {
     }
 
-    // Getters
     public Integer getId() {
         return id;
     }

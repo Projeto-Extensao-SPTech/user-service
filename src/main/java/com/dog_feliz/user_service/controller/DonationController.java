@@ -27,24 +27,22 @@ public class DonationController {
     @Autowired
     private UserRepository userRepository;
 
-    // --- MÉTODO DE CRIAÇÃO (Atualizado para receber Imagem + Dados) ---
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<Object> createDonation(
             @RequestHeader("Authorization") String token,
             @ModelAttribute @Valid DonationRequestDto donationRequest // Usa @ModelAttribute para ler Form-Data
     ) {
         try {
-            // 1. Limpa o prefixo "Bearer "
+
             String cleanToken = token.startsWith("Bearer ") ? token.substring(7) : token;
 
-            // 2. Extrai o email
             String userEmail = jwtService.extractUsername(cleanToken);
 
-            // 3. Busca o usuário
+
             UserEntity user = userRepository.findByMailAddress(userEmail)
                     .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
 
-            // 4. Chama o serviço (que agora sabe salvar a imagem)
+
             DonationResponseDto response = donationService.createDonation(donationRequest, user.getId());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
