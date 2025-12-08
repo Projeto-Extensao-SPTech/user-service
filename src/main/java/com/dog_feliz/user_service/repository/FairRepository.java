@@ -16,20 +16,21 @@ public interface FairRepository extends JpaRepository<FairEntity, Long> {
 
 
     @Query("""
-        SELECT FUNCTION('TO_CHAR', f.fairDate, 'YYYY-MM') AS month, SUM(f.interest) AS total
-        FROM FairEntity f
-        GROUP BY FUNCTION('TO_CHAR', f.fairDate, 'YYYY-MM')
-        ORDER BY total DESC
-    """)
-    List<Object[]> findMonthWithMostInterestRaw();
+    SELECT FUNCTION('FORMATDATETIME', f.fairDate, 'MM')
+    FROM FairEntity f
+    GROUP BY FUNCTION('FORMATDATETIME', f.fairDate, 'MM')
+    ORDER BY SUM(f.interest) DESC
+""")
+    List<String> findMonthWithMostInterestRaw();
+
 
 
     @Query("""
-        SELECT f.address.street AS label, SUM(f.interest) AS total
-        FROM FairEntity f
-        GROUP BY f.address.street
-        ORDER BY total DESC
-    """)
+                SELECT f.address.street AS label, SUM(f.interest) AS total
+                FROM FairEntity f
+                GROUP BY f.address.street
+                ORDER BY total DESC
+            """)
     List<Object[]> findLocationWithMostInterestRaw();
 }
 

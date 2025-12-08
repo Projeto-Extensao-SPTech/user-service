@@ -5,6 +5,7 @@ import com.dog_feliz.user_service.controller.dto.DashboardVolunteerKpiDto;
 import com.dog_feliz.user_service.controller.dto.DashboardMonthlyRegistrationDto;
 import com.dog_feliz.user_service.entity.VolunteerEntity;
 import com.dog_feliz.user_service.repository.FairRepository;
+import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.repository.VolunteerRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +21,19 @@ public class DashboardService {
 
     private final FairRepository fairRepository;
     private final VolunteerRepository volunteerRepository;
+    private final UserRepository userRepository;
 
-    public DashboardService(FairRepository fairRepository, VolunteerRepository volunteerRepository) {
+    public DashboardService(FairRepository fairRepository, VolunteerRepository volunteerRepository, UserRepository userRepository) {
         this.fairRepository = fairRepository;
         this.volunteerRepository = volunteerRepository;
+        this.userRepository = userRepository;
     }
 
 
     public DashboardFairKpiDto getMonthWithMostInterest() {
-        Object[] raw = fairRepository.findMonthWithMostInterestRaw().stream().findFirst().orElse(null);
-        if (raw == null) return new DashboardFairKpiDto("-", 0L);
-        return new DashboardFairKpiDto((String) raw[0], ((Number) raw[1]).longValue());
+        List<String> list = fairRepository.findMonthWithMostInterestRaw();
+        String month = list.isEmpty() ? "-" : list.getFirst();
+        return new DashboardFairKpiDto(month, null);
     }
 
 
@@ -62,7 +65,7 @@ public class DashboardService {
 
 
     public List<DashboardMonthlyRegistrationDto> getMonthlyRegistrations() {
-        List<Object[]> raw = volunteerRepository.getMonthlyRegistrationsRaw();
+        List<Object[]> raw = userRepository.getMonthlyUserRegistrations();
         return raw.stream()
                 .map(o -> new DashboardMonthlyRegistrationDto((String) o[0], ((Number) o[1]).longValue()))
                 .toList();
