@@ -23,6 +23,9 @@ public class DonationEntity {
     @Column(name = "collection_center_id")
     private Integer collectionCenterId;
 
+    @Column(name = "image_path")
+    private String imagePath;
+
     @Column(length = 40, nullable = false)
     private String name;
 
@@ -47,16 +50,18 @@ public class DonationEntity {
     // Construtor vazio (Obrigatório JPA)
     public DonationEntity() {}
 
-    // Construtor Inteligente (Recebe DTO + ID do Usuário)
-    public DonationEntity(DonationRequestDto dto, Long userId) {
+
+    public DonationEntity(DonationRequestDto dto, Long userId, String imagePath) {
         this.userId = userId.intValue();
         this.collectionCenterId = dto.getCollectionCenterId();
         this.name = dto.getName();
         this.type = dto.getType();
         this.amount = dto.getAmount();
+        this.state = dto.getState();
         this.description = dto.getDescription();
         this.shippingMethod = dto.getShippingMethod();
-        this.state = dto.getState();
+
+        this.imagePath = imagePath; // Recebe o caminho da única imagem
     }
 
 
@@ -71,5 +76,8 @@ public class DonationEntity {
     public String getDescription() { return description; }
     public String getShippingMethod() { return shippingMethod; }
     public ZonedDateTime getCreatedAt() { return createdAt; }
+
+    public String getImagePath() { return imagePath; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
 }

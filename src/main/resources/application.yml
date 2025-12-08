@@ -80,6 +80,13 @@
 
 
 spring:
+
+
+  servlet:
+    multipart:
+      max-file-size: 10MB      # Tamanho máximo de um arquivo individual
+      max-request-size: 15MB
+
   application:
     name: user-service
   datasource:
@@ -147,12 +154,22 @@ cors:
     - DELETE
     - OPTIONS
 
+#evolution:
+#  api:
+#    url: http://localhost:8081/
+#    key: abrigoDogFeliz
+#  instance:
+#    name: api-manager
 evolution:
   api:
     url: http://localhost:8081/
+    # Essa chave TEM que ser a mesma que você usou no Header do Bruno (Passo 2)
     key: abrigoDogFeliz
   instance:
     name: api-manager
+
+  # AGORA SIM: Alinhado com 'instance' e 'api', não dentro deles
+  admin-number: "5511954854326"
 
 logging:
   level:
@@ -161,3 +178,4 @@ logging:
 
 uploads:
    path: C:\Users\Miguel\Desktop\PI\user-service\uploads
+
