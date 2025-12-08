@@ -47,11 +47,16 @@ public class SecurityConfig {
                                 "/v3/api-docs",
                                 "/swagger-resources/**",
                                 "/webjars/**",
-                                "/message/**",
+                                "/messages/**",
                                 "/images/**",
                                 "/feiras/images/**",
-                                "/message/**",
-                                "/mails/gmail/default"
+                                "/feiras/**",
+                                "/messages/**",
+                                "/mails/gmail/default",
+                                "/dashboard/**",
+                                "/mails/gmail/default",
+                                "/users/exists-by-phone/**",
+                                "/users/update-password"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

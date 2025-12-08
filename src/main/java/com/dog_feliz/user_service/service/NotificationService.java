@@ -83,6 +83,7 @@ public class NotificationService {
     }
 
     public void deleteById(Long id) {
+        getById(id);
         notificationRepository.deleteById(id);
     }
 

@@ -1,2 +1,2 @@
 # back-end
-Todo conteúdo relacionado ao Back-end do projeto deve ser direcionado a este repositório
+Serviço destinado ao gerenciamento dos usuários que farão parte da aplicação desenvolvida para a ONG Dog Feliz.

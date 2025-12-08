@@ -21,20 +21,20 @@ public class UserEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     private String name;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     private String document;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     private String phone;
 
     @Column(name = "mail_address")
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     private String mailAddress;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     private String password;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -45,7 +45,7 @@ public class UserEntity implements UserDetails {
     private Boolean receiveNotifications = true;
 
     @Column(name = "created_at", updatable = false)
-    private final ZonedDateTime createdAt = ZonedDateTime.now();
+    private ZonedDateTime createdAt = ZonedDateTime.now();
 
     @Column(name = "is_admin")
     private Boolean isAdmin = false;
@@ -74,6 +74,21 @@ public class UserEntity implements UserDetails {
         this.password = userRequestDto.getPassword();
         this.address = addressEntity;
     }
+
+    public UserEntity(UserEntity userEntity, String newPassword) {
+        this.id = userEntity.id;
+        this.type = userEntity.type;
+        this.name = userEntity.name;
+        this.document = userEntity.document;
+        this.phone = userEntity.phone;
+        this.mailAddress = userEntity.mailAddress;
+        this.address = userEntity.address;
+        this.receiveNotifications = userEntity.receiveNotifications;
+        this.createdAt = userEntity.createdAt;
+        this.isAdmin = userEntity.isAdmin;
+        this.password = newPassword;
+    }
+
 
     @Override
     public String getUsername() {
@@ -147,9 +162,5 @@ public class UserEntity implements UserDetails {
 
     public Boolean getIsAdmin() {
         return isAdmin;
-    }
-
-    public void setIsAdmin(Boolean isAdmin) {
-        this.isAdmin = isAdmin;
     }
 }

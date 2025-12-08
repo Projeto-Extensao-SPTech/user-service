@@ -1,5 +1,6 @@
 package com.dog_feliz.user_service.service;
 
+import com.dog_feliz.user_service.controller.dto.UpdatePasswordRequestDto;
 import com.dog_feliz.user_service.shared.exception.ConflictUserException;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
@@ -12,7 +13,9 @@ import com.dog_feliz.user_service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +41,10 @@ public class UserService {
         return new UserResponseDto(userEntity.get());
     }
 
+    public Boolean existsByPhone(String phone) {
+        return userRepository.existsByPhone(phone);
+    }
+
     public UserResponseDto addUser(UserRequestDto userRequestDto){
         if (userRepository.findByMailAddress(userRequestDto.getMailAddress()).isPresent()) throw new ConflictUserException("Already exists an user with requested email");
         AddressEntity address = addressRepository.save(new AddressEntity(userRequestDto.getAddress()));
@@ -60,6 +67,11 @@ public class UserService {
         UserEntity userEntity = verifyUserId(userId);
         userEntity.setReceiveNotifications(receiveNotification);
         userRepository.save(userEntity);
+    }
+
+    public void updatePassword(UpdatePasswordRequestDto updatePasswordRequest) {
+        UserEntity userEntity = userRepository.findByPhone(updatePasswordRequest.phone()).orElseThrow(() -> new UserNotFoundException("User not found by requested phone and password, verify your credentials"));
+        userRepository.save(new UserEntity(userEntity, passwordEncoder.encode(updatePasswordRequest.password())));
     }
 
     public void deleteUser(Long id){

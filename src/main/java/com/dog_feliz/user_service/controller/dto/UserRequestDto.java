@@ -36,7 +36,7 @@ public class UserRequestDto {
 
     private final String password;
 
-    @JsonProperty("isAdmin")
+    @JsonProperty("is_admin")
     private final Boolean isAdmin;
 
     public UserRequestDto(UserType type, String name, String document, String phone, AddressRequestDto address, String mailAddress, String password, Boolean isAdmin) {
