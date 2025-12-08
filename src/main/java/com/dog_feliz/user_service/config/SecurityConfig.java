@@ -49,12 +49,13 @@ public class SecurityConfig {
                                 "/messages/**",
                                 "/images/**",
                                 "/feiras/images/**",
+                                "/feiras/**",
                                 "/messages/**",
                                 "/mails/gmail/default",
                                 "/dashboard/**",
                                 "/mails/gmail/default",
                                 "/users/exists-by-phone/**",
-                                "/users/update-password/"
+                                "/users/update-password"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
