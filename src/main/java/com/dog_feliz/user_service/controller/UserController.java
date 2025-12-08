@@ -51,7 +51,7 @@ public class UserController {
         return userService.existsByPhone(phone);
     }
 
-    @PatchMapping("update-password")
+    @PatchMapping("/update-password")
     private void updatePassword(
         @RequestBody UpdatePasswordRequestDto updatePasswordRequestDto
     ) {
