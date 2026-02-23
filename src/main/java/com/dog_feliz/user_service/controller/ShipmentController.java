@@ -2,7 +2,6 @@ package com.dog_feliz.user_service.controller;
 
 import com.dog_feliz.user_service.controller.dto.ShipmentDetailsResponseDto;
 import com.dog_feliz.user_service.controller.dto.ShipmentRequestDto;
-import com.dog_feliz.user_service.controller.dto.ShipmentResponseDto;
 import com.dog_feliz.user_service.service.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,29 +13,38 @@ import java.util.List;
 @RestController
 @RequestMapping("/shipment")
 public class ShipmentController {
+
     @Autowired
     private ShipmentService shipmentService;
-
-    @PostMapping("/calculate")
-    private List<ShipmentDetailsResponseDto> calculateShipment(@RequestBody ShipmentRequestDto shipmentRequestDto) {
-        return shipmentService.calculate(shipmentRequestDto);
-    }
 
     @GetMapping("/calculate_origem_destination")
     public ResponseEntity<ShipmentDetailsResponseDto> calculate(
             @RequestParam String origin,
             @RequestParam String destination
     ) {
-
         ShipmentRequestDto request = new ShipmentRequestDto();
-        ShipmentRequestDto.FromDto from = new ShipmentRequestDto.FromDto();
-        from.setPostalCode(origin);
-        request.setFrom(from);
 
-        ShipmentRequestDto.ToDto to = new ShipmentRequestDto.ToDto();
-        to.setPostalCode(destination);
-        request.setTo(to);
+        ShipmentRequestDto.FromDto originAddress = new ShipmentRequestDto.FromDto();
+        originAddress.setPostalCode(origin);
+        request.setFrom(originAddress);
 
+        ShipmentRequestDto.ToDto destinationAddress = new ShipmentRequestDto.ToDto();
+        destinationAddress.setPostalCode(destination);
+        request.setTo(destinationAddress);
+
+        request.setProducts(List.of(createDefaultProduct()));
+
+        List<ShipmentDetailsResponseDto> options = shipmentService.calculate(request);
+
+        ShipmentDetailsResponseDto cheapestOption = findCheapestOption(options);
+
+        if (cheapestOption == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(cheapestOption);
+    }
+
+    private ShipmentRequestDto.ProductDto createDefaultProduct() {
         ShipmentRequestDto.ProductDto product = new ShipmentRequestDto.ProductDto();
         product.setId("DOACAO-PADRAO");
         product.setQuantity(1);
@@ -45,12 +53,15 @@ public class ShipmentController {
         product.setWidth(20);
         product.setLength(20);
         product.setInsuranceValue(20.0);
+        return product;
+    }
 
-        request.setProducts(List.of(product));
+    private ShipmentDetailsResponseDto findCheapestOption(List<ShipmentDetailsResponseDto> options) {
+        if (options == null || options.isEmpty()) {
+            return null;
+        }
 
-        List<ShipmentDetailsResponseDto> options = shipmentService.calculate(request);
-
-        ShipmentDetailsResponseDto cheapestOption = options.stream()
+        return options.stream()
                 .min(Comparator.comparingDouble(opt -> {
                     try {
                         return Double.parseDouble(opt.getPrice());
@@ -59,13 +70,5 @@ public class ShipmentController {
                     }
                 }))
                 .orElse(null);
-
-        if (cheapestOption == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(cheapestOption);
     }
-
-
 }
