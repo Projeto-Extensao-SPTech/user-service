@@ -1,34 +1,35 @@
 package com.dog_feliz.user_service.service;
 
 import com.dog_feliz.user_service.controller.dto.UpdatePasswordRequestDto;
-import com.dog_feliz.user_service.shared.exception.ConflictUserException;
-import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.entity.user.UserEntity;
-import com.dog_feliz.user_service.shared.exception.AddressNotFoundException;
 import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dog_feliz.user_service.shared.exception.AddressNotFoundException;
+import com.dog_feliz.user_service.shared.exception.ConflictUserException;
+import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private AddressRepository addressRepository;
+    private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final ValidationService validationService;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    public UserService(UserRepository userRepository, AddressRepository addressRepository, BCryptPasswordEncoder passwordEncoder, ValidationService validationService) {
+        this.userRepository = userRepository;
+        this.addressRepository = addressRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.validationService = validationService;
+    }
 
     public List<UserResponseDto> getUsers(){
         List<UserEntity> users = userRepository.findAll();
@@ -71,10 +72,11 @@ public class UserService {
 
     public void updatePassword(UpdatePasswordRequestDto updatePasswordRequest) {
         UserEntity userEntity = userRepository.findByPhone(updatePasswordRequest.phone()).orElseThrow(() -> new UserNotFoundException("User not found by requested phone and password, verify your credentials"));
+        validationService.verifyIsValidUserId(userEntity.getId());
         userRepository.save(new UserEntity(userEntity, passwordEncoder.encode(updatePasswordRequest.password())));
     }
 
-    public void deleteUser(Long id){
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 

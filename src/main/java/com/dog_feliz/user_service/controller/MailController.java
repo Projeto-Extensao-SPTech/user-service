@@ -6,7 +6,6 @@ import com.dog_feliz.user_service.service.mail.factory.MailSenderFactory;
 import com.dog_feliz.user_service.service.mail.strategy.MailSenderStrategy;
 import com.dog_feliz.user_service.shared.exception.MailSenderException;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/mails")
 public class MailController {
 
-    @Autowired
-    private MailSenderFactory mailSenderFactory;
+    private final MailSenderFactory mailSenderFactory;
+
+    public MailController(MailSenderFactory mailSenderFactory) {
+        this.mailSenderFactory = mailSenderFactory;
+    }
 
     @PostMapping("/{mailSenderName}/{to}")
     private ResponseEntity<MailResponseDto> sendMail(

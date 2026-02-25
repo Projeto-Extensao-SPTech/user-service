@@ -4,6 +4,7 @@ import com.dog_feliz.user_service.controller.dto.FairRequestDto;
 import com.dog_feliz.user_service.controller.dto.FairResponseDto;
 import com.dog_feliz.user_service.entity.FairEntity;
 import com.dog_feliz.user_service.service.FairService;
+import com.dog_feliz.user_service.service.ValidationService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,12 @@ import java.util.List;
 @RequestMapping("/feiras")
 public class FairController {
 
-    FairService fairService;
+    private final FairService fairService;
+    private final ValidationService validationService;
 
-    public FairController(FairService service) {
-        this.fairService = service;
+    public FairController(FairService fairService, ValidationService validationService) {
+        this.fairService = fairService;
+        this.validationService = validationService;
     }
 
     @PostMapping(value = "/cadastrar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -32,7 +35,7 @@ public class FairController {
             @RequestPart("fair") FairRequestDto dto,
             @RequestPart("imagem") MultipartFile[] image
     ) throws IOException {
-
+        validationService.verifyIsAdminUser();
         dto.setImage(List.of(image));
         FairEntity fair = fairService.createFair(dto);
 
@@ -86,6 +89,7 @@ public class FairController {
 
     @DeleteMapping("/{id}")
     public void deleteFair(@PathVariable Long id) {
+        validationService.verifyIsAdminUser();
         fairService.deleteFair(id);
     }
 

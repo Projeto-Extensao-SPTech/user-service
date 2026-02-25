@@ -3,7 +3,6 @@ package com.dog_feliz.user_service.service;
 import com.dog_feliz.user_service.controller.dto.ShipmentDetailsResponseDto;
 import com.dog_feliz.user_service.controller.dto.ShipmentRequestDto;
 import com.dog_feliz.user_service.controller.dto.ShipmentResponseDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -14,11 +13,14 @@ import java.util.List;
 
 @Service
 public class ShipmentService {
-    @Autowired
-    EnvironmentService environmentService;
 
-    @Autowired
-    RestTemplate template;
+    private final EnvironmentService environmentService;
+    private final RestTemplate template;
+
+    public ShipmentService(EnvironmentService environmentService, RestTemplate template) {
+        this.environmentService = environmentService;
+        this.template = template;
+    }
 
     public List<ShipmentDetailsResponseDto> calculate(ShipmentRequestDto shipmentRequest) {
         String url = environmentService.getProperty("melhor-envio.api.url", String.class) + "/api/v2/me/shipment/calculate";

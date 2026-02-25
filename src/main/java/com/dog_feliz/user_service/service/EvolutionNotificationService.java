@@ -1,6 +1,5 @@
 package com.dog_feliz.user_service.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,8 +23,11 @@ public class EvolutionNotificationService {
     @Value("${evolution.instance.name}")
     private String instanceName;
 
-    @Autowired
-    RestTemplate template;
+    private final RestTemplate template;
+
+    public EvolutionNotificationService(RestTemplate template) {
+        this.template = template;
+    }
 
     public String sendMessage(String instanceName, String number, String message){
 

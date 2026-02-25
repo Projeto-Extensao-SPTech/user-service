@@ -2,14 +2,13 @@ package com.dog_feliz.user_service.controller;
 
 import com.dog_feliz.user_service.controller.dto.AuthRequestDto;
 import com.dog_feliz.user_service.controller.dto.AuthResponseDto;
-import com.dog_feliz.user_service.service.AuthService;
-import com.dog_feliz.user_service.service.JwtService;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.user.UserEntity;
+import com.dog_feliz.user_service.service.AuthService;
+import com.dog_feliz.user_service.service.JwtService;
 import com.dog_feliz.user_service.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,14 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @RestController
 public class AuthController {
-    @Autowired
-    private JwtService jwtService;
 
-    @Autowired
-    private AuthService authService;
+    private final JwtService jwtService;
+    private final AuthService authService;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    public AuthController(JwtService jwtService, AuthService authService, UserService userService) {
+        this.jwtService = jwtService;
+        this.authService = authService;
+        this.userService = userService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> register(@RequestBody @Valid UserRequestDto userRequestDto) {
