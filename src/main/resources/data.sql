@@ -1,3 +1,17 @@
+INSERT INTO address_tb (id, street, number, complement, city, state, country, zip_code, created_at)
+VALUES (9999, 'Av Caminho do MAr', '2227', 'Loja', 'São Paulo', 'SP', 'Brasil', '09609-000', CURRENT_TIMESTAMP);
+
+INSERT INTO address_tb (id, street, number, complement, city, state, country, zip_code, created_at)
+VALUES (10000, 'Rua Regina Maria de Lourdes Nascimento', '587', 'Chacara', 'São Paulo', 'SP', 'Brasil', '09609-000', CURRENT_TIMESTAMP);
+
+
+
+INSERT INTO collection_center_tb (name, address_id)
+VALUES ('PetShop - PetLand', 9999);
+
+INSERT INTO collection_center_tb (name, address_id)
+VALUES ('ONG Dog Feliz', 10000);
+
 -- ADDRESS
 INSERT INTO address_tb (zip_code, street, number, complement, city, state, country, created_at) VALUES
 ('01001-000', 'Rua das Flores', 123, 'Apto 12', 'São Paulo', 'SP', 'Brasil', CURRENT_TIMESTAMP),

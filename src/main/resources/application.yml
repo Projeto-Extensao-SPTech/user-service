@@ -1,0 +1,206 @@
+#spring:
+#
+#
+#  servlet:
+#    multipart:
+#      max-file-size: 10MB
+#      max-request-size: 15MB
+#
+#  application:
+#    name: user-service
+#  datasource:
+#    url: jdbc:h2:mem:testdb
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password: ""
+#
+#  jpa:
+#    defer-datasource-initialization: true
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: create-drop
+#
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#
+#server:
+#  port: 7000
+#
+#jasypt:
+#  encryptor:
+#    password: "my-secret"
+#    fixed-salt: "12345678"
+#
+#security:
+#  jwt:
+#    secret-key: "186ef76e9d6a723ecb570d4d9c287487d001e5d35f7ed4a313350a407950318e"
+#    expiration-time: 3600000
+#
+#mail:
+#  gmail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: lucasaiello19@gmail.com
+#    password: wyvqlhssrzrvhgzx
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#  outlook:
+#    host: smtp.office365.com
+#    port: 587
+#    username: lucas.eduardo.aiello@outlook.com
+#    password: usbsjufjcqcoblno
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#
+#cors:
+#  allowed-origins:
+#    - http://localhost:7000
+#    - http://localhost:5173
+#  allowed-methods:
+#    - GET
+#    - POST
+#    - PUT
+#    - DELETE
+#    - OPTIONS
+#
+##evolution:
+##  api:
+##    url: http://localhost:8081/
+##    key: abrigoDogFeliz
+##  instance:
+##    name: api-manager
+#evolution:
+#  api:
+#    url: http://localhost:8081/
+#    key: abrigoDogFeliz
+#  instance:
+#    name: api-manager
+#
+#  admin-number: "5511954854326"
+#
+#logging:
+#  level:
+#    org.springframework.security: DEBUG
+#    org.springframework.web: DEBUG
+#
+#uploads:
+#   path: C:\Users\Miguel\Desktop\PI\user-service\uploads
+#
+
+
+spring:
+
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 15MB
+
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    defer-datasource-initialization: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+server:
+  port: 7000
+
+jasypt:
+  encryptor:
+    password: "my-secret"
+    fixed-salt: "12345678"
+
+security:
+  jwt:
+    secret-key: "186ef76e9d6a723ecb570d4d9c287487d001e5d35f7ed4a313350a407950318e"
+    expiration-time: 3600000
+
+mail:
+  gmail:
+    host: smtp.gmail.com
+    port: 587
+    username: lucasaiello19@gmail.com
+    password: wyvqlhssrzrvhgzx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  outlook:
+    host: smtp.office365.com
+    port: 587
+    username: lucas.eduardo.aiello@outlook.com
+    password: usbsjufjcqcoblno
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+cors:
+  allowed-origins:
+    - http://localhost:7000
+    - http://localhost:5173
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+
+#evolution:
+#  api:
+#    url: http://localhost:8081/
+#    key: abrigoDogFeliz
+#  instance:
+#    name: api-manager
+evolution:
+  api:
+    url: http://localhost:8081/
+    key: abrigoDogFeliz
+  instance:
+    name: evolution_api
+
+
+  admin-number: "5511930144580"
+
+melhor-envio:
+  api:
+    url: "https://sandbox.melhorenvio.com.br"
+
+    token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5NTYiLCJqdGkiOiJlN2VmOGY0M2UyMjVlYzAxYTE3MzA2NDZiYWY5YTRkNmVlYTVmODkyMzAyYmFhZGEyZGJjOTI3M2Y0NDFiMGMzNTA1MGUxOTQ4ZWMyYzEyMSIsImlhdCI6MTc2NTIwMDIwOC4yOTgzMDcsIm5iZiI6MTc2NTIwMDIwOC4yOTgzMSwiZXhwIjoxNzk2NzM2MjA4LjI5MDU2Mywic3ViIjoiYTA4YjQyOWYtNjQyMS00ZjQ0LTliZTItZGQ1MmEyN2NkZDgxIiwic2NvcGVzIjpbInNoaXBwaW5nLWNhbGN1bGF0ZSJdfQ.tP6qU07jTIDjjC2Y4tTlbzemt7daMRhSF-6R9QvLs3kRUcncg2HtIJOg_YOvE0-J8cjy44lzNRW5OvoQkepgkx5--YTM76lMlgLJy06Y6dVWTjESZkcMnYVYzg6cMkzCkDWnQfaNiMUYA2kCyvaFgw1ddhmEK6W9vWCHnu7FW6HLELOGhLcWWDpRnCQwl1GGO2K7bKVqMQIFCC3487rmNhfNDtAYiQBaVA2rXcQiFncKS3TyVfE3mRz7m79ZHxFgN261GkrDpyRQdohiFJfbrrAq9R-NXU_opZi5EJ-14mmCBVW3A2FG0cENb1c2y-Bw6MKwTSlEoTOrhkt02ewHs0ldXzqwHsz_Bjg17DDC3Kh3YEAJlkztG7wDk1BtMnOndriuvcsdGJdK6dAk33WuoAIu1-9Tf28eEuhX2poHTOIpexNPWTTFliTmbNG8a_bY94ugyJEciunsjtuL3g_MkfvhsGq9zKyDlDSpn9rMVSd-EbvQdTaymkdZlamdTn7gg7jly1YqE7IXCpfWngAGMYfOgwwz6NS7D4OcNMj2V7FPO7Wjl5UCjHuX6azVCdCVQO3KrS5mHbomkgHj5C63L_sRLZMGbBNvwrlcZX3y08nth3yGW6eSRDCZV346NmtdyqtZs52jRJ9-6st5yIMCVqKCjI2On6R7zlihz1Z5kEU"
+
+    user-agent: "miguelito.angelo.sfc@gmail.com"
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+
+uploads:
+  path: C:\Users\Miguel\Desktop\PI\user-service\uploads

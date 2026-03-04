@@ -1,10 +1,12 @@
 package com.dog_feliz.user_service.controller.dto;
 
 import com.dog_feliz.user_service.entity.SponsorshipEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
 public class SponsorshipRequestDto {
+    @JsonProperty("sponsor_id")
     private Long sponsorId;
     private String type;
     private String description;
