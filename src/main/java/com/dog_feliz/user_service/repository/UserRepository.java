@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
-    Optional<UserEntity> findByMailAddress(String mailAddress);
+    Optional<UserEntity> findByMailAddressHash(String mailAddressHash);
     Optional<UserEntity> findByPhone(String phone);
     List<UserEntity> findByReceiveNotificationsTrue();
     Boolean existsByPhone(String phone);

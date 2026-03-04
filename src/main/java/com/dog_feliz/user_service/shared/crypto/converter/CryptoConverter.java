@@ -1,4 +1,4 @@
-package com.dog_feliz.user_service.shared.crypto;
+package com.dog_feliz.user_service.shared.crypto.converter;
 
 import jakarta.persistence.AttributeConverter;
 

@@ -119,7 +119,7 @@ INSERT INTO user_tb (
 ) VALUES
 -- ADMIN
 (default, 'PF', 'Admin Master', '00000000000', '11999990000', 'admin@dogfeliz.com',
-'$2a$12$o1OJ.rQ5z8KBWlZlZiIV7ezJbzn8SLQghy9jNQnIh3KeRyTUaPweG', 1, true, NOW(), true),
+'$2a$12$RUhTo8uSt97mOTIGEko2F.sCX4V0tz07xqBHes4YUHNa5Hbbygtoq', 1, true, NOW(), true),
 
 -- USERS COMUNS
 (default, 'PF', 'João Silva', '11111111111', '11988887777', 'joao@gmail.com',

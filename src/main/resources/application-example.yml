@@ -26,10 +26,9 @@ server:
   error:
     include-stacktrace: never
 
-jasypt:
+aes:
   encryptor:
-    password: example-encryptor-password
-    fixed-salt: example-fixed-salt
+    password: secret-key-in-base-64-with-32-bits
 
 security:
   jwt:

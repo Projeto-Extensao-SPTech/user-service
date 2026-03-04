@@ -2,8 +2,6 @@ package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.AddressRequestDto;
 import com.dog_feliz.user_service.entity.user.UserEntity;
-import com.dog_feliz.user_service.shared.crypto.IntegerCryptoConverter;
-import com.dog_feliz.user_service.shared.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;
