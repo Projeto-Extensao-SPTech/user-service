@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("/collection-centers")
 public class CollectionCenterController {
 
-    @Autowired
-    private CollectionCenterService service;
+    private final CollectionCenterService service;
+
+    public CollectionCenterController(CollectionCenterService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ResponseEntity<List<CollectionCenterResponseDto>> listAll() {
