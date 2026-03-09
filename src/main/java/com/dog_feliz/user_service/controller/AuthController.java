@@ -11,10 +11,7 @@ import com.dog_feliz.user_service.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/auth")
 @RestController
@@ -37,7 +34,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> authenticate(@RequestBody @Valid AuthRequestDto authRequestDto) {
+    public ResponseEntity<AuthResponseDto> authenticate(
+            @RequestBody @Valid
+            AuthRequestDto authRequestDto,
+            @RequestHeader(name = "refresh-token")
+            String refreshToken
+    ) {
         UserEntity authenticatedUser = authService.authenticate(authRequestDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
