@@ -31,9 +31,13 @@ aes:
     password: secret-key-in-base-64-with-32-bits
 
 security:
+  hash:
+     secret-key: example-secret-key
   jwt:
     secret-key: example-secret-key
-    expiration-time: 3600000
+    expiration-time: 1800000
+  refresh-token:
+    expiration-time:
 
 mail:
   gmail:
@@ -76,6 +80,7 @@ evolution:
     key: example-key
   instance:
     name: example-instance
+  admin-number: 11978654321
 
 uploads:
   path: uploads
