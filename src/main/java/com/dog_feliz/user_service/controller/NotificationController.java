@@ -5,7 +5,6 @@ import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
 import com.dog_feliz.user_service.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
@@ -20,7 +19,7 @@ public class NotificationController {
     @PostMapping
     private ResponseEntity<NotificationResponseDto> register(@RequestBody NotificationRequestDto notificationRequest) {
         return ResponseEntity
-                .status(201)
+                .status(202)
                 .body(toResponse(notificationService.register(notificationRequest)));
     }
 

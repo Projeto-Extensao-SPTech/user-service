@@ -99,7 +99,11 @@
 
 
 spring:
-
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: dogfeliz
+    password: Urubu100
 
   servlet:
     multipart:

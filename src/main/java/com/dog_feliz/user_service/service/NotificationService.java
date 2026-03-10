@@ -4,14 +4,14 @@ import com.dog_feliz.user_service.controller.dto.MailRequestDto;
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
 import com.dog_feliz.user_service.entity.notification.NotificationEntity;
 import com.dog_feliz.user_service.entity.notification.NotificationRecurrenceEntity;
+import com.dog_feliz.user_service.queue.event.NotificationCreatedEvent;
+import com.dog_feliz.user_service.queue.producer.NotificationProducer;
 import com.dog_feliz.user_service.repository.FairRepository;
 import com.dog_feliz.user_service.repository.NotificationRepository;
 import com.dog_feliz.user_service.service.mail.MailSenderAvailable;
 import com.dog_feliz.user_service.service.mail.strategy.MailSenderStrategy;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -25,6 +25,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
 
     private final NotificationRecurrenceService notificationRecurrenceService;
+    private final NotificationProducer notificationProducer;
 
     @Qualifier(MailSenderAvailable.GMAIL_SENDER)
     private final MailSenderStrategy mailSender;
@@ -35,12 +36,14 @@ public class NotificationService {
             NotificationRepository notificationRepository,
             NotificationRecurrenceService notificationRecurrenceService,
             MailSenderStrategy mailSender,
-            FairRepository fairRepository
+            FairRepository fairRepository,
+            NotificationProducer notificationProducer
     ) {
         this.notificationRepository = notificationRepository;
         this.notificationRecurrenceService = notificationRecurrenceService;
         this.mailSender = mailSender;
         this.fairRepository = fairRepository;
+        this.notificationProducer = notificationProducer;
     }
 
     @Transactional
@@ -63,7 +66,24 @@ public class NotificationService {
                 notificationRequest.getEventDate(),
                 notificationRequest.getRecurrences()
         );
-        return new NotificationEntity(notificationEntity, notificationRecurrenceEntities);
+        NotificationEntity result = new NotificationEntity(notificationEntity, notificationRecurrenceEntities);
+
+        var notificationRecurrence = result.getNotificationRecurrence()
+                .stream()
+                .map(NotificationRecurrenceEntity::getRecurrence)
+                .toList();
+
+        NotificationCreatedEvent event = new NotificationCreatedEvent(
+                result.getNotificationType().name(),
+                result.getFair().getId(),
+                result.getMessage(),
+                result.getEventDate(),
+                notificationRecurrence
+        );
+
+        notificationProducer.sendNotification(event);
+
+        return result;
     }
 
     public List<NotificationEntity> getByRecurrenceDate(LocalDate date) {
