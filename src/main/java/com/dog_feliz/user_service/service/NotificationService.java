@@ -73,13 +73,15 @@ public class NotificationService {
                 .map(NotificationRecurrenceEntity::getRecurrence)
                 .toList();
 
-        NotificationCreatedEvent event = new NotificationCreatedEvent(
-                result.getNotificationType().name(),
-                result.getFair().getId(),
-                result.getMessage(),
-                result.getEventDate(),
-                notificationRecurrence
-        );
+                Long fairIdForEvent = result.getFair() != null ? result.getFair().getId() : null;
+                
+                NotificationCreatedEvent event = new NotificationCreatedEvent(
+                        result.getNotificationType().name(),
+                        fairIdForEvent,
+                        result.getMessage(),
+                        result.getEventDate(),
+                        notificationRecurrence
+                );
 
         notificationProducer.sendNotification(event);
 
