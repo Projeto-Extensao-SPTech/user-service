@@ -93,6 +93,6 @@ public class RefreshTokenEntity {
     }
 
     public Boolean isExpired() {
-        return this.getExpiresAt().isAfter(LocalDateTime.now());
+        return this.getExpiresAt().isBefore(LocalDateTime.now());
     }
 }

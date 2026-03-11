@@ -21,15 +21,15 @@ public class AuthService {
         this.stringHasher = stringHasher;
     }
 
-    public UserEntity authenticate(AuthRequestDto authRequestDto) {
+    public UserEntity authenticate(String mailAddress, String password) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        authRequestDto.getMailAddress(),
-                        authRequestDto.getPassword()
+                        mailAddress,
+                        password
                 )
         );
 
-        return userRepository.findByMailAddressHash(stringHasher.hash(authRequestDto.getMailAddress()))
+        return userRepository.findByMailAddressHash(stringHasher.hash(mailAddress))
                 .orElseThrow();
     }
 }

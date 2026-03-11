@@ -13,7 +13,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshTokenEntity
     @Query("""
        UPDATE RefreshTokenEntity t
        SET t.revoked = true
-       WHERE t.root = :root
-       """)
-    void revokeAllByRoot(@Param("root") RefreshTokenEntity root);
+       WHERE t.root.id = :rootId
+    """)
+    void revokeAllByRoot(@Param("rootId") Long rootId);
 }

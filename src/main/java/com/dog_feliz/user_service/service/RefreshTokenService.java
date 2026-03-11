@@ -2,9 +2,12 @@ package com.dog_feliz.user_service.service;
 
 import com.dog_feliz.user_service.entity.RefreshTokenEntity;
 import com.dog_feliz.user_service.repository.RefreshTokenRepository;
+import com.dog_feliz.user_service.shared.exception.InvalidRefreshTokenException;
 import com.dog_feliz.user_service.shared.crypto.hash.StringHasher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -18,15 +21,15 @@ public class RefreshTokenService {
     public RefreshTokenService(
             RefreshTokenRepository refreshTokenRepository,
             StringHasher stringHasher,
-            @Value("${security.refresh-token.expiration.time}") Integer REFRESH_TOKEN_EXPIRATION_TIME
+            @Value("${security.refresh-token.expiration-time}") Integer REFRESH_TOKEN_EXPIRATION_TIME
     ) {
         this.refreshTokenRepository = refreshTokenRepository;
         this.stringHasher = stringHasher;
         this.REFRESH_TOKEN_EXPIRATION_TIME = REFRESH_TOKEN_EXPIRATION_TIME;
     }
 
+    @Transactional
     public String generate(String oldRefreshToken, Long userId) {
-        String refreshToken;
         if (oldRefreshToken == null) {
             return create(
                     userId,
@@ -41,11 +44,11 @@ public class RefreshTokenService {
         RefreshTokenEntity token = findRefreshTokenByTokenHash(actualRefreshToken);
         if (token.isRevoked()) {
             revokeFamily(token.getRoot());
-            throw new IllegalStateException("Refresh token reuse detected");
+            throw new InvalidRefreshTokenException("Refresh token reuse detected");
         }
 
         if (token.isExpired()) {
-            throw new IllegalStateException("Refresh token expired");
+            throw new InvalidRefreshTokenException("Refresh token expired");
         }
 
         token.revoke();
@@ -60,11 +63,15 @@ public class RefreshTokenService {
 
     private String create(Long userId, RefreshTokenEntity parent, RefreshTokenEntity root) {
         String refreshToken = RefreshTokenEntity.generateRefreshToken();
+        LocalDateTime expiration =
+                root == null
+                        ? LocalDateTime.now().plus(REFRESH_TOKEN_EXPIRATION_TIME, ChronoUnit.MILLIS)
+                        : root.getExpiresAt();
         RefreshTokenEntity entity = new RefreshTokenEntity(
                 null,
                 userId,
                 stringHasher.hash(refreshToken),
-                LocalDateTime.now().plus(REFRESH_TOKEN_EXPIRATION_TIME, ChronoUnit.MILLIS),
+                expiration,
                 false,
                 parent,
                 root
@@ -74,11 +81,18 @@ public class RefreshTokenService {
         if (root == null) {
             saved.setRoot(saved);
         }
+
+        refreshTokenRepository.save(saved);
         return refreshToken;
     }
 
+    public void revoke(String refreshToken) {
+        RefreshTokenEntity refreshTokenEntity = findRefreshTokenByTokenHash(refreshToken);
+        revokeFamily(refreshTokenEntity.getRoot());
+    }
+
     private void revokeFamily(RefreshTokenEntity root) {
-        refreshTokenRepository.revokeAllByRoot(root);
+        refreshTokenRepository.revokeAllByRoot(root.getId());
     }
 
     private RefreshTokenEntity findRefreshTokenByTokenHash(String refreshToken) {
