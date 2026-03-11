@@ -178,6 +178,10 @@ cors:
     - DELETE
     - OPTIONS
 
+notification:
+  service:
+    url: http://localhost:8000
+
 #evolution:
 #  api:
 #    url: http://localhost:8081/
@@ -190,7 +194,6 @@ evolution:
     key: abrigoDogFeliz
   instance:
     name: evolution_api
-
 
   admin-number: "5511930144580"
 
