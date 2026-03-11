@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException ex) {
-        HttpStatus status = HttpStatus.FORBIDDEN;
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         Map<String, Object> body = new HashMap<>();
         body.put("message", ex.getMessage());
         body.put("timestamp", LocalDateTime.now());
