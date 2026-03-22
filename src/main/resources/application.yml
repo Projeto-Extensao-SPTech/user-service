@@ -99,12 +99,15 @@
 
 
 spring:
-
-
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 15MB
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: dogfeliz
+    password: Urubu100
 
   application:
     name: user-service
@@ -166,6 +169,8 @@ cors:
   allowed-origins:
     - http://localhost:7000
     - http://localhost:5173
+    - http://localhost:8000
+
   allowed-methods:
     - GET
     - POST
