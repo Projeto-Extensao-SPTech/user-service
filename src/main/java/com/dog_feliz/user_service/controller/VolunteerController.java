@@ -2,8 +2,8 @@ package com.dog_feliz.user_service.controller;
 
 import com.dog_feliz.user_service.controller.dto.VolunteerRequestDto;
 import com.dog_feliz.user_service.controller.dto.VolunteerResponseDto;
+import com.dog_feliz.user_service.service.ValidationService;
 import com.dog_feliz.user_service.service.VolunteerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,8 +12,13 @@ import java.util.List;
 @RequestMapping("/volunteers")
 public class VolunteerController {
 
-    @Autowired
-    private VolunteerService volunteerService;
+    private final VolunteerService volunteerService;
+    private final ValidationService validationService;
+
+    public VolunteerController(VolunteerService volunteerService, ValidationService validationService) {
+        this.volunteerService = volunteerService;
+        this.validationService = validationService;
+    }
 
     @GetMapping
     public List<VolunteerResponseDto> getVolunteers() {
@@ -32,6 +37,7 @@ public class VolunteerController {
 
     @PutMapping("/{id}")
     public VolunteerResponseDto updateVolunteer(@PathVariable Long id, @RequestBody VolunteerRequestDto dto) {
+        validationService.verifyIsValidUserId(id);
         return volunteerService.updateVolunteer(id, dto);
     }
 

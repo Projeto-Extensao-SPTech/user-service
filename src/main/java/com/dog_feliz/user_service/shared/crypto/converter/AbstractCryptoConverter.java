@@ -1,12 +1,12 @@
-package com.dog_feliz.user_service.shared.crypto;
+package com.dog_feliz.user_service.shared.crypto.converter;
 
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import com.dog_feliz.user_service.shared.crypto.AesGcmEncryptor;
 
 public abstract class AbstractCryptoConverter<T> implements CryptoConverter<T> {
 
-    protected static StandardPBEStringEncryptor encryptor;
+    protected static AesGcmEncryptor encryptor;
 
-    protected AbstractCryptoConverter(StandardPBEStringEncryptor encryptor) {
+    protected AbstractCryptoConverter(AesGcmEncryptor encryptor) {
         AbstractCryptoConverter.encryptor = encryptor;
     }
 
@@ -21,7 +21,7 @@ public abstract class AbstractCryptoConverter<T> implements CryptoConverter<T> {
         return convertFromString(encryptor.decrypt(dbData));
     }
 
-    public static void setEncryptor(StandardPBEStringEncryptor encryptor) {
+    public static void setEncryptor(AesGcmEncryptor encryptor) {
         AbstractCryptoConverter.encryptor = encryptor;
     }
 

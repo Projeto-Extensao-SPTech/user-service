@@ -1,7 +1,6 @@
 package com.dog_feliz.user_service.config;
 
 import com.dog_feliz.user_service.service.EnvironmentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,8 +11,11 @@ import java.util.Properties;
 @Configuration
 public class MailSenderConfig {
 
-    @Autowired
-    private EnvironmentService environmentService;
+    private final EnvironmentService environmentService;
+
+    public MailSenderConfig(EnvironmentService environmentService) {
+        this.environmentService = environmentService;
+    }
 
     @Bean("gmailMailSender")
     public JavaMailSender gmailMailSender() {

@@ -1,32 +1,26 @@
 package com.dog_feliz.user_service.config;
 
-import com.dog_feliz.user_service.shared.crypto.StringCryptoConverter;
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.jasypt.salt.StringFixedSaltGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+
 @Configuration
 public class CryptoConfig {
 
-    @Value("${jasypt.encryptor.password}")
-    private String password;
-
-    @Value("${jasypt.encryptor.fixed-salt}")
-    private String fixedSalt;
+    @Value("${aes.encryptor.secret-key}")
+    private String base64Key;
 
     @Bean
-    public StandardPBEStringEncryptor encryptor() {
-        StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
-        standardPBEStringEncryptor.setAlgorithm("PBEWithMD5AndTripleDES");
-        standardPBEStringEncryptor.setPassword(password);
-        standardPBEStringEncryptor.setSaltGenerator(new StringFixedSaltGenerator(fixedSalt));
-        return standardPBEStringEncryptor;
-    }
+    public SecretKey aesSecretKey() {
+        byte[] decodedKey = Base64.getDecoder().decode(base64Key);
+        if (decodedKey.length != 32) {
+            throw new IllegalArgumentException("AES key must be 256 bits (32 bytes)");
+        }
 
-    @Bean
-    public StringCryptoConverter stringCryptoConverter() {
-      return new StringCryptoConverter(encryptor());
+        return new SecretKeySpec(decodedKey, "AES");
     }
 }

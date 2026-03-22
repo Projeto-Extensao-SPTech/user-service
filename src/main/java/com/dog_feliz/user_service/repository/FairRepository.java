@@ -14,13 +14,12 @@ public interface FairRepository extends JpaRepository<FairEntity, Long> {
 
     List<FairEntity> findByFairDateGreaterThan(LocalDate date);
 
-
     @Query("""
-    SELECT FUNCTION('FORMATDATETIME', f.fairDate, 'MM')
-    FROM FairEntity f
-    GROUP BY FUNCTION('FORMATDATETIME', f.fairDate, 'MM')
-    ORDER BY SUM(f.interest) DESC
-""")
+        SELECT FUNCTION('FORMATDATETIME', f.fairDate, 'MM')
+        FROM FairEntity f
+        GROUP BY FUNCTION('FORMATDATETIME', f.fairDate, 'MM')
+        ORDER BY SUM(f.interest) DESC
+    """)
     List<String> findMonthWithMostInterestRaw();
 
 

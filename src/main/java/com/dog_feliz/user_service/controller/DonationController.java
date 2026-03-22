@@ -6,8 +6,8 @@ import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.service.DonationService;
 import com.dog_feliz.user_service.service.JwtService;
+import com.dog_feliz.user_service.shared.crypto.hash.StringHasher;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +18,17 @@ import java.util.List;
 @RequestMapping("/donations")
 public class DonationController {
 
-    @Autowired
-    private DonationService donationService;
+    private final DonationService donationService;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
+    private final StringHasher stringHasher;
 
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private UserRepository userRepository;
+    public DonationController(DonationService donationService, JwtService jwtService, UserRepository userRepository, StringHasher stringHasher) {
+        this.donationService = donationService;
+        this.jwtService = jwtService;
+        this.userRepository = userRepository;
+        this.stringHasher = stringHasher;
+    }
 
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<Object> createDonation(
@@ -39,7 +42,7 @@ public class DonationController {
             String userEmail = jwtService.extractUsername(cleanToken);
 
 
-            UserEntity user = userRepository.findByMailAddress(userEmail)
+            UserEntity user = userRepository.findByMailAddressHash(stringHasher.hash(userEmail))
                     .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
 
 
@@ -63,7 +66,7 @@ public class DonationController {
             String cleanToken = token.startsWith("Bearer ") ? token.substring(7) : token;
             String userEmail = jwtService.extractUsername(cleanToken);
 
-            UserEntity user = userRepository.findByMailAddress(userEmail)
+            UserEntity user = userRepository.findByMailAddressHash(stringHasher.hash(userEmail))
                     .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
 
             List<DonationResponseDto> donations = donationService.getDonationsByUserId(user.getId());

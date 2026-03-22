@@ -2,9 +2,7 @@ package com.dog_feliz.user_service.controller;
 
 import com.dog_feliz.user_service.controller.dto.ShipmentDetailsResponseDto;
 import com.dog_feliz.user_service.controller.dto.ShipmentRequestDto;
-import com.dog_feliz.user_service.controller.dto.ShipmentResponseDto;
 import com.dog_feliz.user_service.service.ShipmentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +12,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/shipment")
 public class ShipmentController {
-    @Autowired
-    private ShipmentService shipmentService;
+
+    private final ShipmentService shipmentService;
+
+    public ShipmentController(ShipmentService shipmentService) {
+        this.shipmentService = shipmentService;
+    }
 
     @PostMapping("/calculate")
     private List<ShipmentDetailsResponseDto> calculateShipment(@RequestBody ShipmentRequestDto shipmentRequestDto) {

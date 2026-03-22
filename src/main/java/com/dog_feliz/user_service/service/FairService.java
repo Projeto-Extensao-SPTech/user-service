@@ -26,9 +26,9 @@ public class FairService {
     @Value("${uploads.path}")
     private String uploadDir;
 
-    FairRepository fairRepository;
+    private final FairRepository fairRepository;
 
-    AddressRepository addressRepository;
+    private final AddressRepository addressRepository;
 
     public FairService(FairRepository fairRepository, AddressRepository addressRepository) {
         this.fairRepository = fairRepository;
