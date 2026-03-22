@@ -7,7 +7,6 @@ import com.dog_feliz.user_service.service.NotificationService;
 import com.dog_feliz.user_service.service.ValidationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class NotificationController {
     private ResponseEntity<NotificationResponseDto> register(@RequestBody NotificationRequestDto notificationRequest) {
         validationService.verifyIsAdminUser();
         return ResponseEntity
-                .status(201)
+                .status(202)
                 .body(toResponse(notificationService.register(notificationRequest)));
     }
 
