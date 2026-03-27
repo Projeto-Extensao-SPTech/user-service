@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.*;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -129,12 +130,14 @@ public class FairServiceTest {
         FairEntity futureFair = fairStub.createFairEntity(1L, address);
         futureFair.setFairDate(LocalDate.now().plusDays(2));
 
-        when(fairRepository.findByFairDateGreaterThan(LocalDate.now()))
-                .thenReturn(List.of(futureFair));
+        Pageable page = PageRequest.of(0, 10, Sort.by("id"));
+        when(fairRepository.findByFairDateGreaterThan(LocalDate.now(), page)).thenReturn(
+                new PageImpl<>(List.of(futureFair), page, 1)
+        );
 
-        List<FairResponseDto> fairs = fairService.getFutureFairs();
+        Page<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
 
-        assertEquals(1, fairs.size());
+        assertEquals(1, fairs.getContent().size());
     }
 
     @Test
@@ -143,9 +146,12 @@ public class FairServiceTest {
         when(fairRepository.findByFairDateGreaterThan(LocalDate.now()))
                 .thenReturn(List.of());
 
-        List<FairResponseDto> fairs = fairService.getFutureFairs();
+        Pageable page = PageRequest.of(0, 10, Sort.by("id"));
+        when(fairRepository.findByFairDateGreaterThan(LocalDate.now(), page)).thenReturn(Page.empty());
 
-        assertTrue(fairs.isEmpty());
+        Page<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
+
+        assertTrue(fairs.getContent().isEmpty());
     }
 
 
