@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
-@RequestMapping("/feiras")
+@RequestMapping("/fairs")
 public class FairController {
 
     private final FairService fairService;
@@ -31,10 +31,10 @@ public class FairController {
         this.validationService = validationService;
     }
 
-    @PostMapping(value = "/cadastrar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FairEntity> createFair(
             @RequestPart("fair") FairRequestDto dto,
-            @RequestPart("imagem") MultipartFile[] image
+            @RequestPart("image") MultipartFile[] image
     ) throws IOException {
         validationService.verifyIsAdminUser();
         dto.setImage(List.of(image));
