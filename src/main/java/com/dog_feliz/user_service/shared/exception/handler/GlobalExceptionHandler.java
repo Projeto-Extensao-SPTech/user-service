@@ -9,13 +9,22 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpServerErrorException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleGenericException(Exception ex) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status);
+        return ResponseEntity.status(status).body(body);
+    }
 
     @ExceptionHandler(AddressNotFoundException.class)
     public ResponseEntity<Object> handleAddressNotFoundById(AddressNotFoundException ex) {

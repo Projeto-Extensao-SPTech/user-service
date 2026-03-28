@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.*;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -129,23 +130,48 @@ public class FairServiceTest {
         FairEntity futureFair = fairStub.createFairEntity(1L, address);
         futureFair.setFairDate(LocalDate.now().plusDays(2));
 
-        when(fairRepository.findByFairDateGreaterThan(LocalDate.now()))
-                .thenReturn(List.of(futureFair));
+        Pageable page = PageRequest.of(0, 10, Sort.by("id"));
+        when(fairRepository.findByFairDateGreaterThan(LocalDate.now(), page)).thenReturn(
+                new PageImpl<>(List.of(futureFair), page, 1)
+        );
 
-        List<FairResponseDto> fairs = fairService.getFutureFairs();
+        Page<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
 
-        assertEquals(1, fairs.size());
+        assertEquals(1, fairs.getContent().size());
+    }
+
+    @Test
+    @DisplayName("Dado uma chamada para buscar feiras futuras, deve retornar apenas as futuras ordenadas pelo id")
+    void getFutureFairsOrdered() {
+        AddressEntity address = fairStub.createAddressEntity(1L);
+
+        FairEntity futureFair1 = fairStub.createFairEntity(1L, address);
+        futureFair1.setFairDate(LocalDate.now().plusDays(2));
+
+        FairEntity futureFair2 = fairStub.createFairEntity(2L, address);
+        futureFair1.setFairDate(LocalDate.now().plusDays(2));
+
+        Pageable page = PageRequest.of(0, 10, Sort.by("id"));
+        when(fairRepository.findByFairDateGreaterThan(LocalDate.now(), page)).thenReturn(
+                new PageImpl<>(List.of(futureFair1, futureFair2), page, 2)
+        );
+
+        Page<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
+
+        assertEquals(2, fairs.getContent().size());
+        assertEquals(futureFair1.getId(), fairs.getContent().getFirst().getId());
+        assertEquals(futureFair2.getId(), fairs.getContent().getLast().getId());
     }
 
     @Test
     @DisplayName("Dado uma chamada para buscar feiras futuras, quando não houver deve retornar lista vazia")
     void getFutureFairsEmpty() {
-        when(fairRepository.findByFairDateGreaterThan(LocalDate.now()))
-                .thenReturn(List.of());
+        Pageable page = PageRequest.of(0, 10, Sort.by("id"));
+        when(fairRepository.findByFairDateGreaterThan(LocalDate.now(), page)).thenReturn(Page.empty());
 
-        List<FairResponseDto> fairs = fairService.getFutureFairs();
+        Page<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
 
-        assertTrue(fairs.isEmpty());
+        assertTrue(fairs.getContent().isEmpty());
     }
 
 
