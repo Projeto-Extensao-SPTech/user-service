@@ -1,6 +1,7 @@
 package com.dog_feliz.user_service.controller.dto;
 
 import com.dog_feliz.user_service.entity.AddressEntity;
+import com.dog_feliz.user_service.shared.utils.MaskUtils;
 
 import java.time.ZonedDateTime;
 
@@ -59,5 +60,16 @@ public class AddressResponseDto {
 
     public ZonedDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "AddressResponseDto{" +
+                ", zipCode='" + zipCode + '\'' +
+                ", number=" + number +
+                ", street='" + MaskUtils.maskNameField(street) + '\'' +
+                ", city='" + MaskUtils.maskNameField(city) + '\'' +
+                ", state='" + state + '\'' +
+                '}';
     }
 }
