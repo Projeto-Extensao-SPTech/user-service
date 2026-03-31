@@ -26,7 +26,7 @@ public class FairController {
 
     private final FairService fairService;
     private final ValidationService validationService;
-    private static final Logger log = LoggerFactory.getLogger(FairController.class);
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public FairController(FairService fairService, ValidationService validationService) {
         this.fairService = fairService;

@@ -16,7 +16,7 @@ public class VolunteerController {
 
     private final VolunteerService volunteerService;
     private final ValidationService validationService;
-    private static final Logger log = LoggerFactory.getLogger(VolunteerController.class);
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public VolunteerController(VolunteerService volunteerService, ValidationService validationService) {
         this.volunteerService = volunteerService;

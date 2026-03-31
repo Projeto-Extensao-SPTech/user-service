@@ -24,7 +24,7 @@ public class DonationController {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final StringHasher stringHasher;
-    private static final Logger log = LoggerFactory.getLogger(DonationController.class);
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public DonationController(DonationService donationService, JwtService jwtService, UserRepository userRepository, StringHasher stringHasher) {
         this.donationService = donationService;

@@ -17,7 +17,7 @@ import java.util.List;
 public class CollectionCenterController {
 
     private final CollectionCenterService service;
-    private final Logger log = LoggerFactory.getLogger(CollectionCenterController.class);
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public CollectionCenterController(CollectionCenterService service) {
         this.service = service;

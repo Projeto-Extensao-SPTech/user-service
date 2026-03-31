@@ -17,7 +17,7 @@ public class UserController {
 
     private final UserService userService;
     private final ValidationService validationService;
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public UserController(UserService userService, ValidationService validationService) {
         this.userService = userService;

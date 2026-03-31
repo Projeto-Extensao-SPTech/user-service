@@ -51,7 +51,6 @@ mail:
           auth: true
           starttls:
             enable: true
-
   outlook:
     host: smtp.office365.com
     port: 587
@@ -84,3 +83,9 @@ evolution:
 
 uploads:
   path: uploads
+
+logging:
+  file:
+    name: logs/application.log
+  level:
+    root: INFO

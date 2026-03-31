@@ -16,7 +16,7 @@ import java.util.List;
 public class SponsorshipController {
 
     private final SponsorshipService sponsorshipService;
-    private static final Logger log = LoggerFactory.getLogger(SponsorshipController.class);
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public SponsorshipController(SponsorshipService sponsorshipService) {
         this.sponsorshipService = sponsorshipService;

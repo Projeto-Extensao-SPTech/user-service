@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class MailController {
 
     private final MailSenderFactory mailSenderFactory;
-    private static final Logger log = LoggerFactory.getLogger(MailController.class);
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public MailController(MailSenderFactory mailSenderFactory) {
         this.mailSenderFactory = mailSenderFactory;

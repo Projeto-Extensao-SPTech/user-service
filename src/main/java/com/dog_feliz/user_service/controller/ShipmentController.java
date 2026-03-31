@@ -16,7 +16,7 @@ import java.util.List;
 public class ShipmentController {
 
     private final ShipmentService shipmentService;
-    private static final Logger log = LoggerFactory.getLogger(ShipmentController.class);
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ShipmentController(ShipmentService shipmentService) {
         this.shipmentService = shipmentService;
