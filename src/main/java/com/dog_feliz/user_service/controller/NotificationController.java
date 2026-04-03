@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/notifications")
 public class NotificationController {
@@ -18,4 +19,10 @@ public class NotificationController {
         notificationService.register(notificationRequest);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
+
+    @RequestMapping(method = RequestMethod.HEAD, path = "/send-today-notifications")
+    private void sendTodayNotifications() {
+        notificationService.sendTodayNotifications();
+    }
+
 }

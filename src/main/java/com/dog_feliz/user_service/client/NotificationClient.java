@@ -3,6 +3,8 @@ package com.dog_feliz.user_service.client;
 import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @FeignClient(
@@ -15,6 +17,9 @@ public interface NotificationClient {
 
     @GetMapping("/notifications")
     List<NotificationResponseDto> getAll();
+
+    @GetMapping("/notifications/recurrence")
+    List<NotificationResponseDto> findByRecurrenceDate(@RequestParam LocalDate date);
 
     @DeleteMapping("/notifications/{id}")
     void delete(@PathVariable("id") Long id);
