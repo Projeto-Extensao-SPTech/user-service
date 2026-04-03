@@ -4,7 +4,7 @@ import com.dog_feliz.user_service.controller.dto.UpdatePasswordRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dog_feliz.user_service.service.ValidationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +13,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+    private final ValidationService validationService;
+
+    public UserController(UserService userService, ValidationService validationService) {
+        this.userService = userService;
+        this.validationService = validationService;
+    }
 
     @GetMapping
     private ResponseEntity<List<UserResponseDto>> getUsers(){
@@ -25,6 +31,7 @@ public class UserController {
     private ResponseEntity<UserResponseDto> getUser(
         @PathVariable Long id
     ){
+        validationService.verifyIsValidUserId(id);
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
@@ -33,6 +40,7 @@ public class UserController {
         @PathVariable Long id,
         @RequestBody UserRequestDto userRequest
     ) {
+        validationService.verifyIsValidUserId(id);
         return ResponseEntity.ok(userService.updateUser(id, userRequest));
     }
 
@@ -41,6 +49,7 @@ public class UserController {
         @PathVariable Long id,
         @PathVariable Boolean receiveNotification
     ) {
+        validationService.verifyIsValidUserId(id);
         userService.updateReceiveNotification(id, receiveNotification);
     }
 
@@ -62,10 +71,9 @@ public class UserController {
     private void deleteUser(
         @PathVariable Long id
     ) {
+        validationService.verifyIsValidUserId(id);
         userService.deleteUser(id);
     }
-
-
 }
 
 

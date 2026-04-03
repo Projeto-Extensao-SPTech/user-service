@@ -1,7 +1,6 @@
 package com.dog_feliz.user_service.service;
 
 import com.dog_feliz.user_service.entity.DonationEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,11 +24,14 @@ public class EvolutionNotificationService {
     @Value("${evolution.instance.name}")
     private String instanceName;
 
+    private final RestTemplate template;
+
     @Value("${evolution.admin-number}")
     private String adminNumber;
 
-    @Autowired
-    RestTemplate template;
+    public EvolutionNotificationService(RestTemplate template) {
+        this.template = template;
+    }
 
     public String sendMessage(String instanceName, String number, String message){
 

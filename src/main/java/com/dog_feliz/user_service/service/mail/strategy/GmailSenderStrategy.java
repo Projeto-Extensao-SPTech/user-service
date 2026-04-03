@@ -7,7 +7,6 @@ import com.dog_feliz.user_service.service.mail.MailSenderAvailable;
 import com.dog_feliz.user_service.shared.exception.MailSenderException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -21,15 +20,20 @@ import java.util.List;
 
 @Service(value = MailSenderAvailable.GMAIL_SENDER)
 public class GmailSenderStrategy implements MailSenderStrategy {
-    @Autowired
-    @Qualifier("gmailMailSender")
-    private JavaMailSender sender;
 
-    @Autowired
-    private UserService userService;
+    private final JavaMailSender sender;
+    private final UserService userService;
 
     @Value("${mail.gmail.username}")
     private String defaultMailAddress;
+
+    public GmailSenderStrategy(
+            @Qualifier("gmailMailSender") JavaMailSender sender,
+            UserService userService
+    ) {
+        this.sender = sender;
+        this.userService = userService;
+    }
 
     @Override
     public void sendSimpleMail(MailRequestDto mailRequest, String to) {
@@ -108,7 +112,6 @@ public class GmailSenderStrategy implements MailSenderStrategy {
             throw new MailSenderException("Error in send bulk mail: " + e.getMessage());
         }
     }
-
 
     @Override
     public String mailAddressTo(String mailAddress) {

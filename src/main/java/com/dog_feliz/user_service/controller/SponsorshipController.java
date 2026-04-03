@@ -20,34 +20,28 @@ public class SponsorshipController {
         this.sponsorshipService = sponsorshipService;
     }
 
-    // CREATE
     @PostMapping
     public ResponseEntity<SponsorshipResponseDto> addSponsorship(@RequestBody SponsorshipRequestDto dto) {
-        System.out.println("DTO:" + dto);
         SponsorshipResponseDto response = sponsorshipService.addSponsorship(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // READ ALL
     @GetMapping
     public ResponseEntity<List<SponsorshipResponseDto>> getAllSponsorships() {
         return ResponseEntity.ok(sponsorshipService.getAllSponsorships());
     }
 
-    // READ BY ID
     @GetMapping("/{id}")
     public ResponseEntity<SponsorshipResponseDto> getSponsorshipById(@PathVariable Long id) {
         return ResponseEntity.ok(sponsorshipService.getSponsorshipById(id));
     }
 
-    // READ BY SPONSOR ID
     @GetMapping("/by-sponsor/{sponsorId}")
     public ResponseEntity<List<SponsorshipResponseDto>> getBySponsorId(@PathVariable Long sponsorId) {
         return ResponseEntity.ok(Collections.singletonList(sponsorshipService.getSponsorshipsBySponsorId(sponsorId)));
     }
 
-    // UPDATE
-    @PutMapping("/{id}")
+        @PutMapping("/{id}")
     public ResponseEntity<SponsorshipResponseDto> updateSponsorship(
             @PathVariable Long id,
             @RequestBody SponsorshipRequestDto dto
@@ -55,8 +49,7 @@ public class SponsorshipController {
         return ResponseEntity.status(HttpStatus.OK).body(sponsorshipService.updateSponsorship(id, dto));
     }
 
-    // DELETE
-    @DeleteMapping("/{id}")
+        @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSponsorship(@PathVariable Long id) {
         sponsorshipService.deleteSponsorship(id);
         return ResponseEntity.noContent().build();
