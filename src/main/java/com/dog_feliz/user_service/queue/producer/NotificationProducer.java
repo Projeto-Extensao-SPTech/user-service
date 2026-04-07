@@ -16,8 +16,8 @@ public class NotificationProducer {
     public void sendNotification(NotificationCreatedEvent event){
 
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.NOTIFICATION_EXCHANGE,
-                RabbitMQConfig.NOTIFICATION_ROUTING_KEY,
+                RabbitMQConfig.SEND_NOTIFICATION_EXCHANGE,
+                RabbitMQConfig.SEND_NOTIFICATION_ROUTING_KEY,
                 event
         );
     }
