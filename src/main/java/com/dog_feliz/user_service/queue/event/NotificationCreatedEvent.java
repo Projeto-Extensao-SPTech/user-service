@@ -9,6 +9,6 @@ public record NotificationCreatedEvent(
         Long fairId,
         String message,
         LocalDate eventDate,
-        List<LocalDate> recurrence
+        List<Integer> recurrence
 ) {
 }

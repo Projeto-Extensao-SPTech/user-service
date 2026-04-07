@@ -35,8 +35,7 @@ public class NotificationRequestDto {
                     Integer
             > recurrences;
 
-    public NotificationRequestDto() {
-    }
+    public NotificationRequestDto() {}
 
     public NotificationType getType() {
         return type;

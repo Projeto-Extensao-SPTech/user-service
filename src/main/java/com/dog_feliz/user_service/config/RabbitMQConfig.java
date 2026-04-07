@@ -29,18 +29,18 @@ public class RabbitMQConfig {
         return factory;
     }
 
-    public static final String NOTIFICATION_EXCHANGE = "notification.exchange";
-    public static final String NOTIFICATION_QUEUE = "notification.queue";
-    public static final String NOTIFICATION_ROUTING_KEY = "notification.create";
+    public static final String SEND_NOTIFICATION_QUEUE = "notification.queue";
+    public static final String SEND_NOTIFICATION_EXCHANGE = "notification.exchange";
+    public static final String SEND_NOTIFICATION_ROUTING_KEY = "notification.create";
 
     @Bean
     public DirectExchange notificationExchange() {
-        return new DirectExchange(NOTIFICATION_EXCHANGE);
+        return new DirectExchange(SEND_NOTIFICATION_EXCHANGE);
     }
 
     @Bean
     public Queue notificationQueue() {
-        return new Queue(NOTIFICATION_QUEUE, true);
+        return new Queue(SEND_NOTIFICATION_QUEUE, true);
     }
 
     @Bean
@@ -48,6 +48,6 @@ public class RabbitMQConfig {
         return BindingBuilder
                 .bind(notificationQueue)
                 .to(notificationExchange)
-                .with(NOTIFICATION_ROUTING_KEY);
+                .with(SEND_NOTIFICATION_ROUTING_KEY);
     }
 }
