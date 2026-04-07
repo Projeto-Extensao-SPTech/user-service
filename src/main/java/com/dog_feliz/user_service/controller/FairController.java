@@ -5,6 +5,7 @@ import com.dog_feliz.user_service.controller.dto.FairResponseDto;
 import com.dog_feliz.user_service.entity.FairEntity;
 import com.dog_feliz.user_service.service.FairService;
 import com.dog_feliz.user_service.service.ValidationService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
-@RequestMapping("/feiras")
+@RequestMapping("/fairs")
 public class FairController {
 
     private final FairService fairService;
@@ -30,10 +31,10 @@ public class FairController {
         this.validationService = validationService;
     }
 
-    @PostMapping(value = "/cadastrar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FairEntity> createFair(
             @RequestPart("fair") FairRequestDto dto,
-            @RequestPart("imagem") MultipartFile[] image
+            @RequestPart("image") MultipartFile[] image
     ) throws IOException {
         validationService.verifyIsAdminUser();
         dto.setImage(List.of(image));
@@ -73,18 +74,17 @@ public class FairController {
 
     @GetMapping()
     public ResponseEntity<List<FairResponseDto>> getAllFairs() {
-
         List<FairResponseDto> fairs = fairService.getAllFair();
-
         return ResponseEntity.ok(fairs);
     }
 
     @GetMapping("/future")
-    public ResponseEntity<List<FairResponseDto>> getFutureFairs() {
-        List<FairResponseDto> fairs = fairService.getFutureFairs();
-        return fairs.isEmpty()
-                ? ResponseEntity.status(204).body(fairs)
-                : ResponseEntity.ok(fairs);
+    public Page<FairResponseDto> getFutureFairs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy
+    ) {
+        return fairService.getFutureFairs(page, size, sortBy);
     }
 
     @DeleteMapping("/{id}")
