@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/notifications")
 public class NotificationController {
@@ -33,7 +32,6 @@ public class NotificationController {
     @RequestMapping(method = RequestMethod.HEAD, path = "/send-today-notifications")
     private void sendTodayNotifications() {
         notificationService.sendTodayNotifications();
-
         log.info("[SEND_TODAY_NOTIFICATIONS] Notifications sent successfully");
     }
 }
