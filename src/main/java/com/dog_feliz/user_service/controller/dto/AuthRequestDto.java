@@ -1,5 +1,6 @@
 package com.dog_feliz.user_service.controller.dto;
 
+import com.dog_feliz.user_service.shared.utils.MaskUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 
@@ -20,5 +21,12 @@ public class AuthRequestDto {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String toString() {
+        return "AuthRequestDto{" +
+                "mailAddress='" + MaskUtils.maskMailAddress(mailAddress) + '\'' +
+                '}';
     }
 }

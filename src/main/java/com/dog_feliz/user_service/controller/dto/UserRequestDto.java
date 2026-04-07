@@ -1,6 +1,7 @@
 package com.dog_feliz.user_service.controller.dto;
 
 import com.dog_feliz.user_service.entity.user.UserType;
+import com.dog_feliz.user_service.shared.utils.MaskUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -79,4 +80,16 @@ public class UserRequestDto {
     }
 
     public Boolean getIsAdmin() { return isAdmin; }
+
+    @Override
+    public String toString() {
+        return "UserRequestDto{" +
+                "type=" + type +
+                ", name='" + MaskUtils.maskNameField(name) + '\'' +
+                ", document='" + MaskUtils.maskDocument(document) + '\'' +
+                ", phone='" + MaskUtils.maskPhone(phone) + '\'' +
+                ", mailAddress='" + MaskUtils.maskMailAddress(mailAddress) + '\'' +
+                ", isAdmin=" + isAdmin +
+                '}';
+    }
 }

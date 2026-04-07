@@ -7,12 +7,12 @@ public class CollectionCenterResponseDto {
 
     private final Integer id;
     private final String name;
-    private final AddressEntity address; // Enviamos o objeto completo do endereço
+    private final AddressResponseDto address; // Enviamos o objeto completo do endereço
 
     public CollectionCenterResponseDto(CollectionCenterEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
-        this.address = entity.getAddress();
+        this.address = new AddressResponseDto(entity.getAddress());
     }
 
     public Integer getId() {
@@ -23,7 +23,16 @@ public class CollectionCenterResponseDto {
         return name;
     }
 
-    public AddressEntity getAddress() {
+    public AddressResponseDto getAddress() {
         return address;
+    }
+
+    @Override
+    public String toString() {
+        return "CollectionCenterResponseDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address=" + address +
+                '}';
     }
 }

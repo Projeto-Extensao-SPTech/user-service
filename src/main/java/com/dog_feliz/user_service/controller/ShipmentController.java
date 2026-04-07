@@ -3,6 +3,8 @@ package com.dog_feliz.user_service.controller;
 import com.dog_feliz.user_service.controller.dto.ShipmentDetailsResponseDto;
 import com.dog_feliz.user_service.controller.dto.ShipmentRequestDto;
 import com.dog_feliz.user_service.service.ShipmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,7 @@ import java.util.List;
 public class ShipmentController {
 
     private final ShipmentService shipmentService;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ShipmentController(ShipmentService shipmentService) {
         this.shipmentService = shipmentService;
@@ -21,7 +24,10 @@ public class ShipmentController {
 
     @PostMapping("/calculate")
     private List<ShipmentDetailsResponseDto> calculateShipment(@RequestBody ShipmentRequestDto shipmentRequestDto) {
-        return shipmentService.calculate(shipmentRequestDto);
+        List<ShipmentDetailsResponseDto> result = shipmentService.calculate(shipmentRequestDto);
+
+        log.info("[CALCULATE_SHIPMENT] Shipment calculated successfully totalOptions={}", result.size());
+        return result;
     }
 
     @GetMapping("/calculate_origem_destination")
@@ -29,7 +35,6 @@ public class ShipmentController {
             @RequestParam String origin,
             @RequestParam String destination
     ) {
-
         ShipmentRequestDto request = new ShipmentRequestDto();
         ShipmentRequestDto.FromDto from = new ShipmentRequestDto.FromDto();
         from.setPostalCode(origin);
@@ -63,11 +68,12 @@ public class ShipmentController {
                 .orElse(null);
 
         if (cheapestOption == null) {
+            log.warn("[CALCULATE_SHIPMENT] No shipment option found origin={} destination={}", origin, destination);
             return ResponseEntity.notFound().build();
         }
 
+        log.info("[CALCULATE_SHIPMENT] Shipment calculated successfully origin={} destination={} price={}",
+                origin, destination, cheapestOption.getPrice());
         return ResponseEntity.ok(cheapestOption);
     }
-
-
 }
