@@ -1,7 +1,11 @@
 package com.dog_feliz.user_service.client;
 
 import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
+import com.dog_feliz.user_service.controller.dto.PageResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -16,7 +20,7 @@ public interface NotificationClient {
     NotificationResponseDto getById(@PathVariable("id") Long id);
 
     @GetMapping("/notifications")
-    List<NotificationResponseDto> getAll();
+    PageResponseDto<NotificationResponseDto> getAll(@SpringQueryMap Pageable pageable);
 
     @GetMapping("/notifications/recurrence")
     List<NotificationResponseDto> findByRecurrenceDate(@RequestParam LocalDate date);
