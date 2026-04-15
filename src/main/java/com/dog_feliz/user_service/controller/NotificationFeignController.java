@@ -3,13 +3,11 @@ package com.dog_feliz.user_service.controller;
 import com.dog_feliz.user_service.client.NotificationClient;
 import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
 import com.dog_feliz.user_service.controller.dto.PageResponseDto;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/notifications")
@@ -33,12 +31,13 @@ public class NotificationFeignController {
     }
 
     @GetMapping("/recurrence")
-    public List<NotificationResponseDto> findByRecurrenceDate(
+    public PageResponseDto<NotificationResponseDto> findByRecurrenceDate(
             @RequestParam LocalDate date,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size
     ) {
-        return notificationClient.findByRecurrenceDate(date);
+        Pageable pageable = PageRequest.of(page, size);
+        return notificationClient.findByRecurrenceDate(date,pageable);
     }
 
     @DeleteMapping("/{id}")

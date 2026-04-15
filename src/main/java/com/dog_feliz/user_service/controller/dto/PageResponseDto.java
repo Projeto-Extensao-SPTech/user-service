@@ -38,6 +38,18 @@ public class PageResponseDto<T> {
         this.totalPages = totalPages;
     }
 
+    public boolean isEmpty() {
+        return data == null || data.isEmpty();
+    }
+
+    public List<T> getContent() {
+        return data;
+    }
+
+    public boolean isLast() {
+        return page >= totalPages - 1;
+    }
+
     public List<T> getData() {
         return data;
     }
@@ -77,4 +89,6 @@ public class PageResponseDto<T> {
     public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
     }
+
+
 }

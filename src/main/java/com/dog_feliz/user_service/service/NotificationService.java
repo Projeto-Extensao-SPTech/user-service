@@ -4,6 +4,7 @@ import com.dog_feliz.user_service.client.NotificationClient;
 import com.dog_feliz.user_service.controller.dto.MailRequestDto;
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
 import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
+import com.dog_feliz.user_service.controller.dto.PageResponseDto;
 import com.dog_feliz.user_service.queue.event.NotificationCreatedEvent;
 import com.dog_feliz.user_service.queue.producer.NotificationProducer;
 import com.dog_feliz.user_service.repository.FairRepository;
@@ -11,6 +12,8 @@ import com.dog_feliz.user_service.service.mail.MailSenderAvailable;
 import com.dog_feliz.user_service.service.mail.strategy.MailSenderStrategy;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -60,13 +63,26 @@ public class NotificationService {
 
     @Transactional
     public void sendTodayNotifications() {
-        List<NotificationResponseDto> todayNotifications = notificationClient.findByRecurrenceDate(LocalDate.now());
-        if (todayNotifications.isEmpty()) return;
-        List<MailRequestDto> mailRequests =
-                todayNotifications.stream()
-                        .map(this::toMailRequest)
-                        .toList();
-        mailSender.sendBulkMail(mailRequests);
+        int pageNumber = 0;
+        int pageSize = 10;
+
+        PageResponseDto<NotificationResponseDto> result;
+
+        do {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            result = notificationClient.findByRecurrenceDate(LocalDate.now(), pageable);
+
+            if (result.isEmpty()) break;
+
+            List<MailRequestDto> mailRequests = result.getData()
+                    .stream()
+                    .map(this::toMailRequest)
+                    .toList();
+
+            mailSender.sendBulkMail(mailRequests);
+            pageNumber++;
+
+        } while (!result.isLast());
     }
 
 
