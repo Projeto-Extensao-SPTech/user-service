@@ -1,5 +1,6 @@
 package com.dog_feliz.user_service.service;
 
+import com.dog_feliz.user_service.controller.dto.FairResponseDto;
 import com.dog_feliz.user_service.controller.dto.UpdatePasswordRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
@@ -11,6 +12,10 @@ import com.dog_feliz.user_service.shared.crypto.hash.StringHasher;
 import com.dog_feliz.user_service.shared.exception.AddressNotFoundException;
 import com.dog_feliz.user_service.shared.exception.ConflictUserException;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,9 +39,14 @@ public class UserService {
         this.stringHasher = stringHasher;
     }
 
-    public List<UserResponseDto> getUsers(){
-        List<UserEntity> users = userRepository.findAll();
-        return users.stream().map(userEntity -> new UserResponseDto(userEntity)).toList();
+    public Page<UserResponseDto> getUsers(
+            int page,
+            int size,
+            String sortedBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortedBy));
+        Page<UserEntity> users = userRepository.findAll(pageable);
+        return users.map(UserResponseDto::new);
     }
 
     public UserResponseDto getUserById(Long id){
