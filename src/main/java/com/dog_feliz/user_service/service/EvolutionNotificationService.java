@@ -1,6 +1,6 @@
 package com.dog_feliz.user_service.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dog_feliz.user_service.entity.DonationEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,8 +24,14 @@ public class EvolutionNotificationService {
     @Value("${evolution.instance.name}")
     private String instanceName;
 
-    @Autowired
-    RestTemplate template;
+    private final RestTemplate template;
+
+    @Value("${evolution.admin-number}")
+    private String adminNumber;
+
+    public EvolutionNotificationService(RestTemplate template) {
+        this.template = template;
+    }
 
     public String sendMessage(String instanceName, String number, String message){
 
@@ -45,6 +51,32 @@ public class EvolutionNotificationService {
         ResponseEntity<String> response = template.postForEntity(url, request, String.class);
 
         return response.getBody();
+    }
+
+    public void sendDonationNotification(DonationEntity donation, String donorName) {
+        try {
+            String messageText = String.format(
+                    "🐶 *Nova Doação Recebida!* 🐶\n\n" +
+                            "👤 *Doador:* %s\n" +
+                            "📦 *Item:* %s\n" +
+                            "📊 *Qtd:* %d\n" +
+                            "📝 *Estado:* %s\n" +
+                            "🚚 *Envio:* %s\n\n" +
+                            "Acesse o sistema para mais detalhes.",
+                    donorName,
+                    donation.getName(),
+                    donation.getAmount(),
+                    donation.getState(),
+                    donation.getShippingMethod()
+            );
+
+            sendMessage(this.instanceName, adminNumber, messageText);
+
+            System.out.println("✅ Notificação de WhatsApp enviada com sucesso!");
+
+        } catch (Exception e) {
+            System.err.println("❌ Falha ao enviar WhatsApp: " + e.getMessage());
+        }
     }
 
 }

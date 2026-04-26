@@ -40,6 +40,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/h2-console/**",
                                 "/auth/**",
+                                "collection-centers/**",
+                                "/message/sendText/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
@@ -48,9 +50,15 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/messages/**",
                                 "/images/**",
-                                "/feiras/images/**",
+                                "/fairs/images/**",
+                                "/fairs/future**",
                                 "/messages/**",
-                                "/mails/gmail/default"
+                                "/mails/gmail/default",
+                                "/dashboard/**",
+                                "/mails/gmail/default",
+                                "/users/exists-by-phone/**",
+                                "/users/update-password",
+                                "/notifications/send-today-notifications"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

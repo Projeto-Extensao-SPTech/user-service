@@ -7,33 +7,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AuthResponseDto {
     private final Long id;
     private final String token;
-    private final Long expires_at;
+    private final String refreshToken;
     private final UserType type;
     private final String name;
     private final String document;
     private final String phone;
+    @JsonProperty("mail_address")
     private final String mailAddress;
     @JsonProperty("is_admin")
     private final Boolean isAdmin;
     @JsonProperty("receive_notification")
     private final Boolean receiveNotification;
 
-    public AuthResponseDto(Long id, String token, Long expires_at, UserType type, String name, String document, String phone, String mailAddress, Boolean isAdmin, Boolean receiveNotification) {
+    public AuthResponseDto(String token, String refreshToken, UserEntity user) {
         this.token = token;
-        this.expires_at = expires_at;
-        this.type = type;
-        this.name = name;
-        this.document = document;
-        this.phone = phone;
-        this.mailAddress = mailAddress;
-        this.id = id;
-        this.isAdmin = isAdmin;
-        this.receiveNotification = receiveNotification;
-    }
-
-    public AuthResponseDto(String token, Long expires_at, UserEntity user) {
-        this.token = token;
-        this.expires_at = expires_at;
+        this.refreshToken = refreshToken;
         this.type = user.getType();
         this.name = user.getName();
         this.document = user.getDocument();
@@ -64,10 +52,6 @@ public class AuthResponseDto {
         return type;
     }
 
-    public Long getExpires_at() {
-        return expires_at;
-    }
-
     public String getToken() {
         return token;
     }
@@ -78,5 +62,9 @@ public class AuthResponseDto {
 
     public Boolean getReceiveNotification() {
         return receiveNotification;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 }

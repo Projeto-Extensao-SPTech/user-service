@@ -2,7 +2,7 @@ package com.dog_feliz.user_service.entity.user;
 
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.entity.AddressEntity;
-import com.dog_feliz.user_service.shared.crypto.StringCryptoConverter;
+import com.dog_feliz.user_service.shared.crypto.converter.StringCryptoConverter;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,7 +34,9 @@ public class UserEntity implements UserDetails {
     @Convert(converter = StringCryptoConverter.class)
     private String mailAddress;
 
-    @Convert(converter = StringCryptoConverter.class)
+    @Column(name = "mail_address_hash")
+    private String mailAddressHash;
+
     private String password;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -53,12 +55,13 @@ public class UserEntity implements UserDetails {
     public UserEntity() {
     }
 
-    public UserEntity(UserRequestDto userRequestDto, AddressEntity addressEntity, String passwordEncoded) {
+    public UserEntity(UserRequestDto userRequestDto, AddressEntity addressEntity, String passwordEncoded, String mailAddressHash) {
         this.type = userRequestDto.getType();
         this.name = userRequestDto.getName();
         this.document = userRequestDto.getDocument();
         this.phone = userRequestDto.getPhone();
         this.mailAddress = userRequestDto.getMailAddress();
+        this.mailAddressHash = mailAddressHash;
         this.password = passwordEncoded;
         this.address = addressEntity;
         this.isAdmin = userRequestDto.getIsAdmin() != null ? userRequestDto.getIsAdmin() : false;

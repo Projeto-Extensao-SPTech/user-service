@@ -12,6 +12,9 @@ public class FairRequestDto {
     private AddressRequestDto address;
     private List<MultipartFile> images;
 
+    public FairRequestDto() {
+    }
+
     public FairRequestDto(List<MultipartFile> image, AddressRequestDto address, LocalDateTime fairHour, LocalDate fairDate) {
         this.images = image;
         this.address = address;

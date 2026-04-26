@@ -1,11 +1,11 @@
-package com.dog_feliz.user_service.shared.crypto;
+package com.dog_feliz.user_service.shared.crypto.converter;
 
+import com.dog_feliz.user_service.shared.crypto.AesGcmEncryptor;
 import jakarta.persistence.Converter;
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
 @Converter
 public class StringCryptoConverter extends AbstractCryptoConverter<String> {
-    public StringCryptoConverter(StandardPBEStringEncryptor encryptor) {
+    public StringCryptoConverter(AesGcmEncryptor encryptor) {
         super(encryptor);
     }
 

@@ -2,8 +2,6 @@ package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.AddressRequestDto;
 import com.dog_feliz.user_service.entity.user.UserEntity;
-import com.dog_feliz.user_service.shared.crypto.IntegerCryptoConverter;
-import com.dog_feliz.user_service.shared.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;
@@ -16,30 +14,30 @@ public class AddressEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String zipCode;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String street;
 
-    @Convert(converter = IntegerCryptoConverter.class)
+//    @Convert(converter = IntegerCryptoConverter.class)
     @Column(nullable = false)
     private Integer number;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     private String complement;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String city;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String state;
 
-    @Convert(converter = StringCryptoConverter.class)
+//    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String country;
 
@@ -52,7 +50,7 @@ public class AddressEntity {
     public AddressEntity() {}
 
     public AddressEntity(AddressRequestDto dto) {
-        this.zipCode = dto.getZipCode();
+        this.zipCode = dto.getZip_code();
         this.street = dto.getStreet();
         this.number = dto.getNumber();
         this.complement = dto.getComplement();

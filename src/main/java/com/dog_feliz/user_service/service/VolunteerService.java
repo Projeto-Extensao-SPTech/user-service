@@ -8,7 +8,6 @@ import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.repository.VolunteerRepository;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import com.dog_feliz.user_service.shared.exception.VolunteerNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,11 +15,13 @@ import java.util.List;
 @Service
 public class VolunteerService {
 
-    @Autowired
-    private VolunteerRepository volunteerRepository;
+    private final VolunteerRepository volunteerRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    public VolunteerService(VolunteerRepository volunteerRepository, UserRepository userRepository) {
+        this.volunteerRepository = volunteerRepository;
+        this.userRepository = userRepository;
+    }
 
     public List<VolunteerResponseDto> getVolunteers() {
         return volunteerRepository.findAll()

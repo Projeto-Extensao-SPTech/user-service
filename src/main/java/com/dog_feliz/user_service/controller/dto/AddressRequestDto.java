@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 public class AddressRequestDto {
     @NotBlank
     @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "O CEP deve estar no formato 00000-000 ou 00000000")
-    private final String zipCode;
+    private final String zip_code;
 
     @PositiveOrZero(message = "O número deve ser maior ou igual a zero")
     private final Integer number;
@@ -41,7 +41,7 @@ public class AddressRequestDto {
             String state,
             String country
     ) {
-        this.zipCode = zipCode;
+        this.zip_code = zipCode;
         this.number = number;
         this.street = street;
         this.complement = complement;
@@ -50,8 +50,8 @@ public class AddressRequestDto {
         this.country = country;
     }
 
-    public String getZipCode() {
-        return zipCode;
+    public String getZip_code() {
+        return zip_code;
     }
 
     public Integer getNumber() {

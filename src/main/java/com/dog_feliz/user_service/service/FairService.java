@@ -7,11 +7,14 @@ import com.dog_feliz.user_service.entity.FairEntity;
 import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.FairRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.lang.module.FindException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,7 +22,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+
 
 @Service
 public class FairService {
@@ -27,9 +30,9 @@ public class FairService {
     @Value("${uploads.path}")
     private String uploadDir;
 
-    FairRepository fairRepository;
+    private final FairRepository fairRepository;
 
-    AddressRepository addressRepository;
+    private final AddressRepository addressRepository;
 
     public FairService(FairRepository fairRepository, AddressRepository addressRepository) {
         this.fairRepository = fairRepository;
@@ -85,12 +88,14 @@ public class FairService {
 
     }
 
-    public List<FairResponseDto> getFutureFairs() {
-        List<FairEntity> fairs =  fairRepository.findByFairDateGreaterThan(LocalDate.now());
-        return fairs
-                .stream()
-                .map(FairResponseDto::new)
-                .toList();
+    public Page<FairResponseDto> getFutureFairs(
+            int page,
+            int size,
+            String sortedBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortedBy));
+        Page<FairEntity> fairs = fairRepository.findByFairDateGreaterThan(LocalDate.now(), pageable);
+        return fairs.map(FairResponseDto::new);
     }
 
     public void deleteFair(Long id) {
