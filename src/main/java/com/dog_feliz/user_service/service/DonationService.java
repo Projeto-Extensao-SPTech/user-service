@@ -5,7 +5,7 @@ import com.dog_feliz.user_service.controller.dto.DonationResponseDto;
 import com.dog_feliz.user_service.entity.DonationEntity;
 import com.dog_feliz.user_service.repository.DonationRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dog_feliz.user_service.service.mail.MailService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,34 +19,27 @@ import java.util.UUID;
 @Service
 public class DonationService {
 
-    @Autowired
-    private DonationRepository donationRepository;
+    private final DonationRepository donationRepository;
+    private final MailService mailService;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private EvolutionNotificationService evolutionNotificationService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-
-    private final String UPLOAD_DIR = "uploads/donations/";
+    public DonationService(DonationRepository donationRepository, MailService mailService, UserRepository userRepository) {
+        this.donationRepository = donationRepository;
+        this.mailService = mailService;
+        this.userRepository = userRepository;
+    }
 
     public DonationResponseDto createDonation(DonationRequestDto requestDto, Long userId) {
         String imagePath = null;
-
 
         if (requestDto.getImage() != null && !requestDto.getImage().isEmpty()) {
             imagePath = saveImage(requestDto.getImage());
         }
 
-
         DonationEntity newDonation = new DonationEntity(requestDto, userId, imagePath);
         DonationEntity savedDonation = donationRepository.save(newDonation);
 
-
-        userRepository.findById(userId).ifPresent(user -> {
-            evolutionNotificationService.sendDonationNotification(savedDonation, user.getName());
-        });
+        userRepository.findById(userId).ifPresent(user -> mailService.notifyDonation(savedDonation));
 
         return new DonationResponseDto(savedDonation);
     }
@@ -54,15 +47,14 @@ public class DonationService {
     private String saveImage(MultipartFile file) {
         try {
 
+            String UPLOAD_DIR = "uploads/donations/";
             Path uploadPath = Paths.get(UPLOAD_DIR);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
 
-
-            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
             Path filePath = uploadPath.resolve(fileName);
-
 
             Files.copy(file.getInputStream(), filePath);
 
@@ -72,7 +64,6 @@ public class DonationService {
         }
     }
 
-    // Método para listar doações de um usuário específico
     public List<DonationResponseDto> getDonationsByUserId(Long userId) {
         List<DonationEntity> donations = donationRepository.findByUserId(userId.intValue());
         return donations.stream().map(DonationResponseDto::new).toList();

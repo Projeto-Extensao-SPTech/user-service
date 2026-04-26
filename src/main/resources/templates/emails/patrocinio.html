@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="margin:0; padding:0; background:#052759; font-family:'Baloo 2', Arial, sans-serif;">
+
+<!-- Header -->
+<div style="background:#FCAD0B; padding:32px 20px; text-align:center;">
+    <h1 style="margin:0; color:#052759; font-size:28px; font-weight:700;">🤝 Nova Proposta de Patrocínio</h1>
+    <p style="margin:8px 0 0; color:#052759; font-size:15px; font-weight:500;">
+        O Abrigo Dog Feliz recebeu uma nova proposta. Confira os detalhes abaixo.
+    </p>
+</div>
+
+<div style="max-width:600px; margin:30px auto; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.2);">
+
+    <div style="background:#052759; padding:16px 28px;">
+        <p style="margin:0; color:#FFFFFF; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
+            Detalhes da Proposta
+        </p>
+    </div>
+    <div style="padding:28px;">
+        <table style="width:100%; border-collapse:collapse; font-size:15px; color:#333;">
+
+            <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:14px 0; font-weight:700; color:#052759; width:40%;">Tipo de Patrocínio</td>
+                <td style="padding:14px 0;">
+            <span th:text="${sponsorship.type}"
+                  style="background:#e8f0fe; color:#052759; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:700;">
+            </span>
+                </td>
+            </tr>
+
+            <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:14px 0; font-weight:700; color:#052759;">Departamento</td>
+                <td th:text="${sponsorship.department}" style="padding:14px 0; font-weight:600;"></td>
+            </tr>
+
+            <tr th:if="${sponsorship.description}">
+                <td style="padding:14px 0; font-weight:700; color:#052759; vertical-align:top;">Descrição</td>
+                <td th:text="${sponsorship.description}" style="padding:14px 0; line-height:1.7; color:#555;"></td>
+            </tr>
+
+        </table>
+    </div>
+
+    <div style="margin:0 28px 28px; padding:18px; background:#fff8e6; border-left:4px solid #FCAD0B; border-radius:8px;">
+        <p style="margin:0 0 6px; color:#7a5c00; font-size:14px; font-weight:700;">📋 Próximos passos</p>
+        <p style="margin:0; color:#7a5c00; font-size:14px; line-height:1.6;">
+            Entre em contato com o patrocinador para avaliar a proposta e alinhar os detalhes do acordo
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -14,7 +14,6 @@ public class CollectionCenterService {
     private CollectionCenterRepository repository;
 
     public List<CollectionCenterResponseDto> getAllCenters() {
-        // Busca todas as entidades e transforma cada uma em DTO
         return repository.findAll()
                 .stream()
                 .map(CollectionCenterResponseDto::new)

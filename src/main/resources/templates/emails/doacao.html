@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="margin:0; padding:0; background:#052759; font-family:'Baloo 2', Arial, sans-serif;">
+
+<!-- Header -->
+<div style="background:#FCAD0B; padding:32px 20px; text-align:center;">
+    <h1 style="margin:0; color:#052759; font-size:28px; font-weight:700;">🐾 Nova Doação Recebida!</h1>
+    <p style="margin:8px 0 0; color:#052759; font-size:15px; font-weight:500;">
+        O Abrigo Dog Feliz recebeu uma nova doação. Confira os detalhes e providencie o recebimento.
+    </p>
+</div>
+
+<!-- Card principal -->
+<div style="max-width:600px; margin:30px auto; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.2);">
+
+    <!-- Faixa de destaque -->
+    <div style="background:#052759; padding:16px 28px;">
+        <p style="margin:0; color:#FFFFFF; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
+            Detalhes da Doação
+        </p>
+    </div>
+
+    <!-- Conteúdo -->
+    <div style="padding:28px;">
+        <table style="width:100%; border-collapse:collapse; font-size:15px; color:#333;">
+
+            <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:14px 0; font-weight:700; color:#052759; width:40%;">Item</td>
+                <td th:text="${donation.name}" style="padding:14px 0; font-weight:600;"></td>
+            </tr>
+
+            <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:14px 0; font-weight:700; color:#052759;">Tipo</td>
+                <td style="padding:14px 0;">
+            <span th:text="${donation.type}"
+                  style="background:#e8f0fe; color:#052759; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:700;">
+            </span>
+                </td>
+            </tr>
+
+            <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:14px 0; font-weight:700; color:#052759;">Quantidade</td>
+                <td style="padding:14px 0;">
+            <span th:text="${donation.amount}"
+                  style="background:#e6f4ea; color:#1a6e35; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:700;">
+            </span>
+                </td>
+            </tr>
+
+            <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:14px 0; font-weight:700; color:#052759;">Estado do Item</td>
+                <td th:text="${donation.state}" style="padding:14px 0; font-weight:600;"></td>
+            </tr>
+
+            <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:14px 0; font-weight:700; color:#052759;">Método de Envio</td>
+                <td style="padding:14px 0;">
+            <span th:text="${donation.shippingMethod}"
+                  style="background:#fff8e6; color:#7a5c00; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:700;">
+            </span>
+                </td>
+            </tr>
+
+            <tr th:if="${donation.description}">
+                <td style="padding:14px 0; font-weight:700; color:#052759; vertical-align:top;">Descrição</td>
+                <td th:text="${donation.description}"
+                    style="padding:14px 0; line-height:1.7; color:#555; font-style:italic;">
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+    <!-- Próximos passos -->
+    <div style="margin:0 28px 28px; padding:18px; background:#fff8e6; border-left:4px solid #FCAD0B; border-radius:8px;">
+        <p style="margin:0 0 6px; color:#7a5c00; font-size:14px; font-weight:700;">📋 Próximos passos</p>
+        <p style="margin:0; color:#7a5c00; font-size:14px; line-height:1.6;">
+            Entre em contato com o doador pelo e-mail ou telefone registrado para confirmar os detalhes da doação.
+            Verifique o método de envio escolhido pelo doador e providencie o recebimento do item.
+            Caso haja um centro de coleta vinculado, entre em contato para confirmar a logística.
+        </p>
+    </div>
+
+    <div>
+
+    </div>
+
+</div>
+</body>
+</html>

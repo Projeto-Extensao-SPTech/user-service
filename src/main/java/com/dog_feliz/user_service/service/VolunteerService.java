@@ -6,6 +6,7 @@ import com.dog_feliz.user_service.entity.VolunteerEntity;
 import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.repository.VolunteerRepository;
+import com.dog_feliz.user_service.service.mail.MailService;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import com.dog_feliz.user_service.shared.exception.VolunteerNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,12 @@ public class VolunteerService {
 
     private final VolunteerRepository volunteerRepository;
     private final UserRepository userRepository;
+    private final MailService mailService;
 
-    public VolunteerService(VolunteerRepository volunteerRepository, UserRepository userRepository) {
+    public VolunteerService(VolunteerRepository volunteerRepository, UserRepository userRepository, MailService mailService) {
         this.volunteerRepository = volunteerRepository;
         this.userRepository = userRepository;
+        this.mailService = mailService;
     }
 
     public List<VolunteerResponseDto> getVolunteers() {
@@ -50,6 +53,9 @@ public class VolunteerService {
         );
 
         volunteerRepository.save(volunteer);
+
+        mailService.notifyVolunteer(volunteer);
+
         return new VolunteerResponseDto(volunteer);
     }
 
@@ -65,7 +71,7 @@ public class VolunteerService {
 
 
         VolunteerEntity updated = new VolunteerEntity(
-                existing.getId(),           // ID existente
+                existing.getId(),
                 dto.getMessage(),
                 dto.getAvailableDate(),
                 userEntity

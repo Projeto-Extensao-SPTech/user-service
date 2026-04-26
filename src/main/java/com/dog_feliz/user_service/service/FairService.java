@@ -51,14 +51,12 @@ public class FairService {
 
         fair.setAddress(address);
 
-        // Caso a pasta não exista na máquina, cria automaticamente
         Path uploadPath = Paths.get(uploadDir);
 
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        // Aqui convertemos o tipo MultipartFile e associamos
         for (MultipartFile file : fairRequestDto.getImage()) {
 
             Path filePath = uploadPath.resolve(Objects.requireNonNull(file.getOriginalFilename()));

@@ -18,7 +18,7 @@ public class DonationEntity {
     private Integer id;
 
     @Column(name = "user_id", nullable = false)
-    private Integer userId; // Seu banco pede INTEGER, embora UserEntity seja Long
+    private Integer userId;
 
     @Column(name = "collection_center_id")
     private Integer collectionCenterId;
