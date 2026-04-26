@@ -1,13 +1,9 @@
 package com.dog_feliz.user_service.entity;
 
 import com.dog_feliz.user_service.controller.dto.DonationRequestDto;
-import com.dog_feliz.user_service.controller.dto.DonationResponseDto;
 import jakarta.persistence.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "donation_tb")
@@ -47,9 +43,7 @@ public class DonationEntity {
     @Column(name = "created_at", updatable = false)
     private final ZonedDateTime createdAt = ZonedDateTime.now();
 
-
     public DonationEntity() {}
-
 
     public DonationEntity(DonationRequestDto dto, Long userId, String imagePath) {
         this.userId = userId.intValue();

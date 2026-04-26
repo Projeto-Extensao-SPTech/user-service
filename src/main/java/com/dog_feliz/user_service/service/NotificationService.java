@@ -10,7 +10,6 @@ import com.dog_feliz.user_service.queue.producer.NotificationProducer;
 import com.dog_feliz.user_service.repository.FairRepository;
 import com.dog_feliz.user_service.service.mail.MailSenderAvailable;
 import com.dog_feliz.user_service.service.mail.MailService;
-import com.dog_feliz.user_service.service.mail.strategy.MailSenderStrategy;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
