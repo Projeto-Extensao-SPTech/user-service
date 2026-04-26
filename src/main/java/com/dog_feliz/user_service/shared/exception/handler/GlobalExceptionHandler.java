@@ -128,4 +128,14 @@ public class GlobalExceptionHandler {
         body.put("status", status);
         return ResponseEntity.status(status).body(body);
     }
+
+    @ExceptionHandler(ShipmentNotFoundException.class)
+    public ResponseEntity<Object> handleShipmentNotFoundException(ShipmentNotFoundException ex) {
+        HttpStatus status = ex.getStatus();
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status);
+        return ResponseEntity.status(status).body(body);
+    }
 }

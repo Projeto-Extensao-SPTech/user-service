@@ -9,7 +9,6 @@ public class ShipmentDetailsResponseDto {
     private String companyName;
     private String companyImage;
 
-
     public ShipmentDetailsResponseDto() {
     }
 

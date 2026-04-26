@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Email;
 
 public class AuthRequestDto {
     @Email
-    @JsonProperty("mail_address")
+    @JsonProperty("mail_address")   
     private final String mailAddress;
     private final String password;
 
