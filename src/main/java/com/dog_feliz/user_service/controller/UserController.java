@@ -7,7 +7,6 @@ import com.dog_feliz.user_service.service.UserService;
 import com.dog_feliz.user_service.service.ValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -26,13 +25,9 @@ public class UserController {
     }
 
     @GetMapping
-    private ResponseEntity<Page<UserResponseDto>> getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy
-    ){
-        Page<UserResponseDto> users = userService.getUsers(page, size, sortBy);
-        log.info("[GET_USERS] Users fetched successfully total={}", users.getContent().size());
+    private ResponseEntity<List<UserResponseDto>> getUsers(){
+        List<UserResponseDto> users = userService.getUsers();
+        log.info("[GET_USERS] Users fetched successfully total={}", users.size());
         return ResponseEntity.ok(users);
     }
 
