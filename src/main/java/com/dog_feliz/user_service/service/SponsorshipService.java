@@ -6,6 +6,7 @@ import com.dog_feliz.user_service.entity.SponsorshipEntity;
 import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.repository.SponsorshipRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
+import com.dog_feliz.user_service.service.mail.MailService;
 import com.dog_feliz.user_service.shared.exception.SponsorshipNotFoundException;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,17 +18,20 @@ public class SponsorshipService {
 
     private final SponsorshipRepository sponsorshipRepository;
     private final UserRepository userRepository;
+    private final MailService mailService;
 
     public SponsorshipService(
             SponsorshipRepository sponsorshipRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            MailService mailService
     ) {
         this.sponsorshipRepository = sponsorshipRepository;
         this.userRepository = userRepository;
+        this.mailService = mailService;
     }
     public List<SponsorshipResponseDto> getAllSponsorships() {
         List<SponsorshipEntity> sponsorship = sponsorshipRepository.findAll();
-        return sponsorship.stream().map(sponsorshipEntity -> new SponsorshipResponseDto(sponsorshipEntity)).toList();
+        return sponsorship.stream().map(SponsorshipResponseDto::new).toList();
     }
 
     public SponsorshipResponseDto getSponsorshipById(Long id) {
@@ -61,6 +65,8 @@ public class SponsorshipService {
         sponsorship.setDepartment(dto.getDepartment());
 
         SponsorshipEntity saved = sponsorshipRepository.save(sponsorship);
+
+        mailService.notifySponsorship(sponsorship);
         return new SponsorshipResponseDto(saved);
     }
 

@@ -11,7 +11,7 @@ public class NotificationRecurrenceEntity {
     private NotificationRecurrenceId id;
 
     @ManyToOne
-    @MapsId("notificationId") // liga a PK ao campo FK
+    @MapsId("notificationId")
     @JoinColumn(name = "notification_id")
     private NotificationEntity notification;
 

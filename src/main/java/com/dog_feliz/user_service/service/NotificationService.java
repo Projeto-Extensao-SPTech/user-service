@@ -9,7 +9,7 @@ import com.dog_feliz.user_service.queue.event.NotificationCreatedEvent;
 import com.dog_feliz.user_service.queue.producer.NotificationProducer;
 import com.dog_feliz.user_service.repository.FairRepository;
 import com.dog_feliz.user_service.service.mail.MailSenderAvailable;
-import com.dog_feliz.user_service.service.mail.strategy.MailSenderStrategy;
+import com.dog_feliz.user_service.service.mail.MailService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
@@ -26,13 +26,13 @@ import java.util.List;
 public class NotificationService {
 
     @Qualifier(MailSenderAvailable.GMAIL_SENDER)
-    private final MailSenderStrategy mailSender;
+    private final MailService mailService;
     private final FairRepository fairRepository;
     private final NotificationProducer notificationProducer;
     private final NotificationClient notificationClient;
 
-    public NotificationService(FairRepository fairRepository, NotificationProducer notificationProducer, MailSenderStrategy mailSender, NotificationClient notificationClient) {
-        this.mailSender = mailSender;
+    public NotificationService(FairRepository fairRepository, NotificationProducer notificationProducer, MailService mailService, NotificationClient notificationClient) {
+        this.mailService = mailService;
         this.fairRepository = fairRepository;
         this.notificationProducer = notificationProducer;
         this.notificationClient = notificationClient;
@@ -64,7 +64,7 @@ public class NotificationService {
     @Transactional
     public void sendTodayNotifications() {
         int pageNumber = 0;
-        int pageSize = 10;
+        int pageSize = 100;
 
         PageResponseDto<NotificationResponseDto> result;
 
@@ -79,7 +79,7 @@ public class NotificationService {
                     .map(this::toMailRequest)
                     .toList();
 
-            mailSender.sendBulkMail(mailRequests);
+            mailService.sendBulkNotifications(mailRequests);
             pageNumber++;
 
         } while (!result.isLast());
