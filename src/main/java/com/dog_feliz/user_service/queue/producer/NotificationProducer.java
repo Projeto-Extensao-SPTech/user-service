@@ -1,7 +1,7 @@
 package com.dog_feliz.user_service.queue.producer;
 
 import com.dog_feliz.user_service.config.RabbitMQConfig;
-import com.dog_feliz.user_service.queue.event.NotificationCreatedEvent;
+import com.dog_feliz.user_service.queue.event.NotificationScheduledEvent;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,11 @@ public class NotificationProducer {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void sendNotification(NotificationCreatedEvent event){
+    public void sendNotificationScheduled(NotificationScheduledEvent event){
 
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.SEND_NOTIFICATION_EXCHANGE,
-                RabbitMQConfig.SEND_NOTIFICATION_ROUTING_KEY,
+                RabbitMQConfig.NOTIFICATION_EXCHANGE,
+                RabbitMQConfig.NOTIFICATION_SCHEDULED_ROUTING_KEY,
                 event
         );
     }

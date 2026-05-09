@@ -22,15 +22,15 @@ public class NotificationController {
         this.validationService = validationService;
     }
 
-    @PostMapping
-    private ResponseEntity<Void> register(@RequestBody NotificationRequestDto notificationRequest) {
+    @PostMapping("/scheduled")
+    private ResponseEntity<Void> scheduleNotification(@RequestBody NotificationRequestDto notificationRequest) {
         validationService.verifyIsAdminUser();
-        notificationService.register(notificationRequest);
+        notificationService.schedule(notificationRequest);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
-    @RequestMapping(method = RequestMethod.HEAD, path = "/send-today-notifications")
-    private void sendTodayNotifications() {
+    @RequestMapping(method = RequestMethod.HEAD, path = "/send-today-scheduled-notifications")
+    private void sendTodayScheduledNotifications() {
         notificationService.sendTodayNotifications();
         log.info("[SEND_TODAY_NOTIFICATIONS] Notifications sent successfully");
     }

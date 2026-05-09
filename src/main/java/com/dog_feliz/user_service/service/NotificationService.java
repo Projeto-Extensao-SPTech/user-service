@@ -5,7 +5,7 @@ import com.dog_feliz.user_service.controller.dto.MailRequestDto;
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
 import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
 import com.dog_feliz.user_service.controller.dto.PageResponseDto;
-import com.dog_feliz.user_service.queue.event.NotificationCreatedEvent;
+import com.dog_feliz.user_service.queue.event.NotificationScheduledEvent;
 import com.dog_feliz.user_service.queue.producer.NotificationProducer;
 import com.dog_feliz.user_service.repository.FairRepository;
 import com.dog_feliz.user_service.service.mail.MailSenderAvailable;
@@ -39,7 +39,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public void register(NotificationRequestDto notificationRequest) {
+    public void schedule(NotificationRequestDto notificationRequest) {
         Long fairId = notificationRequest.getFairId();
         if (fairId != null) {
             fairRepository.findById(fairId)
@@ -51,14 +51,14 @@ public class NotificationService {
 
         // Removemos a lógica de manter a notificação dentro do domínio e enviamos ela somente para o microservice de notificação.
         List<Integer> recurrences = notificationRequest.getRecurrences();
-        NotificationCreatedEvent event = new NotificationCreatedEvent(
+        NotificationScheduledEvent event = new NotificationScheduledEvent(
                 notificationRequest.getType().name(),
                 fairId,
                 notificationRequest.getMessage(),
                 notificationRequest.getEventDate(),
                 recurrences
         );
-        notificationProducer.sendNotification(event);
+        notificationProducer.sendNotificationScheduled(event);
     }
 
     @Transactional
