@@ -4,7 +4,9 @@ import com.dog_feliz.user_service.client.NotificationClient;
 import com.dog_feliz.user_service.controller.dto.MailRequestDto;
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
 import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
+import com.dog_feliz.user_service.controller.dto.NotificationSendRequest;
 import com.dog_feliz.user_service.controller.dto.PageResponseDto;
+import com.dog_feliz.user_service.queue.event.NotificationInstantEvent;
 import com.dog_feliz.user_service.queue.event.NotificationScheduledEvent;
 import com.dog_feliz.user_service.queue.producer.NotificationProducer;
 import com.dog_feliz.user_service.repository.FairRepository;
@@ -59,6 +61,14 @@ public class NotificationService {
                 recurrences
         );
         notificationProducer.sendNotificationScheduled(event);
+    }
+
+    public void send(NotificationSendRequest notificationRequest) {
+        notificationProducer.sendNotificationInstant(new NotificationInstantEvent(
+                notificationRequest.notificationType().name(),
+                notificationRequest.recipientMailAddress(),
+                notificationRequest.message()
+        ));
     }
 
     @Transactional
