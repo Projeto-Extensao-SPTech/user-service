@@ -1,107 +1,118 @@
 package com.dog_feliz.user_service.service;
 
-import com.dog_feliz.user_service.client.NotificationClient;
-import com.dog_feliz.user_service.controller.dto.MailRequestDto;
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
-import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
 import com.dog_feliz.user_service.controller.dto.NotificationSendRequest;
-import com.dog_feliz.user_service.controller.dto.PageResponseDto;
+import com.dog_feliz.user_service.controller.dto.NotificationType;
+import com.dog_feliz.user_service.entity.DonationEntity;
+import com.dog_feliz.user_service.entity.FairEntity;
+import com.dog_feliz.user_service.entity.SponsorshipEntity;
+import com.dog_feliz.user_service.entity.VolunteerEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.queue.event.NotificationInstantEvent;
 import com.dog_feliz.user_service.queue.event.NotificationScheduledEvent;
 import com.dog_feliz.user_service.queue.producer.NotificationProducer;
-import com.dog_feliz.user_service.repository.FairRepository;
-import com.dog_feliz.user_service.service.mail.MailSenderAvailable;
-import com.dog_feliz.user_service.service.mail.MailService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-
-import java.time.LocalDate;
 import java.util.List;
 
 
 @Service
 public class NotificationService {
+    @Value("${notification.default-recipient-mail}")
+    private String defaultRecipientMail;
 
-    @Qualifier(MailSenderAvailable.GMAIL_SENDER)
-    private final MailService mailService;
-    private final FairRepository fairRepository;
     private final NotificationProducer notificationProducer;
-    private final NotificationClient notificationClient;
+    private final MailTemplateService mailTemplateService;
 
-    public NotificationService(FairRepository fairRepository, NotificationProducer notificationProducer, MailService mailService, NotificationClient notificationClient) {
-        this.mailService = mailService;
-        this.fairRepository = fairRepository;
+    private final FairService fairService;
+    private final SponsorshipService sponsorshipService;
+    private final DonationService donationService;
+    private final VolunteerService volunteerService;
+    private final UserService userService;
+
+    public NotificationService(
+            NotificationProducer notificationProducer,
+            MailTemplateService mailTemplateService,
+            FairService fairService,
+            SponsorshipService sponsorshipService,
+            DonationService donationService,
+            VolunteerService volunteerService,
+            UserService userService
+    ) {
         this.notificationProducer = notificationProducer;
-        this.notificationClient = notificationClient;
+        this.mailTemplateService = mailTemplateService;
+        this.fairService = fairService;
+        this.sponsorshipService = sponsorshipService;
+        this.donationService = donationService;
+        this.volunteerService = volunteerService;
+        this.userService = userService;
     }
 
     @Transactional
-    public void schedule(NotificationRequestDto notificationRequest) {
-        Long fairId = notificationRequest.getFairId();
-        if (fairId != null) {
-            fairRepository.findById(fairId)
-                    .orElseThrow(() -> new HttpClientErrorException(
-                            HttpStatus.NOT_FOUND,
-                            "Fair id not found in notification register"
-                    ));
-        }
+    public void schedule(NotificationRequestDto request) {
+        Long fairId = request.getFairId();
+        if (fairId != null) fairService.getFair(fairId);
 
-        // Removemos a lógica de manter a notificação dentro do domínio e enviamos ela somente para o microservice de notificação.
-        List<Integer> recurrences = notificationRequest.getRecurrences();
+        List<Integer> recurrences = request.getRecurrences();
         NotificationScheduledEvent event = new NotificationScheduledEvent(
-                notificationRequest.getType().name(),
+                request.getType().name(),
                 fairId,
-                notificationRequest.getMessage(),
-                notificationRequest.getEventDate(),
+                request.getMessage(),
+                request.getEventDate(),
                 recurrences
         );
         notificationProducer.sendNotificationScheduled(event);
     }
 
-    public void send(NotificationSendRequest notificationRequest) {
+    public void send(NotificationSendRequest request) {
+        NotificationType type = request.notificationType();
         notificationProducer.sendNotificationInstant(new NotificationInstantEvent(
-                notificationRequest.notificationType().name(),
-                notificationRequest.recipientMailAddress(),
-                notificationRequest.message()
+                type.name(),
+                request.recipientMailAddress() == null ? defaultRecipientMail : request.recipientMailAddress(),
+                resolveNotificationContent(request.message(), type, request.referenceId())
         ));
     }
 
-    @Transactional
-    public void sendTodayNotifications() {
-        int pageNumber = 0;
-        int pageSize = 100;
 
-        PageResponseDto<NotificationResponseDto> result;
 
-        do {
-            Pageable pageable = PageRequest.of(pageNumber, pageSize);
-            result = notificationClient.findByRecurrenceDate(LocalDate.now(), pageable);
+    private String resolveNotificationContent(
+            String message,
+            NotificationType type,
+            Long referenceId
+    ) {
+        if (message == null && referenceId == null) {
+            throw new IllegalArgumentException("The message is required when reference id is null");
+        }
 
-            if (result.isEmpty()) break;
+        if (referenceId != null) {
+            return getContentByNotificationType(type, referenceId);
+        }
 
-            List<MailRequestDto> mailRequests = result.getData()
-                    .stream()
-                    .map(this::toMailRequest)
-                    .toList();
-
-            mailService.sendBulkNotifications(mailRequests);
-            pageNumber++;
-
-        } while (!result.isLast());
+        return message;
     }
 
-
-    private MailRequestDto toMailRequest(NotificationResponseDto notification) {
-        return new MailRequestDto(
-                notification.getType().getDescription(),
-                notification.getMessage(),
-                null
-        );
+    private String getContentByNotificationType(NotificationType type, Long referenceId) {
+        return switch (type) {
+            case FAIR -> {
+                FairEntity fair = fairService.getFair(referenceId);
+                yield  mailTemplateService.renderFair(fair);
+            }
+            case DONATION -> {
+                DonationEntity donation = donationService.getDonationById(referenceId);
+                yield  mailTemplateService.renderDonation(donation);
+            }
+            case VOLUNTEER -> {
+                VolunteerEntity volunteer = volunteerService.getVolunteerById(referenceId);
+                UserEntity user = userService.getUserById(volunteer.getUserEntity().getId());
+                yield  mailTemplateService.renderVolunteer(volunteer, user);
+            }
+            case SPONSORSHIP -> {
+                SponsorshipEntity sponsorship = sponsorshipService.getSponsorshipById(referenceId);
+                yield  mailTemplateService.renderSponsorship(sponsorship);
+            }
+            case GENERAL -> null;
+        };
     }
 }
 

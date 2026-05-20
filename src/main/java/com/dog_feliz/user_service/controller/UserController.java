@@ -3,6 +3,7 @@ package com.dog_feliz.user_service.controller;
 import com.dog_feliz.user_service.controller.dto.UpdatePasswordRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.service.UserService;
 import com.dog_feliz.user_service.service.ValidationService;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class UserController {
             @PathVariable Long id
     ){
         validationService.verifyIsValidUserId(id);
-        UserResponseDto user = userService.getUserById(id);
+        UserResponseDto user = toResponse(userService.getUserById(id));
 
         log.info("[GET_USER_BY_ID] User fetched successfully userId={}", id);
         return ResponseEntity.ok(user);
@@ -89,5 +90,9 @@ public class UserController {
         validationService.verifyIsValidUserId(id);
         userService.deleteUser(id);
         log.info("[DELETE_USER] User deleted successfully userId={}", id);
+    }
+
+    private UserResponseDto toResponse(UserEntity user) {
+        return new UserResponseDto(user);
     }
 }

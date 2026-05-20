@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="margin:0; padding:0; background:#052759; font-family:'Baloo 2', Arial, sans-serif;">
+
+<!-- Header -->
+<div style="background:#FCAD0B; padding:32px 20px; text-align:center;">
+    <h1 style="margin:0; color:#052759; font-size:28px; font-weight:700;">🐾 Nova Feira Cadastrada!</h1>
+    <p style="margin:8px 0 0; color:#052759; font-size:15px; font-weight:500;">
+        O Abrigo Dog Feliz acaba de divulgar mais uma feira. Confira os detalhes abaixo!
+    </p>
+</div>
+
+<!-- Card principal -->
+<div style="max-width:600px; margin:30px auto; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.2);">
+
+    <!-- Faixa de destaque -->
+    <div style="background:#052759; padding:16px 28px;">
+        <p style="margin:0; color:#FFFFFF; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
+            Detalhes da Feira
+        </p>
+    </div>
+
+    <!-- Conteúdo -->
+    <div style="padding:28px;">
+        <table style="width:100%; border-collapse:collapse; font-size:15px; color:#333;">
+
+            <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:14px 0; font-weight:700; color:#052759; width:40%;">Data</td>
+                <td th:text="${fair.fairDate}" style="padding:14px 0; font-weight:600;"></td>
+            </tr>
+
+            <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:14px 0; font-weight:700; color:#052759;">Horário</td>
+                <td style="padding:14px 0;">
+                    <span th:text="${#temporals.format(fair.fairHour, 'HH:mm')}"
+                          style="background:#e8f0fe; color:#052759; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:700;">
+                    </span>
+                </td>
+            </tr>
+
+            <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:14px 0; font-weight:700; color:#052759;">Interesse</td>
+                <td style="padding:14px 0;">
+                    <span th:text="${fair.interest}"
+                          style="background:#e6f4ea; color:#1a6e35; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:700;">
+                    </span>
+                </td>
+            </tr>
+
+            <tr style="border-bottom:1px solid #f0f0f0;">
+                <td style="padding:14px 0; font-weight:700; color:#052759; vertical-align:top;">Endereço</td>
+                <td style="padding:14px 0; font-weight:600;">
+                    <span th:text="${fair.address.street + ', ' + fair.address.number}"></span><br/>
+                    <span th:text="${fair.address.city + ' - ' + fair.address.state}"></span><br/>
+                    <span th:text="${fair.address.zipCode}"></span>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+    <!-- Próximos passos -->
+    <div style="margin:0 28px 28px; padding:18px; background:#fff8e6; border-left:4px solid #FCAD0B; border-radius:8px;">
+        <p style="margin:0 0 6px; color:#7a5c00; font-size:14px; font-weight:700;">📋 Próximos passos</p>
+        <p style="margin:0; color:#7a5c00; font-size:14px; line-height:1.6;">
+            Confirme sua presença e fique atento ao horário da feira.
+            Caso tenha dúvidas, entre em contato com o abrigo para mais informações.
+        </p>
+    </div>
+
+</div>
+</body>
+</html>

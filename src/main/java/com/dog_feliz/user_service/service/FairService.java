@@ -69,11 +69,9 @@ public class FairService {
         return fairRepository.save(fair);
     }
 
-    public FairResponseDto getFair(Long id) {
-        FairEntity fair = fairRepository.findById(id)
+    public FairEntity getFair(Long id) {
+        return fairRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Feira não encontrada com o id: " + id));
-
-        return new FairResponseDto(fair);
     }
 
     public List<FairResponseDto> getAllFair() {

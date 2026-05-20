@@ -1,6 +1,5 @@
 package com.dog_feliz.user_service.controller.dto;
 
-import com.dog_feliz.user_service.entity.notification.NotificationType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;

@@ -49,7 +49,7 @@ public class FairController {
     @GetMapping("/{id}")
     public ResponseEntity<FairResponseDto> getFair(@PathVariable Long id) {
 
-        FairResponseDto fair = fairService.getFair(id);
+        FairResponseDto fair = toResponse(fairService.getFair(id));
 
         log.info("[GET_FAIR] Fair fetched successfully fairId={}", id);
         return ResponseEntity.ok(fair);
@@ -114,5 +114,9 @@ public class FairController {
             log.error("[INSERT_INTEREST_FAIR] Error while updating interest fairId={} message={}", id, e.getMessage(), e);
             throw new RuntimeException("Não foi possível atualizar o campo de interesse pela feira");
         }
+    }
+
+    private FairResponseDto toResponse(FairEntity fair) {
+        return new FairResponseDto(fair);
     }
 }

@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 
 public class DonationResponseDto {
 
-    private final Integer id;
+    private final Long id;
     private final String name;
     private final String type;
     private final Integer amount;
@@ -26,7 +26,7 @@ public class DonationResponseDto {
     }
 
 
-    public Integer getId() { return id; }
+    public Long getId() { return id; }
     public String getName() { return name; }
     public String getType() { return type; }
     public Integer getAmount() { return amount; }

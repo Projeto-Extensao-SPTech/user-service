@@ -36,10 +36,4 @@ public class NotificationController {
         notificationService.send(notificationRequest);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
-
-    @RequestMapping(method = RequestMethod.HEAD, path = "/send-today-scheduled-notifications")
-    private void sendTodayScheduledNotifications() {
-        notificationService.sendTodayNotifications();
-        log.info("[SEND_TODAY_NOTIFICATIONS] Notifications sent successfully");
-    }
 }

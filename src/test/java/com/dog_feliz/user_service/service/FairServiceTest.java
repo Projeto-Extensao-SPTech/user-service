@@ -90,10 +90,10 @@ public class FairServiceTest {
 
         when(fairRepository.findById(10L)).thenReturn(Optional.of(fair));
 
-        FairResponseDto response = fairService.getFair(10L);
+        FairEntity fairEntity = fairService.getFair(10L);
 
-        assertNotNull(response);
-        assertEquals(10L, response.getId());
+        assertNotNull(fairEntity);
+        assertEquals(10L, fairEntity.getId());
     }
 
 
