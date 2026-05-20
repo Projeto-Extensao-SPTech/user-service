@@ -64,7 +64,7 @@ public class UserEntity implements UserDetails {
         this.mailAddressHash = mailAddressHash;
         this.password = passwordEncoded;
         this.address = addressEntity;
-        this.isAdmin = userRequestDto.getIsAdmin() != null ? userRequestDto.getIsAdmin() : false;
+        this.isAdmin = false;
     }
 
     public UserEntity(Long id, UserRequestDto userRequestDto, AddressEntity addressEntity) {

@@ -138,4 +138,34 @@ public class GlobalExceptionHandler {
         body.put("status", status);
         return ResponseEntity.status(status).body(body);
     }
+
+    @ExceptionHandler(ForbiddenUserException.class)
+    public ResponseEntity<Object> handleForbiddenUserException(ForbiddenUserException ex) {
+        HttpStatus status = ex.getStatus();
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status);
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(VolunteerNotFoundException.class)
+    public ResponseEntity<Object> handleVolunteerNotFoundException(VolunteerNotFoundException ex) {
+        HttpStatus status = ex.getStatus();
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status);
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(SponsorshipNotFoundException.class)
+    public ResponseEntity<Object> handleSponsorshipNotFoundException(SponsorshipNotFoundException ex) {
+        HttpStatus status = ex.getStatus();
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status);
+        return ResponseEntity.status(status).body(body);
+    }
 }

@@ -29,4 +29,12 @@ public class VolunteerRequestDto {
         this.message = message;
     }
 
+    public void setAvailableDate(LocalDate availableDate) {
+        this.availableDate = availableDate;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
 }
