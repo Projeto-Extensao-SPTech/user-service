@@ -1,6 +1,7 @@
 package com.dog_feliz.user_service.controller;
 
 import com.dog_feliz.user_service.controller.dto.VolunteerResponseDto;
+import com.dog_feliz.user_service.service.JwtService;
 import com.dog_feliz.user_service.service.ValidationService;
 import com.dog_feliz.user_service.service.VolunteerService;
 import com.dog_feliz.user_service.stub.VolunteerStub;
@@ -38,9 +39,12 @@ class VolunteerControllerTest {
     @MockitoBean
     private ValidationService validationService;
 
+    @MockitoBean
+    private JwtService jwtService;
+
     @Test
     @DisplayName("Dada atualização de voluntário, quando PUT /volunteers/{id}, deve validar propriedade pelo user_id do corpo da requisição")
-    void givenUpdate_whenPut_thenValidatesUserIdFromRequestBody() throws Exception {
+    void givenUpdateWhenPutThenValidatesUserIdFromRequestBody() throws Exception {
         var request = VolunteerStub.validRequest(10L);
         when(volunteerService.updateVolunteer(eq(99L), eq(request)))
                 .thenReturn(new VolunteerResponseDto(99L, "msg", LocalDate.now(), 10L));

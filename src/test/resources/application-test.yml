@@ -18,10 +18,6 @@ spring:
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
-  rabbitmq:
-    listener:
-      simple:
-        auto-startup: false
 
 server:
   port: 0
@@ -30,14 +26,16 @@ server:
 
 aes:
   encryptor:
-    secret-key: dGVzdC1hZXMta2V5LTMyLWJ5dGVzLWxvbmchIQ==
+    secret-key: 7Fv9YkT8wHn2mQpLx3BzR0dKcW1uVnFhR2V4c0tZbW8=
 
 security:
   hash:
-    secret-key: test-hash-secret-key
+    secret-key: 9xKf2LmQ7vT4sYpR8bWcZ3NqE1uD6HjA
+
   jwt:
-    secret-key: dGVzdC1qd3Qtc2VjcmV0LWtleS0zMi1ieXRlcy1sb25nISE=
+    secret-key: w3JqVbYp6kK1xN8fTzQ2mH9cR4sD7uL5aE0pXyZbWcI=
     expiration-time: 1800000
+
   refresh-token:
     expiration-time: 604800000
 

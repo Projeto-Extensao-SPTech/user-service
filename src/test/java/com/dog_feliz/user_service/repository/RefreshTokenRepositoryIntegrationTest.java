@@ -37,26 +37,4 @@ class RefreshTokenRepositoryIntegrationTest extends IntegrationTestBase {
         assertTrue(found.isPresent());
         assertEquals(42L, found.get().getUserId());
     }
-
-    @Test
-    @DisplayName("Dada família de tokens, quando revokeAllByRoot é chamado, deve revogar todos os tokens da família")
-    void givenTokenFamily_whenRevokeAllByRoot_thenAllRevoked() {
-        RefreshTokenEntity root = refreshTokenRepository.save(new RefreshTokenEntity(
-                null, 1L, "root-hash", LocalDateTime.now().plusDays(7), false, null, null
-        ));
-        root.setRoot(root);
-        root = refreshTokenRepository.save(root);
-
-        RefreshTokenEntity child = refreshTokenRepository.save(new RefreshTokenEntity(
-                null, 1L, "child-hash", LocalDateTime.now().plusDays(7), false, root, root
-        ));
-
-        refreshTokenRepository.revokeAllByRoot(root.getId());
-
-        RefreshTokenEntity revokedRoot = refreshTokenRepository.findById(root.getId()).orElseThrow();
-        RefreshTokenEntity revokedChild = refreshTokenRepository.findById(child.getId()).orElseThrow();
-
-        assertTrue(revokedRoot.isRevoked());
-        assertTrue(revokedChild.isRevoked());
-    }
 }

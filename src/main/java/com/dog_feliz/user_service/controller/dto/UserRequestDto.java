@@ -5,7 +5,9 @@ import com.dog_feliz.user_service.shared.utils.MaskUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
 
+@Getter
 public class UserRequestDto {
     @NotNull(message = "O tipo do usuário é obrigatório.")
     private final UserType type;
@@ -35,6 +37,7 @@ public class UserRequestDto {
     @JsonProperty("mail_address")
     private final String mailAddress;
 
+    @Size(min = 8, max = 100)
     private final String password;
 
     @JsonProperty("is_admin")
@@ -50,36 +53,6 @@ public class UserRequestDto {
         this.password = password;
         this.isAdmin = isAdmin;
     }
-
-    public UserType getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDocument() {
-        return document;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public AddressRequestDto getAddress() {
-        return address;
-    }
-
-    public String getMailAddress() {
-        return mailAddress;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Boolean getIsAdmin() { return isAdmin; }
 
     @Override
     public String toString() {

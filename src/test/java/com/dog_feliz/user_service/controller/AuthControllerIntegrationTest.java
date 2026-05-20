@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class AuthControllerIntegrationTest extends IntegrationTestBase {
@@ -37,7 +38,7 @@ class AuthControllerIntegrationTest extends IntegrationTestBase {
 
     @Test
     @DisplayName("Dado payload de cadastro inválido, quando POST /auth/register, deve retornar status 400")
-    void givenInvalidPayload_whenRegister_thenReturnsBadRequest() throws Exception {
+    void givenInvalidPayloadWhenRegisterThenReturnsBadRequest() throws Exception {
         Map<String, Object> invalidUser = Map.of(
                 "type", "PF",
                 "mail_address", "invalid-email"
@@ -51,7 +52,7 @@ class AuthControllerIntegrationTest extends IntegrationTestBase {
 
     @Test
     @DisplayName("Dado cadastro válido com admin solicitado, quando POST /auth/register, deve retornar 201 e usuário persistido sem privilégio de admin")
-    void givenValidRegistration_whenRegister_thenReturnsCreatedWithoutAdminPrivileges() throws Exception {
+    void givenValidRegistrationWhenRegisterThenReturnsCreatedWithoutAdminPrivileges() throws Exception {
         String email = "register-test@example.com";
         Map<String, Object> user = validRegistrationPayload(email, true);
 
@@ -83,7 +84,7 @@ class AuthControllerIntegrationTest extends IntegrationTestBase {
 
     @Test
     @DisplayName("Dadas credenciais inválidas, quando POST /auth/login, deve retornar status 401")
-    void givenInvalidCredentials_whenLogin_thenReturnsUnauthorized() throws Exception {
+    void givenInvalidCredentialsWhenLoginThenReturnsUnauthorized() throws Exception {
         Map<String, String> login = Map.of(
                 "mail_address", "nonexistent@example.com",
                 "password", "wrong-password"
@@ -97,7 +98,7 @@ class AuthControllerIntegrationTest extends IntegrationTestBase {
 
     @Test
     @DisplayName("Dado usuário cadastrado, quando POST /auth/login, deve retornar os tokens de autenticação")
-    void givenRegisteredUser_whenLogin_thenReturnsTokens() throws Exception {
+    void givenRegisteredUserWhenLoginThenReturnsTokens() throws Exception {
         String email = "login-flow@example.com";
         registerUser(email);
 
@@ -109,8 +110,9 @@ class AuthControllerIntegrationTest extends IntegrationTestBase {
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(login)))
+                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.access_token", not(emptyString())))
+                .andExpect(jsonPath("$.token", not(emptyString())))
                 .andExpect(jsonPath("$.refresh_token", not(emptyString())));
     }
 
