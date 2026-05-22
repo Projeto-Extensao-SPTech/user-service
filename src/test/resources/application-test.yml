@@ -1,0 +1,84 @@
+spring:
+  application:
+    name: user-service-test
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+
+server:
+  port: 0
+  error:
+    include-stacktrace: never
+
+aes:
+  encryptor:
+    secret-key: 7Fv9YkT8wHn2mQpLx3BzR0dKcW1uVnFhR2V4c0tZbW8=
+
+security:
+  hash:
+    secret-key: 9xKf2LmQ7vT4sYpR8bWcZ3NqE1uD6HjA
+
+  jwt:
+    secret-key: w3JqVbYp6kK1xN8fTzQ2mH9cR4sD7uL5aE0pXyZbWcI=
+    expiration-time: 1800000
+
+  refresh-token:
+    expiration-time: 604800000
+
+notification:
+  service:
+    url: http://localhost:9999
+
+melhor-envio:
+  api:
+    url: http://localhost:9998
+    token: test-token
+
+mail:
+  gmail:
+    host: localhost
+    port: 1025
+    username: test@test.com
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+  outlook:
+    host: localhost
+    port: 1025
+    username: test@outlook.com
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+uploads:
+  path: ${java.io.tmpdir}/user-service-test-uploads
+
+url:
+  name: http://localhost:5173
+
+logging:
+  level:
+    root: WARN
+    com.dog_feliz: INFO

@@ -4,6 +4,8 @@ import com.dog_feliz.user_service.shared.exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -137,5 +139,53 @@ public class GlobalExceptionHandler {
         body.put("timestamp", LocalDateTime.now());
         body.put("status", status);
         return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(ForbiddenUserException.class)
+    public ResponseEntity<Object> handleForbiddenUserException(ForbiddenUserException ex) {
+        HttpStatus status = ex.getStatus();
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status);
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(VolunteerNotFoundException.class)
+    public ResponseEntity<Object> handleVolunteerNotFoundException(VolunteerNotFoundException ex) {
+        HttpStatus status = ex.getStatus();
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status);
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(SponsorshipNotFoundException.class)
+    public ResponseEntity<Object> handleSponsorshipNotFoundException(SponsorshipNotFoundException ex) {
+        HttpStatus status = ex.getStatus();
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status);
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadCredentials(BadCredentialsException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Credenciais inválidas");
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+    }
+
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public ResponseEntity<Object> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Credenciais inválidas");
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
     }
 }

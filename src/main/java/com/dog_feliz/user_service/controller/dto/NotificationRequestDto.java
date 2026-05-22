@@ -6,10 +6,14 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Getter
+@Setter
 public class NotificationRequestDto {
     @NotNull(message = "O tipo da notificação é obrigatório.")
     private NotificationType type;
@@ -37,24 +41,5 @@ public class NotificationRequestDto {
 
     public NotificationRequestDto() {}
 
-    public NotificationType getType() {
-        return type;
-    }
-
-    public Long getFairId() {
-        return fairId;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public List<Integer> getRecurrences() {
-        return recurrences;
-    }
-
-    public LocalDate getEventDate() {
-        return eventDate;
-    }
 }
 

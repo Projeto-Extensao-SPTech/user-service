@@ -46,7 +46,7 @@ public class VolunteerController {
 
     @PutMapping("/{id}")
     public VolunteerResponseDto updateVolunteer(@PathVariable Long id, @RequestBody VolunteerRequestDto dto) {
-        validationService.verifyIsValidUserId(id);
+        validationService.verifyIsValidUserId(dto.getUserId());
         VolunteerResponseDto response = volunteerService.updateVolunteer(id, dto);
         log.info("[UPDATE_VOLUNTEER] Volunteer updated successfully volunteerId={}", id);
         return response;

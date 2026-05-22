@@ -8,13 +8,7 @@ import com.dog_feliz.user_service.repository.FairRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.repository.VolunteerRepository;
 import org.springframework.stereotype.Service;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 @Service
 public class DashboardService {

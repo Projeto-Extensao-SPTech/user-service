@@ -1,6 +1,5 @@
 package com.dog_feliz.user_service.entity.notification;
 
-import com.dog_feliz.user_service.controller.dto.FairResponseDto;
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
 import com.dog_feliz.user_service.entity.FairEntity;
 import jakarta.persistence.*;
