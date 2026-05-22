@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/h2-console/**",
                                 "/auth/**",
-                                "collection-centers/**",
+                                "/collection-centers/**",
                                 "/message/sendText/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",

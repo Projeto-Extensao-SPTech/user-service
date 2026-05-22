@@ -1,6 +1,5 @@
 package com.dog_feliz.user_service.service;
 
-import com.dog_feliz.user_service.controller.dto.AuthRequestDto;
 import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.shared.crypto.hash.StringHasher;

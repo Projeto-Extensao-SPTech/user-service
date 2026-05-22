@@ -11,8 +11,10 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
+@Profile("!test")
 public class RabbitMQConfig {
 
     public static final String MQ_MESSAGE_CONVERTER = "mq-message-converter";

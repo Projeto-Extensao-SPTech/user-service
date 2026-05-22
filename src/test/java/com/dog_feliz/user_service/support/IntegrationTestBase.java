@@ -1,23 +1,20 @@
-package com.dog_feliz.user_service;
+package com.dog_feliz.user_service.support;
 
 import com.dog_feliz.user_service.client.NotificationClient;
 import com.dog_feliz.user_service.queue.producer.NotificationProducer;
-import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
-class UserServiceApplicationTests {
+public abstract class IntegrationTestBase {
 
     @MockitoBean
-    private NotificationClient notificationClient;
+    protected NotificationClient notificationClient;
 
     @MockitoBean
-    private NotificationProducer notificationProducer;
-
-    @Test
-    void contextLoads() {
-    }
+    protected NotificationProducer notificationProducer;
 }

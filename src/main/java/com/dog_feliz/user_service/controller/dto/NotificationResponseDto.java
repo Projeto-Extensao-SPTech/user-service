@@ -2,11 +2,15 @@ package com.dog_feliz.user_service.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+@Getter
+@Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NotificationResponseDto {
     private NotificationType type;
@@ -16,20 +20,4 @@ public class NotificationResponseDto {
     private ZonedDateTime createdAt;
 
     public NotificationResponseDto() {}
-
-    public NotificationType getType() {
-        return type;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public List<LocalDate> getRecurrences() {
-        return recurrences;
-    }
-
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
 }
