@@ -74,8 +74,6 @@ public class NotificationService {
         ));
     }
 
-
-
     private String resolveNotificationContent(
             String message,
             NotificationType type,

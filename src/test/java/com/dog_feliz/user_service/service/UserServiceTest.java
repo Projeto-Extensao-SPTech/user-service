@@ -69,7 +69,7 @@ class UserServiceTest {
         UserEntity user = UserStub.entityWithId(1L);
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        UserResponseDto result = userService.getUserById(1L);
+        UserEntity result = userService.getUserById(1L);
 
         assertNotNull(result);
     }
