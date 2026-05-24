@@ -1,0 +1,30 @@
+name: Backend CI - DEVELOP
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Dar permissão ao Maven Wrapper
+        run: chmod +x mvnw
+
+      - name: Buildar projeto
+        run: ./mvnw clean package
+
+      - name: Build Docker Image
+        run: docker build -t backend-app .
