@@ -11,6 +11,12 @@ import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.queue.event.NotificationInstantEvent;
 import com.dog_feliz.user_service.queue.event.NotificationScheduledEvent;
 import com.dog_feliz.user_service.queue.producer.NotificationProducer;
+import com.dog_feliz.user_service.repository.DonationRepository;
+import com.dog_feliz.user_service.repository.FairRepository;
+import com.dog_feliz.user_service.repository.SponsorshipRepository;
+import com.dog_feliz.user_service.repository.UserRepository;
+import com.dog_feliz.user_service.repository.VolunteerRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,34 +31,34 @@ public class NotificationService {
     private final NotificationProducer notificationProducer;
     private final MailTemplateService mailTemplateService;
 
-    private final FairService fairService;
-    private final SponsorshipService sponsorshipService;
-    private final DonationService donationService;
-    private final VolunteerService volunteerService;
-    private final UserService userService;
+    private final FairRepository fairRepository;
+    private final SponsorshipRepository sponsorshipRepository;
+    private final DonationRepository donationRepository;
+    private final VolunteerRepository volunteerRepository;
+    private final UserRepository userRepository;
 
     public NotificationService(
             NotificationProducer notificationProducer,
             MailTemplateService mailTemplateService,
-            FairService fairService,
-            SponsorshipService sponsorshipService,
-            DonationService donationService,
-            VolunteerService volunteerService,
-            UserService userService
+            FairRepository fairRepository,
+            SponsorshipRepository sponsorshipRepository,
+            DonationRepository donationRepository,
+            VolunteerRepository volunteerRepository,
+            UserRepository userRepository
     ) {
         this.notificationProducer = notificationProducer;
         this.mailTemplateService = mailTemplateService;
-        this.fairService = fairService;
-        this.sponsorshipService = sponsorshipService;
-        this.donationService = donationService;
-        this.volunteerService = volunteerService;
-        this.userService = userService;
+        this.fairRepository = fairRepository;
+        this.sponsorshipRepository = sponsorshipRepository;
+        this.donationRepository = donationRepository;
+        this.volunteerRepository = volunteerRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
     public void schedule(NotificationRequestDto request) {
         Long fairId = request.getFairId();
-        if (fairId != null) fairService.getFair(fairId);
+        if (fairId != null) fairRepository.findById(fairId);
 
         List<Integer> recurrences = request.getRecurrences();
         NotificationScheduledEvent event = new NotificationScheduledEvent(
@@ -91,26 +97,31 @@ public class NotificationService {
     }
 
     private String getContentByNotificationType(NotificationType type, Long referenceId) {
-        return switch (type) {
+        switch (type) {
             case FAIR -> {
-                FairEntity fair = fairService.getFair(referenceId);
-                yield  mailTemplateService.renderFair(fair);
+                FairEntity fair = fairRepository.findById(referenceId)
+                        .orElseThrow(() -> new EntityNotFoundException("Fair not found with id: " + referenceId));
+                return mailTemplateService.renderFair(fair);
             }
             case DONATION -> {
-                DonationEntity donation = donationService.getDonationById(referenceId);
-                yield  mailTemplateService.renderDonation(donation);
+                DonationEntity donation = donationRepository.findById(referenceId)
+                        .orElseThrow(() -> new EntityNotFoundException("Donation not found with id: " + referenceId));
+                return mailTemplateService.renderDonation(donation);
             }
             case VOLUNTEER -> {
-                VolunteerEntity volunteer = volunteerService.getVolunteerById(referenceId);
-                UserEntity user = userService.getUserById(volunteer.getUserEntity().getId());
-                yield  mailTemplateService.renderVolunteer(volunteer, user);
+                VolunteerEntity volunteer = volunteerRepository.findById(referenceId)
+                        .orElseThrow(() -> new EntityNotFoundException("Volunteer not found with id: " + referenceId));
+                UserEntity user = userRepository.findById(volunteer.getUserEntity().getId())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + volunteer.getUserEntity().getId()));
+                return mailTemplateService.renderVolunteer(volunteer, user);
             }
             case SPONSORSHIP -> {
-                SponsorshipEntity sponsorship = sponsorshipService.getSponsorshipById(referenceId);
-                yield  mailTemplateService.renderSponsorship(sponsorship);
+                SponsorshipEntity sponsorship = sponsorshipRepository.findById(referenceId)
+                        .orElseThrow(() -> new EntityNotFoundException("Sponsorship not found with id: " + referenceId));
+                return mailTemplateService.renderSponsorship(sponsorship);
             }
-            case GENERAL -> null;
-        };
+        }
+        return null;
     }
 }
 

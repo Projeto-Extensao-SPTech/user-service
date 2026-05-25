@@ -41,36 +41,13 @@ security:
 
 notification:
   service:
-    url: http://localhost:9999
+    url: http://localhost:8082
+  default-recipient-mail: projetoextensaosptech@gmaill.com
 
 melhor-envio:
   api:
     url: http://localhost:9998
     token: test-token
-
-mail:
-  gmail:
-    host: localhost
-    port: 1025
-    username: test@test.com
-    password: test
-    properties:
-      mail:
-        smtp:
-          auth: false
-          starttls:
-            enable: false
-  outlook:
-    host: localhost
-    port: 1025
-    username: test@outlook.com
-    password: test
-    properties:
-      mail:
-        smtp:
-          auth: false
-          starttls:
-            enable: false
 
 uploads:
   path: ${java.io.tmpdir}/user-service-test-uploads
