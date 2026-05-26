@@ -3,7 +3,7 @@ package com.dog_feliz.user_service.config;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -18,7 +18,10 @@ public class S3Config {
         return S3Client.builder()
                 .region(Region.of(props.getRegion()))
                 .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create(props.getAccessKey(), props.getSecretKey())
+                        AwsSessionCredentials.create(
+                                props.getAccessKey(),
+                                props.getSecretKey(),
+                                props.getSessionToken())
                 ))
                 .build();
     }
@@ -28,7 +31,10 @@ public class S3Config {
         return S3Presigner.builder()
                 .region(Region.of(props.getRegion()))
                 .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create(props.getAccessKey(), props.getSecretKey())
+                        AwsSessionCredentials.create(
+                                props.getAccessKey(),
+                                props.getSecretKey(),
+                                props.getSessionToken())
                 ))
                 .build();
     }
