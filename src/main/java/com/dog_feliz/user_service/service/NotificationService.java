@@ -62,6 +62,7 @@ public class NotificationService {
 
         List<Integer> recurrences = request.getRecurrences();
         NotificationScheduledEvent event = new NotificationScheduledEvent(
+                request.getEventId(),
                 request.getType().name(),
                 fairId,
                 request.getMessage(),
