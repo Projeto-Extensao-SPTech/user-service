@@ -5,8 +5,6 @@ on:
     branches:
       - main
       - develop
-  release:
-    types: [published]
 
 jobs:
   build:
@@ -39,9 +37,9 @@ jobs:
         id: vars
         run: echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
-      # develop: só build local (valida Dockerfile + jar), não publica
+      # develop: só build local da imagem (valida Dockerfile), sem push
       - name: Build da imagem (sem push) - develop
-        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/develop'
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -50,36 +48,18 @@ jobs:
 
       # main: login + push latest + sha-curto
       - name: Login no Docker Hub - main
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build e Push - main
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
             gustapa/user-service:latest
-            gustapa/user-service:sha-${{ steps.vars.outputs.short_sha }}
-
-      # release published: login + push vX.Y.Z + sha-curto
-      - name: Login no Docker Hub - release
-        if: github.event_name == 'release'
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build e Push - release
-        if: github.event_name == 'release'
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: |
-            gustapa/user-service:${{ github.event.release.tag_name }}
             gustapa/user-service:sha-${{ steps.vars.outputs.short_sha }}
