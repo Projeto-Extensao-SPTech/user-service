@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop
 
 jobs:
   build:
@@ -32,13 +33,25 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login no Docker Hub
+      # Em develop: só faz build local da imagem (valida o Dockerfile), não faz login/push
+      - name: Build da imagem (sem push) - develop
+        if: github.ref == 'refs/heads/develop'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: gusta-pa/user-service:dev-ci
+
+      # Em main: faz login e push para o Dockerhub
+      - name: Login no Docker Hub - main
+        if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build e Push para o Docker Hub
+      - name: Build e Push para o Docker Hub - main
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v6
         with:
           context: .
