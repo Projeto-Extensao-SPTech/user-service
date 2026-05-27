@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - develop
+    tags:
+      - "v*"
 
 jobs:
   build:
@@ -17,9 +19,9 @@ jobs:
       - name: Configurar Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '21'
-          cache: 'maven'
+          distribution: "temurin"
+          java-version: "21"
+          cache: "maven"
 
       - name: Dar permissão ao Maven Wrapper
         run: chmod +x mvnw
@@ -33,7 +35,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # develop: só builda (valida Dockerfile + jar), não publica
+      # develop: só build local (valida Dockerfile + jar), não publica
       - name: Build da imagem (sem push) - develop
         if: github.ref == 'refs/heads/develop'
         uses: docker/build-push-action@v6
@@ -42,15 +44,16 @@ jobs:
           push: false
           tags: gustapa/user-service:dev-ci
 
-      # main: login + push para Dockerhub
-      - name: Login no Docker Hub - main
-        if: github.ref == 'refs/heads/main'
+      # main ou tag v*: faz login e publica
+      - name: Login no Docker Hub (main ou release tag)
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build e Push para o Docker Hub - main
+      # main: publica latest + sha
+      - name: Build e Push - main
         if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v6
         with:
@@ -58,4 +61,15 @@ jobs:
           push: true
           tags: |
             gustapa/user-service:latest
+            gustapa/user-service:${{ github.sha }}
+
+      # tag v*: publica a versão do release (github.ref_name = o nome do tag, ex: v1.2.3) + sha
+      - name: Build e Push - release (tag v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            gustapa/user-service:${{ github.ref_name }}
             gustapa/user-service:${{ github.sha }}
