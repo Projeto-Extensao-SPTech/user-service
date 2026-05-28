@@ -13,6 +13,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class FairRequestDtoTest {
@@ -31,15 +32,13 @@ public class FairRequestDtoTest {
 
        var newFairStub = fairStub.createNewFair();
 
-       var fairDate = LocalDate.of(2025, 12, 2);
-       var fairHour = LocalDateTime.of(2025, 12, 2, 12, 30);
-
-
+       var fairDate = LocalDate.now().plusDays(7);
+       var fairHour = LocalDateTime.now().plusDays(7).truncatedTo(ChronoUnit.MINUTES);
 
         assertEquals(fairDate, newFairStub.getFairDate());
         assertEquals(fairHour, newFairStub.getFairHour());
-        assertEquals(1, newFairStub.getImage().size());
-        assertEquals("foto.png", newFairStub.getImage().getFirst().getOriginalFilename());
+        assertEquals(1, newFairStub.getImages().size());
+        assertEquals("foto.png", newFairStub.getImages().getFirst().getOriginalFilename());
     }
 
     @Test
@@ -71,13 +70,13 @@ public class FairRequestDtoTest {
         dto.setFairDate(fairDate);
         dto.setFairHour(fairHour);
         dto.setAddress(address);
-        dto.setImage(List.of(file));
+        dto.setImages(List.of(file));
 
         assertEquals(fairDate, dto.getFairDate());
         assertEquals(fairHour, dto.getFairHour());
         assertEquals(address, dto.getAddress());
-        assertEquals(1, dto.getImage().size());
-        assertEquals("foto2.png", dto.getImage().getFirst().getOriginalFilename());
+        assertEquals(1, dto.getImages().size());
+        assertEquals("foto2.png", dto.getImages().getFirst().getOriginalFilename());
     }
 
 }
