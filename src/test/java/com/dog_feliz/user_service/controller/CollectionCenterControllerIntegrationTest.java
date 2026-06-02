@@ -33,10 +33,12 @@ class CollectionCenterControllerIntegrationTest extends IntegrationTestBase {
         collectionCenterRepository.deleteAll();
         addressRepository.deleteAll();
 
-        AddressEntity address = addressRepository.save(new AddressEntity(AddressStub.validRequest()));
+        AddressEntity address = new AddressEntity(AddressStub.validRequest());
+
         CollectionCenterEntity center = new CollectionCenterEntity();
         ReflectionTestUtils.setField(center, "name", "Centro SP");
         ReflectionTestUtils.setField(center, "address", address);
+
         collectionCenterRepository.save(center);
     }
 

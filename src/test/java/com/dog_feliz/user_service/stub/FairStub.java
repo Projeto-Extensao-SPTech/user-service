@@ -8,46 +8,65 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public record FairStub() {
+public class FairStub {
 
     public FairRequestDto createNewFair() {
-        MockMultipartFile file = new MockMultipartFile(
+        MockMultipartFile image = new MockMultipartFile(
                 "image",
                 "foto.png",
                 "image/png",
-                "conteudo".getBytes()
-        );
-        AddressRequestDto adress = new AddressRequestDto(
-                "03992231",
-                120,
-                "Rua do birobiro",
-                "Bloco zezinho",
-                "SP Garoa",
-                "SP",
-                "Brasil"
+                "conteudo-fake".getBytes()
         );
 
-        FairRequestDto request = new FairRequestDto();
-        request.setFairDate(LocalDate.of(2025, 12, 2));
-        request.setFairHour(LocalDateTime.of(2025, 12, 2, 12, 30));
-        request.setAddress(adress);
-        request.setImage(List.of(file));
-        return request;
+        FairRequestDto dto = new FairRequestDto();
+        dto.setFairDate(LocalDate.now().plusDays(7));
+        dto.setFairHour(LocalDateTime.now().plusDays(7).truncatedTo(ChronoUnit.MINUTES));
+        dto.setAddress(createAddressRequestDto());
+        dto.setImages(List.of(image));
+        return dto;
     }
 
-    public FairEntity createFairEntity(Long id, AddressEntity address){
+    public AddressRequestDto createAddressRequestDto() {
+        AddressRequestDto dto = new AddressRequestDto();
+        dto.setStreet("Rua das Flores");
+        dto.setNumber(123);
+        dto.setCity("São Paulo");
+        dto.setState("SP");
+        dto.setZip_code("01001-000");
+        return dto;
+    }
+
+    public AddressEntity createAddressEntity(Long id) {
+        AddressEntity address = new AddressEntity();
+        address.setId(id);
+        address.setStreet("Rua das Flores");
+        address.setNumber(123);
+        address.setCity("São Paulo");
+        address.setState("SP");
+        address.setZipCode("01001-000");
+        return address;
+    }
+
+    public FairEntity createFairEntity(Long id, AddressEntity address) {
         FairEntity fair = new FairEntity();
         fair.setId(id);
+        fair.setFairDate(LocalDate.now().plusDays(7));
+        fair.setFairHour(LocalDateTime.now().plusDays(7));
         fair.setAddress(address);
-
+        fair.setInterest(0);
+        fair.setImageKeys(List.of("fair/uuid-stub_foto.png"));
         return fair;
     }
 
-    public AddressEntity createAddressEntity(Long id){
-        AddressEntity address = new AddressEntity();
-        address.setAddress(id);
-        return address;
+    public FairEntity createFairEntityWithMultipleImages(Long id, AddressEntity address) {
+        FairEntity fair = createFairEntity(id, address);
+        fair.setImageKeys(List.of(
+                "fair/uuid-1_foto1.png",
+                "fair/uuid-2_foto2.png"
+        ));
+        return fair;
     }
 }

@@ -3,10 +3,14 @@ package com.dog_feliz.user_service.entity;
 import com.dog_feliz.user_service.controller.dto.AddressRequestDto;
 import com.dog_feliz.user_service.entity.user.UserEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "address_tb")
 public class AddressEntity {
 
@@ -14,30 +18,23 @@ public class AddressEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String zipCode;
 
-//    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String street;
 
-//    @Convert(converter = IntegerCryptoConverter.class)
     @Column(nullable = false)
     private Integer number;
 
-//    @Convert(converter = StringCryptoConverter.class)
     private String complement;
 
-//    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String city;
 
-//    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String state;
 
-//    @Convert(converter = StringCryptoConverter.class)
     @Column(nullable = false)
     private String country;
 
@@ -62,46 +59,6 @@ public class AddressEntity {
     public AddressEntity(Long id, AddressRequestDto dto) {
         this(dto);
         this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public Integer getNumber() {
-        return number;
-    }
-
-    public String getComplement() {
-        return complement;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
     }
 
     @Override

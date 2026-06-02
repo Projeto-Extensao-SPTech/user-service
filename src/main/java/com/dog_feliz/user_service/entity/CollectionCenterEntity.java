@@ -1,7 +1,9 @@
 package com.dog_feliz.user_service.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "collection_center_tb")
 public class CollectionCenterEntity {
@@ -13,22 +15,11 @@ public class CollectionCenterEntity {
     @Column(length = 40, nullable = false)
     private String name;
 
-    @OneToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "address_id")
     private AddressEntity address;
 
     public CollectionCenterEntity() {
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public AddressEntity getAddress() {
-        return address;
-    }
 }
