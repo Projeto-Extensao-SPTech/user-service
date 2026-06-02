@@ -39,6 +39,3 @@ build/
 
 ## Log files ##
 ./logs/application.log
-
-## Runtime uploads ##
-uploads/
