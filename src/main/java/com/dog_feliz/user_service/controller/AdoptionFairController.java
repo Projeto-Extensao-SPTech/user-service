@@ -1,4 +1,0 @@
-package com.dog_feliz.user_service.controller;
-
-public class AdoptionFairController {
-}

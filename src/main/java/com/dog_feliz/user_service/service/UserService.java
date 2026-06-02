@@ -1,15 +1,16 @@
 package com.dog_feliz.user_service.service;
 
-import com.dog_feliz.user_service.shared.exception.ConflictUserException;
-import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
+import com.dog_feliz.user_service.controller.dto.UpdatePasswordRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.AddressEntity;
-import com.dog_feliz.user_service.entity.UserEntity;
-import com.dog_feliz.user_service.shared.exception.AddressNotFoundException;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dog_feliz.user_service.shared.crypto.hash.StringHasher;
+import com.dog_feliz.user_service.shared.exception.AddressNotFoundException;
+import com.dog_feliz.user_service.shared.exception.ConflictUserException;
+import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,38 +20,45 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final ValidationService validationService;
+    private final StringHasher stringHasher;
 
-    @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    public UserService(UserRepository userRepository, AddressRepository addressRepository, BCryptPasswordEncoder passwordEncoder, ValidationService validationService, StringHasher stringHasher) {
+        this.userRepository = userRepository;
+        this.addressRepository = addressRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.validationService = validationService;
+        this.stringHasher = stringHasher;
+    }
 
     public List<UserResponseDto> getUsers(){
         List<UserEntity> users = userRepository.findAll();
         return users.stream().map(userEntity -> new UserResponseDto(userEntity)).toList();
     }
 
-    public UserResponseDto getUserById(Long id){
-        Optional<UserEntity> userEntity = userRepository.findById(id);
-        if (userEntity.isEmpty()) throw new UserNotFoundException("User not found by id %d".formatted(id));
-        return new UserResponseDto(userEntity.get());
+    public UserEntity getUserById(Long id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found by id %d".formatted(id)));
+    }
+
+    public Boolean existsByPhone(String phone) {
+        return userRepository.existsByPhone(phone);
     }
 
     public UserResponseDto addUser(UserRequestDto userRequestDto){
-        if (userRepository.findByMailAddress(userRequestDto.getMailAddress()).isPresent()) throw new ConflictUserException("Already exists an user with requested email");
+        String mailAddressHash = stringHasher.hash(userRequestDto.getMailAddress());
+        if (userRepository.findByMailAddressHash(mailAddressHash).isPresent()) throw new ConflictUserException("Already exists an user with requested email");
         AddressEntity address = addressRepository.save(new AddressEntity(userRequestDto.getAddress()));
-        UserEntity user = userRepository.save(new UserEntity(userRequestDto, address, passwordEncoder.encode(userRequestDto.getPassword())));
+        UserEntity user = userRepository.save(new UserEntity(userRequestDto, address, passwordEncoder.encode(userRequestDto.getPassword()), mailAddressHash));
         return new UserResponseDto(user);
     }
 
     public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto){
-        Optional<UserEntity> userEntity = userRepository.findById(id);
-        if (userEntity.isEmpty()) throw new UserNotFoundException("User not found by id %d".formatted(id));
-
-        Long addressId = userEntity.get().getAddress().getId();
+        UserEntity userEntity = verifyUserId(id);
+        Long addressId = userEntity.getAddress().getId();
         Optional<AddressEntity> addressEntity = addressRepository.findById(addressId);
         if (addressEntity.isEmpty()) throw new AddressNotFoundException("Address not found by id %d".formatted(addressId));
 
@@ -59,11 +67,29 @@ public class UserService {
         return new UserResponseDto(userUpdated);
     }
 
-    public void deleteUser(Long id){
+    public void updateReceiveNotification(Long userId, Boolean receiveNotification) {
+        UserEntity userEntity = verifyUserId(userId);
+        userEntity.setReceiveNotifications(receiveNotification);
+        userRepository.save(userEntity);
+    }
+
+    public void updatePassword(UpdatePasswordRequestDto updatePasswordRequest) {
+        UserEntity userEntity = userRepository.findByPhone(updatePasswordRequest.phone()).orElseThrow(() -> new UserNotFoundException("User not found by requested phone and password, verify your credentials"));
+        validationService.verifyIsValidUserId(userEntity.getId());
+        userRepository.save(new UserEntity(userEntity, passwordEncoder.encode(updatePasswordRequest.password())));
+    }
+
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
     public List<UserEntity> getUsersForNotification() {
         return userRepository.findByReceiveNotificationsTrue();
+    }
+
+    private UserEntity verifyUserId(Long userId) {
+        Optional<UserEntity> userEntity = userRepository.findById(userId);
+        if (userEntity.isEmpty()) throw new UserNotFoundException("User not found by id %d".formatted(userId));
+        return userEntity.get();
     }
 }

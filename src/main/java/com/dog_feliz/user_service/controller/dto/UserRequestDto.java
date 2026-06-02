@@ -1,16 +1,21 @@
 package com.dog_feliz.user_service.controller.dto;
 
+import com.dog_feliz.user_service.entity.user.UserType;
+import com.dog_feliz.user_service.shared.utils.MaskUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+import lombok.Getter;
 
+@Getter
 public class UserRequestDto {
+    @NotNull(message = "O tipo do usuário é obrigatório.")
+    private final UserType type;
+
     @Size(min = 8, max = 40)
     private final String name;
 
-    @Size(min = 11, max = 11)
+    @Size(min = 11, max = 14)
     private final String document;
 
     /**
@@ -26,43 +31,38 @@ public class UserRequestDto {
     @Valid
     private final AddressRequestDto address;
 
+    @NotNull
     @Size(min = 8, max = 100)
     @Email
     @JsonProperty("mail_address")
     private final String mailAddress;
 
+    @Size(min = 8, max = 100)
     private final String password;
 
-    public UserRequestDto(String name, String document, String phone, AddressRequestDto address, String mailAddress, String password) {
+    @JsonProperty("is_admin")
+    private final Boolean isAdmin;
+
+    public UserRequestDto(UserType type, String name, String document, String phone, AddressRequestDto address, String mailAddress, String password, Boolean isAdmin) {
+        this.type = type;
         this.name = name;
         this.document = document;
         this.phone = phone;
         this.address = address;
         this.mailAddress = mailAddress;
         this.password = password;
+        this.isAdmin = isAdmin;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDocument() {
-        return document;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public AddressRequestDto getAddress() {
-        return address;
-    }
-
-    public String getMailAddress() {
-        return mailAddress;
-    }
-
-    public String getPassword() {
-        return password;
+    @Override
+    public String toString() {
+        return "UserRequestDto{" +
+                "type=" + type +
+                ", name='" + MaskUtils.maskNameField(name) + '\'' +
+                ", document='" + MaskUtils.maskDocument(document) + '\'' +
+                ", phone='" + MaskUtils.maskPhone(phone) + '\'' +
+                ", mailAddress='" + MaskUtils.maskMailAddress(mailAddress) + '\'' +
+                ", isAdmin=" + isAdmin +
+                '}';
     }
 }

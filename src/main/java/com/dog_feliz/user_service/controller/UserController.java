@@ -1,10 +1,13 @@
 package com.dog_feliz.user_service.controller;
 
-import com.dog_feliz.user_service.service.JwtService;
+import com.dog_feliz.user_service.controller.dto.UpdatePasswordRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dog_feliz.user_service.service.ValidationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -13,38 +16,83 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final ValidationService validationService;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private JwtService jwtService;
+    public UserController(UserService userService, ValidationService validationService) {
+        this.userService = userService;
+        this.validationService = validationService;
+    }
 
     @GetMapping
     private ResponseEntity<List<UserResponseDto>> getUsers(){
-        return ResponseEntity.ok(userService.getUsers());
+        List<UserResponseDto> users = userService.getUsers();
+        log.info("[GET_USERS] Users fetched successfully total={}", users.size());
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
     private ResponseEntity<UserResponseDto> getUser(
-        @PathVariable Long id
+            @PathVariable Long id
     ){
-        return ResponseEntity.ok(userService.getUserById(id));
+        validationService.verifyIsValidUserId(id);
+        UserResponseDto user = toResponse(userService.getUserById(id));
+
+        log.info("[GET_USER_BY_ID] User fetched successfully userId={}", id);
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}")
     private ResponseEntity<UserResponseDto> updateUser(
-        @PathVariable Long id,
-        @RequestBody UserRequestDto userRequest
+            @PathVariable Long id,
+            @RequestBody UserRequestDto userRequest
     ) {
-        return ResponseEntity.ok(userService.updateUser(id, userRequest));
+        validationService.verifyIsValidUserId(id);
+        UserResponseDto updatedUser = userService.updateUser(id, userRequest);
+
+        log.info("[UPDATE_USER] User updated successfully userId={}", id);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @PatchMapping("/notification/{id}/{receiveNotification}")
+    private void updateReceiveNotification(
+            @PathVariable Long id,
+            @PathVariable Boolean receiveNotification
+    ) {
+        validationService.verifyIsValidUserId(id);
+        userService.updateReceiveNotification(id, receiveNotification);
+        log.info("[UPDATE_USER_NOTIFICATION] Notification preference updated userId={} receiveNotification={}",
+                id, receiveNotification);
+    }
+
+    @GetMapping("/exists-by-phone/{phone}")
+    private Boolean existsByPhone(
+            @PathVariable String phone
+    ) {
+        Boolean exists = userService.existsByPhone(phone);
+        log.info("[EXISTS_USER_BY_PHONE] Check executed phoneExists={}", exists);
+        return exists;
+    }
+
+    @PatchMapping("/update-password")
+    private void updatePassword(
+            @RequestBody UpdatePasswordRequestDto updatePasswordRequestDto
+    ) {
+        userService.updatePassword(updatePasswordRequestDto);
+        log.info("[UPDATE_USER_PASSWORD] Password updated successfully");
     }
 
     @DeleteMapping("/{id}")
     private void deleteUser(
-        @PathVariable Long id
+            @PathVariable Long id
     ) {
+        validationService.verifyIsValidUserId(id);
         userService.deleteUser(id);
+        log.info("[DELETE_USER] User deleted successfully userId={}", id);
+    }
+
+    private UserResponseDto toResponse(UserEntity user) {
+        return new UserResponseDto(user);
     }
 }
-
-

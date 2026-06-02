@@ -1,6 +1,6 @@
 package com.dog_feliz.user_service.service;
 
-import com.dog_feliz.user_service.entity.UserEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -37,11 +38,13 @@ public class JwtService {
         UserEntity userEntity = (UserEntity) userDetails;
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("id", userEntity.getId());
+        extraClaims.put("user_type", userEntity.getType());
         extraClaims.put("name", userEntity.getName());
         extraClaims.put("phone", userEntity.getPhone());
         extraClaims.put("mail_address", userEntity.getMailAddress());
         extraClaims.put("document", userEntity.getDocument());
         extraClaims.put("receive_notifications", userEntity.getReceiveNotifications());
+        extraClaims.put("is_admin", userEntity.getIsAdmin());
         return generateToken(extraClaims, userDetails);
     }
 
@@ -53,11 +56,7 @@ public class JwtService {
         return jwtExpiration;
     }
 
-    private String buildToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails,
-            long expiration
-    ) {
+    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -93,5 +92,9 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String getTokenFromRequestObject(HttpServletRequest request) {
+        return request.getHeader("Authorization").substring(7);
     }
 }

@@ -1,96 +1,129 @@
 package com.dog_feliz.user_service.service;
 
-import com.dog_feliz.user_service.controller.dto.mail.MailRequestDto;
-import com.dog_feliz.user_service.controller.dto.notification.NotificationRequestDto;
-import com.dog_feliz.user_service.entity.notification.NotificationEntity;
-import com.dog_feliz.user_service.entity.notification.NotificationRecurrenceEntity;
-import com.dog_feliz.user_service.repository.AdoptionFairRepository;
-import com.dog_feliz.user_service.repository.NotificationRepository;
-import com.dog_feliz.user_service.service.mail.MailSenderAvailable;
-import com.dog_feliz.user_service.service.mail.strategy.MailSenderStrategy;
+import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
+import com.dog_feliz.user_service.controller.dto.NotificationSendRequest;
+import com.dog_feliz.user_service.controller.dto.NotificationType;
+import com.dog_feliz.user_service.entity.DonationEntity;
+import com.dog_feliz.user_service.entity.FairEntity;
+import com.dog_feliz.user_service.entity.SponsorshipEntity;
+import com.dog_feliz.user_service.entity.VolunteerEntity;
+import com.dog_feliz.user_service.entity.user.UserEntity;
+import com.dog_feliz.user_service.queue.event.NotificationInstantEvent;
+import com.dog_feliz.user_service.queue.event.NotificationScheduledEvent;
+import com.dog_feliz.user_service.queue.producer.NotificationProducer;
+import com.dog_feliz.user_service.repository.DonationRepository;
+import com.dog_feliz.user_service.repository.FairRepository;
+import com.dog_feliz.user_service.repository.SponsorshipRepository;
+import com.dog_feliz.user_service.repository.UserRepository;
+import com.dog_feliz.user_service.repository.VolunteerRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class NotificationService {
-    private final NotificationRepository notificationRepository;
-    private final AdoptionFairRepository adoptionFairRepository;
-    private final NotificationRecurrenceService notificationRecurrenceService;
-    @Qualifier(MailSenderAvailable.GMAIL_SENDER)
-    private final MailSenderStrategy mailSender;
+    @Value("${notification.default-recipient-mail}")
+    private String defaultRecipientMail;
+
+    private final NotificationProducer notificationProducer;
+    private final MailTemplateService mailTemplateService;
+
+    private final FairRepository fairRepository;
+    private final SponsorshipRepository sponsorshipRepository;
+    private final DonationRepository donationRepository;
+    private final VolunteerRepository volunteerRepository;
+    private final UserRepository userRepository;
 
     public NotificationService(
-            NotificationRepository notificationRepository,
-            AdoptionFairRepository adoptionFairRepository,
-            NotificationRecurrenceService notificationRecurrenceService, MailSenderStrategy mailSender
+            NotificationProducer notificationProducer,
+            MailTemplateService mailTemplateService,
+            FairRepository fairRepository,
+            SponsorshipRepository sponsorshipRepository,
+            DonationRepository donationRepository,
+            VolunteerRepository volunteerRepository,
+            UserRepository userRepository
     ) {
-        this.notificationRepository = notificationRepository;
-        this.adoptionFairRepository = adoptionFairRepository;
-        this.notificationRecurrenceService = notificationRecurrenceService;
-        this.mailSender = mailSender;
+        this.notificationProducer = notificationProducer;
+        this.mailTemplateService = mailTemplateService;
+        this.fairRepository = fairRepository;
+        this.sponsorshipRepository = sponsorshipRepository;
+        this.donationRepository = donationRepository;
+        this.volunteerRepository = volunteerRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
-    public NotificationEntity register(NotificationRequestDto notificationRequest) {
-        NotificationEntity notificationEntity;
-        Long adoptionFairId = notificationRequest.getAdoptionFairId();
+    public void schedule(NotificationRequestDto request) {
+        Long fairId = request.getFairId();
+        if (fairId != null) fairRepository.findById(fairId);
 
-        if (adoptionFairId != null) {
-            var adoptionFair = adoptionFairRepository.findById(adoptionFairId)
-                    .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Adoption fair id not found in notification register"));
-            notificationEntity = notificationRepository.save(new NotificationEntity(notificationRequest, adoptionFair));
-        } else {
-            notificationEntity = notificationRepository.save(new NotificationEntity(notificationRequest));
+        List<Integer> recurrences = request.getRecurrences();
+        NotificationScheduledEvent event = new NotificationScheduledEvent(
+                request.getEventId(),
+                request.getType().name(),
+                fairId,
+                request.getMessage(),
+                request.getEventDate(),
+                recurrences
+        );
+        notificationProducer.sendNotificationScheduled(event);
+    }
+
+    public void send(NotificationSendRequest request) {
+        NotificationType type = request.notificationType();
+        notificationProducer.sendNotificationInstant(new NotificationInstantEvent(
+                type.name(),
+                request.recipientMailAddress() == null ? defaultRecipientMail : request.recipientMailAddress(),
+                resolveNotificationContent(request.message(), type, request.referenceId())
+        ));
+    }
+
+    private String resolveNotificationContent(
+            String message,
+            NotificationType type,
+            Long referenceId
+    ) {
+        if (message == null && referenceId == null) {
+            throw new IllegalArgumentException("The message is required when reference id is null");
         }
 
-        List<NotificationRecurrenceEntity> notificationRecurrenceEntities = notificationRecurrenceService.register(
-                notificationEntity,
-                notificationRequest.getEventDate(),
-                notificationRequest.getRecurrences()
-        );
-        return new NotificationEntity(notificationEntity, notificationRecurrenceEntities);
-    }
-
-    public List<NotificationEntity> getByRecurrenceDate(LocalDate date) {
-        return notificationRepository.findByRecurrenceDate(date);
-    }
-
-    public NotificationEntity getById(Long id) {
-        Optional<NotificationEntity> notificationEntity = notificationRepository.findById(id);
-        if (notificationEntity.isEmpty()) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "Notification id not found");
+        if (referenceId != null) {
+            return getContentByNotificationType(type, referenceId);
         }
-        return notificationEntity.get();
+
+        return message;
     }
 
-    public List<NotificationEntity> getFutureNotifications() {
-        return notificationRepository.findByRecurrenceDateGreaterThan(LocalDate.now());
-    }
-
-    public void deleteById(Long id) {
-        notificationRepository.deleteById(id);
-    }
-
-    public void sendTodayNotifications() {
-        List<NotificationEntity> todayNotifications = this.getByRecurrenceDate(LocalDate.now());
-        List<MailRequestDto> mailRequests = todayNotifications.stream().map(notification -> toMailRequest(notification)).toList();
-        mailSender.sendBulkMail(mailRequests);
-    }
-
-    private MailRequestDto toMailRequest(NotificationEntity notification) {
-        // adjust attachment field when is an adoption fair notification to send image
-        return new MailRequestDto(
-                notification.getNotificationType().getDescription(),
-                notification.getMessage(),
-                null
-        );
+    private String getContentByNotificationType(NotificationType type, Long referenceId) {
+        switch (type) {
+            case FAIR -> {
+                FairEntity fair = fairRepository.findById(referenceId)
+                        .orElseThrow(() -> new EntityNotFoundException("Fair not found with id: " + referenceId));
+                return mailTemplateService.renderFair(fair);
+            }
+            case DONATION -> {
+                DonationEntity donation = donationRepository.findById(referenceId)
+                        .orElseThrow(() -> new EntityNotFoundException("Donation not found with id: " + referenceId));
+                return mailTemplateService.renderDonation(donation);
+            }
+            case VOLUNTEER -> {
+                VolunteerEntity volunteer = volunteerRepository.findById(referenceId)
+                        .orElseThrow(() -> new EntityNotFoundException("Volunteer not found with id: " + referenceId));
+                UserEntity user = userRepository.findById(volunteer.getUserEntity().getId())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + volunteer.getUserEntity().getId()));
+                return mailTemplateService.renderVolunteer(volunteer, user);
+            }
+            case SPONSORSHIP -> {
+                SponsorshipEntity sponsorship = sponsorshipRepository.findById(referenceId)
+                        .orElseThrow(() -> new EntityNotFoundException("Sponsorship not found with id: " + referenceId));
+                return mailTemplateService.renderSponsorship(sponsorship);
+            }
+        }
+        return null;
     }
 }
+
 
