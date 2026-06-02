@@ -39,10 +39,9 @@ public class UserService {
         return users.stream().map(userEntity -> new UserResponseDto(userEntity)).toList();
     }
 
-    public UserResponseDto getUserById(Long id){
-        Optional<UserEntity> userEntity = userRepository.findById(id);
-        if (userEntity.isEmpty()) throw new UserNotFoundException("User not found by id %d".formatted(id));
-        return new UserResponseDto(userEntity.get());
+    public UserEntity getUserById(Long id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found by id %d".formatted(id)));
     }
 
     public Boolean existsByPhone(String phone) {

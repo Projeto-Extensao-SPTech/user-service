@@ -2,6 +2,7 @@ package com.dog_feliz.user_service.controller;
 
 import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipResponseDto;
+import com.dog_feliz.user_service.entity.SponsorshipEntity;
 import com.dog_feliz.user_service.service.SponsorshipService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class SponsorshipController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SponsorshipResponseDto> getSponsorshipById(@PathVariable Long id) {
-        SponsorshipResponseDto response = sponsorshipService.getSponsorshipById(id);
+        SponsorshipResponseDto response = toResponse(sponsorshipService.getSponsorshipById(id));
         log.info("[GET_SPONSORSHIP_BY_ID] Sponsorship fetched successfully sponsorshipId={}", id);
         return ResponseEntity.ok(response);
     }
@@ -65,5 +66,9 @@ public class SponsorshipController {
         sponsorshipService.deleteSponsorship(id);
         log.info("[DELETE_SPONSORSHIP] Sponsorship deleted successfully sponsorshipId={}", id);
         return ResponseEntity.noContent().build();
+    }
+
+    private SponsorshipResponseDto toResponse(SponsorshipEntity sponsorship) {
+        return new SponsorshipResponseDto(sponsorship);
     }
 }

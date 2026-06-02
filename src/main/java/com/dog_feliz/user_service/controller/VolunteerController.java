@@ -2,6 +2,7 @@ package com.dog_feliz.user_service.controller;
 
 import com.dog_feliz.user_service.controller.dto.VolunteerRequestDto;
 import com.dog_feliz.user_service.controller.dto.VolunteerResponseDto;
+import com.dog_feliz.user_service.entity.VolunteerEntity;
 import com.dog_feliz.user_service.service.ValidationService;
 import com.dog_feliz.user_service.service.VolunteerService;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class VolunteerController {
 
     @GetMapping("/{id}")
     public VolunteerResponseDto getVolunteerById(@PathVariable Long id) {
-        VolunteerResponseDto volunteer = volunteerService.getVolunteerById(id);
+        VolunteerResponseDto volunteer = toResponse(volunteerService.getVolunteerById(id));
         log.info("[GET_VOLUNTEER_BY_ID] Volunteer fetched successfully volunteerId={}", id);
         return volunteer;
     }
@@ -56,5 +57,9 @@ public class VolunteerController {
     public void deleteVolunteer(@PathVariable Long id) {
         volunteerService.deleteVolunteer(id);
         log.info("[DELETE_VOLUNTEER] Volunteer deleted successfully volunteerId={}", id);
+    }
+
+    private VolunteerResponseDto toResponse(VolunteerEntity volunteer) {
+        return new VolunteerResponseDto(volunteer);
     }
 }

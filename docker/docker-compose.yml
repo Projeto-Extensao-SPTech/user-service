@@ -1,0 +1,142 @@
+version: "3.9"
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-user-service-data:
+  mysql-notification-service-data:
+  rabbitmq-data:
+
+services:
+
+  mysql-user-service:
+    image: mysql:8.0
+    container_name: mysql-user-service
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_USER_SERVICE_ROOT_PASSWORD}
+      MYSQL_DATABASE:      ${MYSQL_USER_SERVICE_DB}
+      MYSQL_USER:          ${MYSQL_USER_SERVICE_USER}
+      MYSQL_PASSWORD:      ${MYSQL_USER_SERVICE_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-user-service-data:/var/lib/mysql
+      - ./init-scripts/user-service:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_USER_SERVICE_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-network
+
+  mysql-notification-service:
+    image: mysql:8.0
+    container_name: mysql-notification-service
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_NOTIFICATION_SERVICE_ROOT_PASSWORD}
+      MYSQL_DATABASE:      ${MYSQL_NOTIFICATION_SERVICE_DB}
+      MYSQL_USER:          ${MYSQL_NOTIFICATION_SERVICE_USER}
+      MYSQL_PASSWORD:      ${MYSQL_NOTIFICATION_SERVICE_PASSWORD}
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql-notification-service-data:/var/lib/mysql
+      - ./init-scripts/notification-service:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_NOTIFICATION_SERVICE_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: rabbitmq
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro # optional
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro # optional
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-network
+
+  user-service:
+    build:
+      context: ${USER_SERVICE_PATH}
+      dockerfile: docker/Dockerfile
+    container_name: user-service
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SPRING_DATASOURCE_URL:        jdbc:mysql://mysql-user-service:3306/${MYSQL_USER_SERVICE_DB}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME:   ${MYSQL_USER_SERVICE_USER}
+      SPRING_DATASOURCE_PASSWORD:   ${MYSQL_USER_SERVICE_PASSWORD}
+      SPRING_RABBITMQ_HOST:         rabbitmq
+      SPRING_RABBITMQ_PORT:         5672
+      SPRING_RABBITMQ_USERNAME:     ${RABBITMQ_USER}
+      SPRING_RABBITMQ_PASSWORD:     ${RABBITMQ_PASSWORD}
+      SPRING_RABBITMQ_VIRTUAL_HOST: ${RABBITMQ_VHOST}
+      SPRING_PROFILES_ACTIVE:       ${SPRING_PROFILES_ACTIVE:-local}
+      SPRING_NOTIFICATION_URL:      notification-service
+    ports:
+      - "8081:8080"
+    depends_on:
+      mysql-user-service:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      notification-service:
+        condition: service_started
+    networks:
+      - app-network
+
+  notification-service:
+    build:
+      context: ${NOTIFICATION_SERVICE_PATH}
+      dockerfile: docker/Dockerfile
+    container_name: notification-service
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SPRING_DATASOURCE_URL:        jdbc:mysql://mysql-notification-service:3306/${MYSQL_NOTIFICATION_SERVICE_DB}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME:   ${MYSQL_NOTIFICATION_SERVICE_USER}
+      SPRING_DATASOURCE_PASSWORD:   ${MYSQL_NOTIFICATION_SERVICE_PASSWORD}
+      SPRING_RABBITMQ_HOST:         rabbitmq
+      SPRING_RABBITMQ_PORT:         5672
+      SPRING_RABBITMQ_USERNAME:     ${RABBITMQ_USER}
+      SPRING_RABBITMQ_PASSWORD:     ${RABBITMQ_PASSWORD}
+      SPRING_RABBITMQ_VIRTUAL_HOST: ${RABBITMQ_VHOST}
+      SPRING_PROFILES_ACTIVE:       ${SPRING_PROFILES_ACTIVE:-local}
+    ports:
+      - "8082:8080"
+    depends_on:
+      mysql-notification-service:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - app-network

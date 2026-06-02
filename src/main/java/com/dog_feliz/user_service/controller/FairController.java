@@ -49,7 +49,8 @@ public class FairController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FairResponseDto> getFair(@PathVariable Long id) {
-        FairResponseDto fair = fairService.getFair(id);
+
+        FairResponseDto fair = toResponse(fairService.getFair(id));
 
         log.info("[GET_FAIR] Fair fetched successfully fairId={}", id);
         return ResponseEntity.ok(fair);
@@ -101,5 +102,9 @@ public class FairController {
 
         log.info("[INSERT_INTEREST_FAIR] Interest updated successfully fairId={}", id);
         return ResponseEntity.noContent().build();
+    }
+
+    private FairResponseDto toResponse(FairEntity fair) {
+        return new FairResponseDto(fair);
     }
 }

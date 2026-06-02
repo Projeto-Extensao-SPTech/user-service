@@ -1,6 +1,5 @@
 package com.dog_feliz.user_service.controller.dto;
 
-import com.dog_feliz.user_service.entity.notification.NotificationType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
@@ -11,10 +10,13 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class NotificationRequestDto {
+    private final String eventId = UUID.randomUUID().toString();
+
     @NotNull(message = "O tipo da notificação é obrigatório.")
     private NotificationType type;
 

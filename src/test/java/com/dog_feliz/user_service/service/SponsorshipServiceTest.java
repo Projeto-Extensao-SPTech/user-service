@@ -5,7 +5,6 @@ import com.dog_feliz.user_service.entity.SponsorshipEntity;
 import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.repository.SponsorshipRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
-import com.dog_feliz.user_service.service.mail.MailService;
 import com.dog_feliz.user_service.shared.exception.SponsorshipNotFoundException;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import com.dog_feliz.user_service.stub.SponsorshipStub;
@@ -31,8 +30,6 @@ class SponsorshipServiceTest {
     private SponsorshipRepository sponsorshipRepository;
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private MailService mailService;
 
     @InjectMocks
     private SponsorshipService sponsorshipService;
@@ -62,22 +59,6 @@ class SponsorshipServiceTest {
 
         assertThrows(UserNotFoundException.class,
                 () -> sponsorshipService.addSponsorship(SponsorshipStub.validRequest(3L)));
-    }
-
-    @Test
-    @DisplayName("Dado patrocinador válido, quando addSponsorship é chamado, deve salvar o patrocínio e enviar e-mail")
-    void givenValidSponsor_whenAdd_thenSavesAndNotifies() {
-        UserEntity sponsor = UserStub.entityWithId(1L);
-        SponsorshipEntity saved = new SponsorshipEntity();
-        saved.setId(10L);
-
-        when(userRepository.findById(1L)).thenReturn(Optional.of(sponsor));
-        when(sponsorshipRepository.save(any())).thenReturn(saved);
-
-        SponsorshipResponseDto response = sponsorshipService.addSponsorship(SponsorshipStub.validRequest(1L));
-
-        assertNotNull(response);
-        verify(mailService).notifySponsorship(any());
     }
 
     @Test

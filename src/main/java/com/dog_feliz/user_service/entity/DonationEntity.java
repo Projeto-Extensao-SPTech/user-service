@@ -11,7 +11,7 @@ public class DonationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "user_id", nullable = false)
     private Integer userId;
@@ -59,7 +59,7 @@ public class DonationEntity {
     }
 
 
-    public Integer getId() { return id; }
+    public Long getId() { return id; }
     public Integer getUserId() { return userId; }
     public Integer getCollectionCenterId() { return collectionCenterId; }
     public String getName() { return name; }

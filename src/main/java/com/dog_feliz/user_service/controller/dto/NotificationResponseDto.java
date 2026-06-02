@@ -1,8 +1,5 @@
 package com.dog_feliz.user_service.controller.dto;
 
-import com.dog_feliz.user_service.entity.notification.NotificationEntity;
-import com.dog_feliz.user_service.entity.notification.NotificationRecurrenceEntity;
-import com.dog_feliz.user_service.entity.notification.NotificationType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -22,17 +19,5 @@ public class NotificationResponseDto {
     @JsonProperty("created_at")
     private ZonedDateTime createdAt;
 
-    public NotificationResponseDto(NotificationEntity notificationEntity) {
-        this.type = notificationEntity.getNotificationType();
-        this.message = notificationEntity.getMessage();
-        this.recurrences = notificationEntity
-                .getNotificationRecurrence()
-                .stream()
-                .map(NotificationRecurrenceEntity::getRecurrence)
-                .toList();
-        this.createdAt = notificationEntity.getCreatedAt();
-    }
-
-    public NotificationResponseDto() {
-    }
+    public NotificationResponseDto() {}
 }

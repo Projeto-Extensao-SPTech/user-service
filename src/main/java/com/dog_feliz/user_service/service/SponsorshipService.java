@@ -1,12 +1,13 @@
 package com.dog_feliz.user_service.service;
 
+import com.dog_feliz.user_service.controller.dto.NotificationSendRequest;
+import com.dog_feliz.user_service.controller.dto.NotificationType;
 import com.dog_feliz.user_service.controller.dto.SponsorshipRequestDto;
 import com.dog_feliz.user_service.controller.dto.SponsorshipResponseDto;
 import com.dog_feliz.user_service.entity.SponsorshipEntity;
 import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.repository.SponsorshipRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
-import com.dog_feliz.user_service.service.mail.MailService;
 import com.dog_feliz.user_service.shared.exception.SponsorshipNotFoundException;
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,29 +19,24 @@ public class SponsorshipService {
 
     private final SponsorshipRepository sponsorshipRepository;
     private final UserRepository userRepository;
-    private final MailService mailService;
+    private final NotificationService notificationService;
 
-    public SponsorshipService(
-            SponsorshipRepository sponsorshipRepository,
-            UserRepository userRepository,
-            MailService mailService
-    ) {
+    public SponsorshipService(SponsorshipRepository sponsorshipRepository, UserRepository userRepository, NotificationService notificationService) {
         this.sponsorshipRepository = sponsorshipRepository;
         this.userRepository = userRepository;
-        this.mailService = mailService;
+        this.notificationService = notificationService;
     }
+
     public List<SponsorshipResponseDto> getAllSponsorships() {
         List<SponsorshipEntity> sponsorship = sponsorshipRepository.findAll();
         return sponsorship.stream().map(SponsorshipResponseDto::new).toList();
     }
 
-    public SponsorshipResponseDto getSponsorshipById(Long id) {
-        SponsorshipEntity sponsorship = sponsorshipRepository.findById(id)
+    public SponsorshipEntity getSponsorshipById(Long id) {
+        return sponsorshipRepository.findById(id)
                 .orElseThrow(() ->
                         new SponsorshipNotFoundException("Sponsorship não encontrado com o ID: %d".formatted(id))
                 );
-
-        return new SponsorshipResponseDto(sponsorship);
     }
 
     public SponsorshipResponseDto getSponsorshipsBySponsorId(Long sponsorId) {
@@ -66,7 +62,14 @@ public class SponsorshipService {
 
         SponsorshipEntity saved = sponsorshipRepository.save(sponsorship);
 
-        mailService.notifySponsorship(sponsorship);
+        notificationService.send(
+                new NotificationSendRequest(
+                        NotificationType.SPONSORSHIP,
+                        null,
+                        null,
+                        saved.getId()
+                )
+        );
         return new SponsorshipResponseDto(saved);
     }
 

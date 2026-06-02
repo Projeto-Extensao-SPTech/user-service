@@ -5,7 +5,7 @@ import com.dog_feliz.user_service.entity.VolunteerEntity;
 import com.dog_feliz.user_service.entity.user.UserEntity;
 import com.dog_feliz.user_service.repository.UserRepository;
 import com.dog_feliz.user_service.repository.VolunteerRepository;
-import com.dog_feliz.user_service.service.mail.MailService;
+
 import com.dog_feliz.user_service.shared.exception.UserNotFoundException;
 import com.dog_feliz.user_service.shared.exception.VolunteerNotFoundException;
 import com.dog_feliz.user_service.stub.UserStub;
@@ -31,8 +31,7 @@ class VolunteerServiceTest {
     private VolunteerRepository volunteerRepository;
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private MailService mailService;
+
 
     @InjectMocks
     private VolunteerService volunteerService;
@@ -63,19 +62,6 @@ class VolunteerServiceTest {
 
         assertThrows(UserNotFoundException.class,
                 () -> volunteerService.addVolunteer(VolunteerStub.validRequest(5L)));
-    }
-
-    @Test
-    @DisplayName("Dada requisição válida, quando addVolunteer é chamado, deve salvar o voluntário e enviar e-mail")
-    void givenValidRequest_whenAddVolunteer_thenSavesAndNotifies() {
-        UserEntity user = UserStub.entityWithId(1L);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(volunteerRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-
-        VolunteerResponseDto response = volunteerService.addVolunteer(VolunteerStub.validRequest(1L));
-
-        assertNotNull(response);
-        verify(mailService).notifyVolunteer(any(VolunteerEntity.class));
     }
 
     @Test

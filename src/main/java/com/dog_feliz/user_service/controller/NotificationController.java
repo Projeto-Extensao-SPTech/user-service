@@ -1,6 +1,7 @@
 package com.dog_feliz.user_service.controller;
 
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
+import com.dog_feliz.user_service.controller.dto.NotificationSendRequest;
 import com.dog_feliz.user_service.service.NotificationService;
 import org.springframework.http.HttpStatus;
 import com.dog_feliz.user_service.service.ValidationService;
@@ -22,16 +23,17 @@ public class NotificationController {
         this.validationService = validationService;
     }
 
-    @PostMapping
-    private ResponseEntity<Void> register(@RequestBody NotificationRequestDto notificationRequest) {
+    @PostMapping("/schedule")
+    private ResponseEntity<Void> scheduleNotification(@RequestBody NotificationRequestDto notificationRequest) {
         validationService.verifyIsAdminUser();
-        notificationService.register(notificationRequest);
+        notificationService.schedule(notificationRequest);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
-    @RequestMapping(method = RequestMethod.HEAD, path = "/send-today-notifications")
-    private void sendTodayNotifications() {
-        notificationService.sendTodayNotifications();
-        log.info("[SEND_TODAY_NOTIFICATIONS] Notifications sent successfully");
+    @PostMapping("/send")
+    private ResponseEntity<Void> send(@RequestBody NotificationSendRequest notificationRequest) {
+        validationService.verifyIsAdminUser();
+        notificationService.send(notificationRequest);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

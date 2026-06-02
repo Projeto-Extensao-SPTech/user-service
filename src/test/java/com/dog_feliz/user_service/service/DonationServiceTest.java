@@ -4,7 +4,6 @@ import com.dog_feliz.user_service.controller.dto.DonationResponseDto;
 import com.dog_feliz.user_service.entity.DonationEntity;
 import com.dog_feliz.user_service.repository.DonationRepository;
 import com.dog_feliz.user_service.repository.UserRepository;
-import com.dog_feliz.user_service.service.mail.MailService;
 import com.dog_feliz.user_service.stub.DonationStub;
 import com.dog_feliz.user_service.stub.UserStub;
 import org.junit.jupiter.api.DisplayName;
@@ -13,13 +12,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DonationServiceTest {
@@ -27,7 +28,7 @@ class DonationServiceTest {
     @Mock
     private DonationRepository donationRepository;
     @Mock
-    private MailService mailService;
+    private NotificationService notificationService;
     @Mock
     private UserRepository userRepository;
 
@@ -44,7 +45,7 @@ class DonationServiceTest {
         DonationResponseDto response = donationService.createDonation(DonationStub.validRequest(), 1L);
 
         assertNotNull(response);
-        verify(mailService).notifyDonation(saved);
+        verify(notificationService).send(any());
     }
 
     @Test
@@ -57,7 +58,8 @@ class DonationServiceTest {
         DonationResponseDto response = donationService.createDonation(DonationStub.validRequestWithImage(), 2L);
 
         assertNotNull(response);
-        verify(mailService, never()).notifyDonation(any());
+        // when the return is empty, the notification is not sent
+        verify(notificationService, times(0)).send(any());
     }
 
     @Test
