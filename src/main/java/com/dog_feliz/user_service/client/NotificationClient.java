@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @FeignClient(
         name = "notification-service",
-        url = "${notification.service.url:http://localhost:9999}"
+        url = "${notification.service.url}"
 )
 public interface NotificationClient {
     @GetMapping("/notifications/{id}")
