@@ -16,7 +16,6 @@ public class NotificationController {
 
     private final NotificationService notificationService;
     private final ValidationService validationService;
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public NotificationController(NotificationService notificationService, ValidationService validationService) {
         this.notificationService = notificationService;

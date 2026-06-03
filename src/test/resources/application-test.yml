@@ -66,3 +66,6 @@ aws:
     access-key: fake-access-key
     secret-key: fake-secret-key
     session-token: fake-session-token
+
+cors:
+  allowed-origin: http://localhost:7000

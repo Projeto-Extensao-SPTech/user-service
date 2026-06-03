@@ -1,0 +1,78 @@
+spring:
+  application:
+    name: user-service
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 15MB
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+
+server:
+  port: ${SERVER_PORT:7000}
+  error:
+    include-stacktrace: never
+
+aes:
+  encryptor:
+    secret-key: ${ENCRYPTOR_SECRET_KEY}
+
+security:
+  hash:
+    secret-key: ${HASH_SECRET_KEY}
+
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+    expiration-time: 1800000
+
+  refresh-token:
+    expiration-time: 3600000
+
+cors:
+  allowed-origin: ${SITE_URL:abrigodogfeliz.qzz.io}
+
+notification:
+  service:
+    url: ${SPRING_NOTIFICATION_URL}
+  default-recipient-mail: lucasaiello19@gmail.com
+
+melhor-envio:
+  api:
+    url: ${MELHOR_ENVIO_URL:https://sandbox.melhorenvio.com.br}
+    token: ${MELHOR_ENVIO_TOKEN}
+    user-agent: ${MELHOR_ENVIO_USER_AGENT}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+
+aws:
+  s3:
+    bucket-name: ${AWS_BUCKET_NAME:my-bucket}
+    region: ${AWS_REGION:us-east-1}
+    access-key: ${AWS_ACCESS_KEY:aws-access-key}
+    secret-key: ${AWS_SECRET_KEY:aws-secret-key}
+    session-token: ${AWS_SESSION_TOKEN:session-token}
