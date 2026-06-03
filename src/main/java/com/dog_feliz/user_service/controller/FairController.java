@@ -56,8 +56,8 @@ public class FairController {
         return ResponseEntity.ok(fair);
     }
 
-    @GetMapping("/images/{key}")
-    public ResponseEntity<Void> getImage(@PathVariable String key) {
+    @GetMapping("/images")
+    public ResponseEntity<Void> getImage(@RequestParam String key) {
         String presignedUrl = storageService.getPresignedUrl(key, Duration.ofMinutes(15));
 
         log.info("[GET_FAIR_IMAGE] Redirecting to presigned URL key={}", key);
