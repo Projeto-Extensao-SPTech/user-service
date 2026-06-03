@@ -25,9 +25,11 @@ public class NotificationFeignController {
     }
 
     @GetMapping
-    public PageResponseDto<NotificationResponseDto> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return notificationClient.getAll(pageable);
+    public PageResponseDto<NotificationResponseDto> getAll(
+            @RequestParam Integer page,
+            @RequestParam Integer size
+    ) {
+        return notificationClient.getAll(page, size);
     }
 
     @GetMapping("/recurrence")

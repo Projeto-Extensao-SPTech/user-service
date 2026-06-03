@@ -18,7 +18,10 @@ public interface NotificationClient {
     NotificationResponseDto getById(@PathVariable("id") Long id);
 
     @GetMapping("/notifications")
-    PageResponseDto<NotificationResponseDto> getAll(@SpringQueryMap Pageable pageable);
+    PageResponseDto<NotificationResponseDto> getAll(
+            @RequestParam Integer page,
+            @RequestParam Integer size
+    );
 
     @GetMapping("/notifications/recurrence")
     PageResponseDto<NotificationResponseDto> findByRecurrenceDate(@RequestParam LocalDate date, @RequestParam(required = false) Pageable pageable);
