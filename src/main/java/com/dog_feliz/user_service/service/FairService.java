@@ -2,11 +2,15 @@ package com.dog_feliz.user_service.service;
 
 import com.dog_feliz.user_service.controller.dto.FairRequestDto;
 import com.dog_feliz.user_service.controller.dto.FairResponseDto;
+import com.dog_feliz.user_service.controller.dto.PageResponseDto;
 import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.entity.FairEntity;
 import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.FairRepository;
+import com.dog_feliz.user_service.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,17 +28,16 @@ public class FairService {
     private final AddressRepository addressRepository;
     private final StorageService storageService;
 
+    @CacheEvict(value = "fairs", allEntries = true)
     public FairEntity createFair(FairRequestDto dto) {
         AddressEntity address = addressRepository.save(new AddressEntity(dto.getAddress()));
         List<String> imageKeys = storageService.uploadAll(dto.getImages(), "fair");
-
         FairEntity fair = new FairEntity();
         fair.setFairDate(dto.getFairDate());
         fair.setFairHour(dto.getFairHour());
         fair.setAddress(address);
         fair.setInterest(0);
         fair.setImageKeys(imageKeys);
-
         return fairRepository.save(fair);
     }
 
@@ -49,12 +52,16 @@ public class FairService {
                 .toList();
     }
 
-    public Page<FairResponseDto> getFutureFairs(int page, int size, String sortedBy) {
+    @Cacheable(cacheNames = "fairs", key = "'page:' + #page + ':size:' + #size")
+    public PageResponseDto<FairResponseDto> getFutureFairs(int page, int size, String sortedBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortedBy));
-        return fairRepository.findByFairDateGreaterThan(LocalDate.now(), pageable)
-                .map(FairResponseDto::new);
+        return new PageResponseDto<>(
+                fairRepository.findByFairDateGreaterThan(LocalDate.now(), pageable)
+                        .map(FairResponseDto::new)
+        );
     }
 
+    @CacheEvict(value = "fairs", allEntries = true)
     public void deleteFair(Long id) {
         FairEntity fair = fairRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Feira não encontrada com o id: " + id));
@@ -62,6 +69,7 @@ public class FairService {
         fairRepository.deleteById(id);
     }
 
+    @CacheEvict(value = "fairs", allEntries = true)
     public void insertInterest(Long id) {
         FairEntity fair = fairRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Feira não encontrada"));

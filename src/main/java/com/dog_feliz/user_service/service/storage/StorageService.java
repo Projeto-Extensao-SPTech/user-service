@@ -1,4 +1,4 @@
-package com.dog_feliz.user_service.service;
+package com.dog_feliz.user_service.service.storage;
 
 import org.springframework.web.multipart.MultipartFile;
 

@@ -2,18 +2,26 @@ package com.dog_feliz.user_service.controller;
 
 import com.dog_feliz.user_service.controller.dto.FairRequestDto;
 import com.dog_feliz.user_service.controller.dto.FairResponseDto;
+import com.dog_feliz.user_service.controller.dto.PageResponseDto;
 import com.dog_feliz.user_service.entity.FairEntity;
 import com.dog_feliz.user_service.service.FairService;
-import com.dog_feliz.user_service.service.S3StorageService;
 import com.dog_feliz.user_service.service.ValidationService;
+import com.dog_feliz.user_service.service.storage.S3StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
@@ -75,13 +83,12 @@ public class FairController {
     }
 
     @GetMapping("/future")
-    public Page<FairResponseDto> getFutureFairs(
+    public PageResponseDto<FairResponseDto> getFutureFairs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy
     ) {
-        Page<FairResponseDto> fairs = fairService.getFutureFairs(page, size, sortBy);
-
+        PageResponseDto<FairResponseDto> fairs = fairService.getFutureFairs(page, size, sortBy);
         log.info("[GET_FUTURE_FAIRS] Future fairs fetched successfully page={} size={} sortBy={} totalElements={}",
                 page, size, sortBy, fairs.getTotalElements());
         return fairs;

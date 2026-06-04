@@ -2,10 +2,12 @@ package com.dog_feliz.user_service.service;
 
 import com.dog_feliz.user_service.controller.dto.FairRequestDto;
 import com.dog_feliz.user_service.controller.dto.FairResponseDto;
+import com.dog_feliz.user_service.controller.dto.PageResponseDto;
 import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.entity.FairEntity;
 import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.FairRepository;
+import com.dog_feliz.user_service.service.storage.S3StorageService;
 import com.dog_feliz.user_service.shared.exception.StorageException;
 import com.dog_feliz.user_service.stub.FairStub;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,15 +16,28 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class FairServiceTest {
 
@@ -164,9 +179,9 @@ public class FairServiceTest {
         when(fairRepository.findByFairDateGreaterThan(LocalDate.now(), pageable))
                 .thenReturn(new PageImpl<>(List.of(futureFair), pageable, 1));
 
-        Page<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
+        PageResponseDto<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
 
-        assertEquals(1, fairs.getContent().size());
+        assertEquals(1, fairs.getData().size());
     }
 
     @Test
@@ -182,11 +197,11 @@ public class FairServiceTest {
         when(fairRepository.findByFairDateGreaterThan(LocalDate.now(), pageable))
                 .thenReturn(new PageImpl<>(List.of(fair1, fair2), pageable, 2));
 
-        Page<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
+        PageResponseDto<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
 
-        assertEquals(2, fairs.getContent().size());
-        assertEquals(fair1.getId(), fairs.getContent().getFirst().getId());
-        assertEquals(fair2.getId(), fairs.getContent().getLast().getId());
+        assertEquals(2, fairs.getData().size());
+        assertEquals(fair1.getId(), fairs.getData().getFirst().getId());
+        assertEquals(fair2.getId(), fairs.getData().getLast().getId());
     }
 
     @Test
@@ -195,9 +210,9 @@ public class FairServiceTest {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
         when(fairRepository.findByFairDateGreaterThan(LocalDate.now(), pageable)).thenReturn(Page.empty());
 
-        Page<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
+        PageResponseDto<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
 
-        assertTrue(fairs.getContent().isEmpty());
+        assertTrue(fairs.getData().isEmpty());
     }
 
 

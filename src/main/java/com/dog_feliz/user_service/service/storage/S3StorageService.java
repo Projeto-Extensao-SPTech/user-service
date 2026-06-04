@@ -1,4 +1,4 @@
-package com.dog_feliz.user_service.service;
+package com.dog_feliz.user_service.service.storage;
 
 import com.dog_feliz.user_service.config.AwsS3Properties;
 import com.dog_feliz.user_service.shared.exception.StorageException;

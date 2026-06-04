@@ -1,7 +1,9 @@
 package com.dog_feliz.user_service.controller;
 
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
+import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
 import com.dog_feliz.user_service.controller.dto.NotificationSendRequest;
+import com.dog_feliz.user_service.controller.dto.PageResponseDto;
 import com.dog_feliz.user_service.service.NotificationService;
 import org.springframework.http.HttpStatus;
 import com.dog_feliz.user_service.service.ValidationService;
@@ -34,5 +36,18 @@ public class NotificationController {
         validationService.verifyIsAdminUser();
         notificationService.send(notificationRequest);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+
+    @GetMapping("/{id}")
+    public NotificationResponseDto getById(@PathVariable Long id) {
+        return notificationService.getNotificationById(id);
+    }
+
+    @GetMapping
+    public PageResponseDto<NotificationResponseDto> getAll(
+            @RequestParam Integer page,
+            @RequestParam Integer size
+    ) {
+        return notificationService.getAllNotifications(page, size);
     }
 }

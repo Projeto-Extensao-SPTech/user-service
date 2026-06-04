@@ -1,8 +1,11 @@
 package com.dog_feliz.user_service.service;
 
+import com.dog_feliz.user_service.client.NotificationClient;
 import com.dog_feliz.user_service.controller.dto.NotificationRequestDto;
+import com.dog_feliz.user_service.controller.dto.NotificationResponseDto;
 import com.dog_feliz.user_service.controller.dto.NotificationSendRequest;
 import com.dog_feliz.user_service.controller.dto.NotificationType;
+import com.dog_feliz.user_service.controller.dto.PageResponseDto;
 import com.dog_feliz.user_service.entity.DonationEntity;
 import com.dog_feliz.user_service.entity.FairEntity;
 import com.dog_feliz.user_service.entity.SponsorshipEntity;
@@ -19,7 +22,11 @@ import com.dog_feliz.user_service.repository.VolunteerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
+
 import java.util.List;
 
 
@@ -30,6 +37,7 @@ public class NotificationService {
 
     private final NotificationProducer notificationProducer;
     private final MailTemplateService mailTemplateService;
+    private final NotificationClient notificationClient;
 
     private final FairRepository fairRepository;
     private final SponsorshipRepository sponsorshipRepository;
@@ -39,7 +47,7 @@ public class NotificationService {
 
     public NotificationService(
             NotificationProducer notificationProducer,
-            MailTemplateService mailTemplateService,
+            MailTemplateService mailTemplateService, NotificationClient notificationClient,
             FairRepository fairRepository,
             SponsorshipRepository sponsorshipRepository,
             DonationRepository donationRepository,
@@ -48,6 +56,7 @@ public class NotificationService {
     ) {
         this.notificationProducer = notificationProducer;
         this.mailTemplateService = mailTemplateService;
+        this.notificationClient = notificationClient;
         this.fairRepository = fairRepository;
         this.sponsorshipRepository = sponsorshipRepository;
         this.donationRepository = donationRepository;
@@ -60,10 +69,16 @@ public class NotificationService {
         Long fairId = request.getFairId();
         if (fairId != null) fairRepository.findById(fairId);
 
+<<<<<<< Updated upstream
         List<Integer> recurrences = request.getRecurrences();
         NotificationScheduledEvent event = new NotificationScheduledEvent(
                 request.getEventId(),
                 request.getType().name(),
+=======
+        List<Integer> recurrences = notificationRequest.getRecurrences();
+        NotificationCreatedEvent event = new NotificationCreatedEvent(
+                notificationRequest.getType().name(),
+>>>>>>> Stashed changes
                 fairId,
                 request.getMessage(),
                 request.getEventDate(),
@@ -79,6 +94,23 @@ public class NotificationService {
                 request.recipientMailAddress() == null ? defaultRecipientMail : request.recipientMailAddress(),
                 resolveNotificationContent(request.message(), type, request.referenceId())
         ));
+    }
+
+    @Cacheable(value = "notifications", key = "'page:' + #page + ':size:' + #size")
+    public PageResponseDto<NotificationResponseDto> getAllNotifications(int page, int size) {
+        try {
+            return notificationClient.getAll(page, size);
+        } catch (Exception e) {
+            throw new HttpServerErrorException(HttpStatusCode.valueOf(500));
+        }
+    }
+
+    public NotificationResponseDto getNotificationById(Long id) {
+        try {
+            return notificationClient.getById(id);
+        } catch (Exception e) {
+            throw new HttpServerErrorException(HttpStatusCode.valueOf(500));
+        }
     }
 
     private String resolveNotificationContent(
