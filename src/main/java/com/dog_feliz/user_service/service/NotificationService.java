@@ -69,16 +69,10 @@ public class NotificationService {
         Long fairId = request.getFairId();
         if (fairId != null) fairRepository.findById(fairId);
 
-<<<<<<< Updated upstream
         List<Integer> recurrences = request.getRecurrences();
         NotificationScheduledEvent event = new NotificationScheduledEvent(
                 request.getEventId(),
                 request.getType().name(),
-=======
-        List<Integer> recurrences = notificationRequest.getRecurrences();
-        NotificationCreatedEvent event = new NotificationCreatedEvent(
-                notificationRequest.getType().name(),
->>>>>>> Stashed changes
                 fairId,
                 request.getMessage(),
                 request.getEventDate(),
