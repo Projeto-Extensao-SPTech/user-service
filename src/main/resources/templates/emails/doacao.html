@@ -1,90 +1,214 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<body style="margin:0; padding:0; background:#052759; font-family:'Baloo 2', Arial, sans-serif;">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Novo Voluntário — Abrigo Dog Feliz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body style="margin:0;padding:0;background-color:#f0f2f5;font-family:'Baloo 2',Arial,sans-serif;">
 
-<!-- Header -->
-<div style="background:#FCAD0B; padding:32px 20px; text-align:center;">
-    <h1 style="margin:0; color:#052759; font-size:28px; font-weight:700;">🐾 Nova Doação Recebida!</h1>
-    <p style="margin:8px 0 0; color:#052759; font-size:15px; font-weight:500;">
-        O Abrigo Dog Feliz recebeu uma nova doação. Confira os detalhes e providencie o recebimento.
-    </p>
-</div>
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0f2f5;padding:32px 16px;">
+    <tr>
+        <td align="center">
+            <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 
-<!-- Card principal -->
-<div style="max-width:600px; margin:30px auto; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.2);">
+                <!-- Barra decorativa superior -->
+                <tr>
+                    <td style="background:linear-gradient(90deg,#052759 0%,#FCAD0B 50%,#052759 100%);height:4px;border-radius:12px 12px 0 0;font-size:0;line-height:0;">
+                        &nbsp;
+                    </td>
+                </tr>
 
-    <!-- Faixa de destaque -->
-    <div style="background:#052759; padding:16px 28px;">
-        <p style="margin:0; color:#FFFFFF; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
-            Detalhes da Doação
-        </p>
-    </div>
+                <!-- Header -->
+                <tr>
+                    <td style="background-color:#052759;padding:40px 32px 32px;text-align:center;">
+                        <table cellpadding="0" cellspacing="0" style="margin:0 auto 16px;">
+                            <tr>
+                                <td style="background-color:#FCAD0B;width:56px;height:56px;border-radius:50%;text-align:center;vertical-align:middle;">
+                                    <span style="font-size:26px;line-height:56px;">🐾</span>
+                                </td>
+                            </tr>
+                        </table>
+                        <p style="margin:0 0 10px;color:#FCAD0B;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;">
+                            Abrigo Dog Feliz
+                        </p>
+                        <h1 style="margin:0 0 8px;color:#ffffff;font-size:24px;font-weight:700;line-height:1.3;">
+                            Novo Voluntário Cadastrado!
+                        </h1>
+                        <p style="margin:0;color:rgba(255,255,255,0.65);font-size:14px;line-height:1.6;">
+                            Alguém quer fazer a diferença para os nossos animais!<br/>
+                            Veja os dados e entre em contato para confirmar.
+                        </p>
+                    </td>
+                </tr>
 
-    <!-- Conteúdo -->
-    <div style="padding:28px;">
-        <table style="width:100%; border-collapse:collapse; font-size:15px; color:#333;">
+                <!-- Card branco -->
+                <tr>
+                    <td style="background-color:#ffffff;">
 
-            <tr style="border-bottom:1px solid #f0f0f0;">
-                <td style="padding:14px 0; font-weight:700; color:#052759; width:40%;">Item</td>
-                <td th:text="${donation.name}" style="padding:14px 0; font-weight:600;"></td>
-            </tr>
+                        <!-- Barra de seção -->
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="background-color:#f8f9fb;border-bottom:1px solid #eeeeee;padding:14px 28px;">
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="width:8px;height:8px;background-color:#FCAD0B;border-radius:50%;vertical-align:middle;">
+                                                &nbsp;
+                                            </td>
+                                            <td style="padding-left:10px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6b7280;vertical-align:middle;">
+                                                Informações do Voluntário
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
 
-            <tr style="border-bottom:1px solid #f0f0f0;">
-                <td style="padding:14px 0; font-weight:700; color:#052759;">Tipo</td>
-                <td style="padding:14px 0;">
-            <span th:text="${donation.type}"
-                  style="background:#e8f0fe; color:#052759; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:700;">
-            </span>
-                </td>
-            </tr>
+                        <!-- Linhas de informação -->
+                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:8px 28px 4px;">
 
-            <tr style="border-bottom:1px solid #f0f0f0;">
-                <td style="padding:14px 0; font-weight:700; color:#052759;">Quantidade</td>
-                <td style="padding:14px 0;">
-            <span th:text="${donation.amount}"
-                  style="background:#e6f4ea; color:#1a6e35; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:700;">
-            </span>
-                </td>
-            </tr>
+                            <!-- Nome -->
+                            <tr>
+                                <td style="padding:16px 0;border-bottom:1px solid #f3f4f6;vertical-align:top;width:52px;">
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="background-color:#e8f0fe;width:36px;height:36px;border-radius:8px;text-align:center;vertical-align:middle;font-size:17px;">
+                                                👤
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="padding:16px 0 16px 16px;border-bottom:1px solid #f3f4f6;vertical-align:top;">
+                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">
+                                        Nome</p>
+                                    <p th:text="${user.name}"
+                                       style="margin:0;font-size:15px;color:#111827;font-weight:600;"></p>
+                                </td>
+                            </tr>
 
-            <tr style="border-bottom:1px solid #f0f0f0;">
-                <td style="padding:14px 0; font-weight:700; color:#052759;">Estado do Item</td>
-                <td th:text="${donation.state}" style="padding:14px 0; font-weight:600;"></td>
-            </tr>
+                            <!-- E-mail -->
+                            <tr>
+                                <td style="padding:16px 0;border-bottom:1px solid #f3f4f6;vertical-align:top;width:52px;">
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="background-color:#fef3c7;width:36px;height:36px;border-radius:8px;text-align:center;vertical-align:middle;font-size:17px;">
+                                                📧
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="padding:16px 0 16px 16px;border-bottom:1px solid #f3f4f6;vertical-align:top;">
+                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">
+                                        E-mail</p>
+                                    <a th:href="'mailto:' + ${user.mailAddress}"
+                                       th:text="${user.mailAddress}"
+                                       style="font-size:15px;color:#052759;font-weight:600;text-decoration:none;"></a>
+                                </td>
+                            </tr>
 
-            <tr style="border-bottom:1px solid #f0f0f0;">
-                <td style="padding:14px 0; font-weight:700; color:#052759;">Método de Envio</td>
-                <td style="padding:14px 0;">
-            <span th:text="${donation.shippingMethod}"
-                  style="background:#fff8e6; color:#7a5c00; padding:4px 12px; border-radius:20px; font-size:13px; font-weight:700;">
-            </span>
-                </td>
-            </tr>
+                            <!-- Telefone (condicional) -->
+                            <tr th:if="${user.phone}">
+                                <td style="padding:16px 0;border-bottom:1px solid #f3f4f6;vertical-align:top;width:52px;">
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="background-color:#d1fae5;width:36px;height:36px;border-radius:8px;text-align:center;vertical-align:middle;font-size:17px;">
+                                                📱
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="padding:16px 0 16px 16px;border-bottom:1px solid #f3f4f6;vertical-align:top;">
+                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">
+                                        Telefone</p>
+                                    <p th:text="${user.phone}"
+                                       style="margin:0;font-size:15px;color:#111827;font-weight:600;"></p>
+                                </td>
+                            </tr>
 
-            <tr th:if="${donation.description}">
-                <td style="padding:14px 0; font-weight:700; color:#052759; vertical-align:top;">Descrição</td>
-                <td th:text="${donation.description}"
-                    style="padding:14px 0; line-height:1.7; color:#555; font-style:italic;">
-                </td>
-            </tr>
+                            <!-- Data de disponibilidade -->
+                            <tr>
+                                <td style="padding:16px 0;border-bottom:1px solid #f3f4f6;vertical-align:top;width:52px;">
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="background-color:#fce7f3;width:36px;height:36px;border-radius:8px;text-align:center;vertical-align:middle;font-size:17px;">
+                                                📅
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="padding:16px 0 16px 16px;border-bottom:1px solid #f3f4f6;vertical-align:middle;">
+                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">
+                                        Data de disponibilidade</p>
+                                    <span th:text="${#temporals.format(volunteer.availableDate, 'dd/MM/yyyy')}"
+                                          style="display:inline-block;background-color:#d1fae5;color:#065f46;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700;"></span>
+                                </td>
+                            </tr>
 
-        </table>
-    </div>
+                            <!-- Mensagem (condicional) -->
+                            <tr th:if="${volunteer.message}">
+                                <td style="padding:16px 0;vertical-align:top;width:52px;">
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="background-color:#f3f4f6;width:36px;height:36px;border-radius:8px;text-align:center;vertical-align:middle;font-size:17px;">
+                                                💬
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="padding:16px 0 16px 16px;vertical-align:top;">
+                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">
+                                        Mensagem</p>
+                                    <p th:text="${volunteer.message}"
+                                       style="margin:0;font-size:14px;color:#4b5563;font-style:italic;line-height:1.6;"></p>
+                                </td>
+                            </tr>
 
-    <!-- Próximos passos -->
-    <div style="margin:0 28px 28px; padding:18px; background:#fff8e6; border-left:4px solid #FCAD0B; border-radius:8px;">
-        <p style="margin:0 0 6px; color:#7a5c00; font-size:14px; font-weight:700;">📋 Próximos passos</p>
-        <p style="margin:0; color:#7a5c00; font-size:14px; line-height:1.6;">
-            Entre em contato com o doador pelo e-mail ou telefone registrado para confirmar os detalhes da doação.
-            Verifique o método de envio escolhido pelo doador e providencie o recebimento do item.
-            Caso haja um centro de coleta vinculado, entre em contato para confirmar a logística.
-        </p>
-    </div>
+                        </table>
 
-    <div>
+                        <!-- Próximos passos -->
+                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:8px 28px 0;">
+                            <tr>
+                                <td style="background-color:#fffbf0;border:1px solid #fde68a;border-radius:10px;padding:20px;">
+                                    <p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#92400e;letter-spacing:0.5px;text-transform:uppercase;">
+                                        📋 Próximos passos
+                                    </p>
+                                    <p style="margin:0;font-size:14px;color:#78350f;line-height:1.7;">
+                                        Entre em contato com o voluntário pelo e-mail ou telefone acima para confirmar
+                                        a participação e alinhar as atividades que ele poderá desempenhar no abrigo.
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
 
-    </div>
+                        <table width="100%" cellpadding="0" cellspacing="0"
+                               style="padding:28px 28px 36px;text-align:center;">
 
-</div>
+                        </table>
+
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color:#052759;padding:24px 28px;text-align:center;">
+                        <p style="margin:0 0 6px;color:#FCAD0B;font-size:13px;font-weight:700;">🐾 Abrigo Dog Feliz</p>
+                        <a th:href="${siteUrl}"
+                           style="color:rgba(255,255,255,0.65);font-size:12px;text-decoration:none;">abrigo-dog-feliz.com</a>
+                    </td>
+                </tr>
+
+                <!-- Barra decorativa inferior -->
+                <tr>
+                    <td style="background:linear-gradient(90deg,#052759 0%,#FCAD0B 50%,#052759 100%);height:4px;border-radius:0 0 12px 12px;font-size:0;line-height:0;">
+                        &nbsp;
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
