@@ -227,30 +227,4 @@ public class FairServiceTest {
         verify(storageService, never()).delete(anyString());
         verify(fairRepository, never()).deleteById(anyLong());
     }
-
-    @Test
-    @DisplayName("Dado uma chamada para inserir interesse, deve incrementar corretamente")
-    void insertInterest() {
-        AddressEntity address = fairStub.createAddressEntity(1L);
-        FairEntity fair = fairStub.createFairEntity(1L, address);
-        fair.setInterest(5);
-
-        when(fairRepository.findById(1L)).thenReturn(Optional.of(fair));
-
-        fairService.insertInterest(1L);
-
-        assertEquals(6, fair.getInterest());
-        verify(fairRepository, times(1)).save(fair);
-    }
-
-    @Test
-    @DisplayName("Dado uma chamada para inserir interesse, quando a feira não existir deve lançar erro")
-    void insertInterestNotFound() {
-        when(fairRepository.findById(999L)).thenReturn(Optional.empty());
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> fairService.insertInterest(999L));
-
-        assertEquals("Feira não encontrada", exception.getMessage());
-        verify(fairRepository, never()).save(any());
-    }
 }

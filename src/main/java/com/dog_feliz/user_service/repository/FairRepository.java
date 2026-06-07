@@ -12,25 +12,29 @@ import java.util.List;
 
 @Repository
 public interface FairRepository extends JpaRepository<FairEntity, Long> {
-
     Page<FairEntity> findByFairDateGreaterThan(LocalDate date, Pageable pageable);
 
     @Query("""
-        SELECT FUNCTION('FORMATDATETIME', f.fairDate, 'MM')
-        FROM FairEntity f
-        GROUP BY FUNCTION('FORMATDATETIME', f.fairDate, 'MM')
-        ORDER BY SUM(f.interest) DESC
-    """)
+                SELECT FUNCTION('FORMATDATETIME', f.fairDate, 'MM')
+                FROM FairEntity f
+                GROUP BY FUNCTION('FORMATDATETIME', f.fairDate, 'MM')
+                ORDER BY (
+                    SELECT COUNT(ufi)
+                    FROM UserFairInterestEntity ufi
+                    WHERE ufi.fairId = f.id
+                ) DESC
+            """)
     List<String> findMonthWithMostInterestRaw();
 
-
-
     @Query("""
-                SELECT f.address.street AS label, SUM(f.interest) AS total
+                SELECT f.address.street, (
+                    SELECT COUNT(ufi)
+                    FROM UserFairInterestEntity ufi
+                    WHERE ufi.fairId = f.id
+                ) AS total
                 FROM FairEntity f
                 GROUP BY f.address.street
                 ORDER BY total DESC
             """)
     List<Object[]> findLocationWithMostInterestRaw();
 }
-

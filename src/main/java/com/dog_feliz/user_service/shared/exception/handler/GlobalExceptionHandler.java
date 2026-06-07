@@ -188,4 +188,14 @@ public class GlobalExceptionHandler {
         body.put("status", HttpStatus.UNAUTHORIZED);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
     }
+
+    @ExceptionHandler(FairInterestConflictException.class)
+    public ResponseEntity<Map<String, Object>> handleFairInterestConflict(
+            FairInterestConflictException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", ex.getStatus().value());
+        return ResponseEntity.status(ex.getStatus()).body(body);
+    }
 }
