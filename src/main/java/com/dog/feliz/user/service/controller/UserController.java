@@ -3,6 +3,7 @@ package com.dog.feliz.user.service.controller;
 import com.dog.feliz.user.service.controller.dto.UpdatePasswordRequestDto;
 import com.dog.feliz.user.service.controller.dto.UserRequestDto;
 import com.dog.feliz.user.service.controller.dto.UserResponseDto;
+import com.dog.feliz.user.service.controller.dto.ValidateCodeRequestDto;
 import com.dog.feliz.user.service.entity.user.UserEntity;
 import com.dog.feliz.user.service.service.UserService;
 import com.dog.feliz.user.service.service.ValidationService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -86,13 +88,18 @@ public class UserController {
         return exists;
     }
 
-
     @PostMapping("/send-code/{mail}")
     private void sendCode(
             @PathVariable String mail
     ) {
         userService.sendCodeForMail(mail);
         log.info("[SEND_FOR_EMAIL] Sending code by email={}", mail);
+    }
+
+    @PostMapping("/validate-code")
+    public ResponseEntity<Void> validateCode(@RequestBody ValidateCodeRequestDto request) {
+        userService.validateCode(request.mail(), request.code());
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/update-password")

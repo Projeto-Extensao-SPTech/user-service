@@ -2,16 +2,17 @@ package com.dog.feliz.user.service.controller;
 
 import com.dog.feliz.user.service.controller.dto.FairRequestDto;
 import com.dog.feliz.user.service.controller.dto.FairResponseDto;
-import com.dog.feliz.user.service.controller.dto.PageResponseDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import com.dog.feliz.user.service.entity.FairEntity;
 import com.dog.feliz.user.service.service.FairService;
 import com.dog.feliz.user.service.service.ValidationService;
 import com.dog.feliz.user.service.service.storage.S3StorageService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import com.dog.feliz.user.service.controller.dto.PageResponseDto;
+import org.springframework.security.core.Authentication;
+import com.dog.feliz.user.service.entity.user.UserEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,12 +80,12 @@ public class FairController {
     }
 
     @GetMapping("/future")
-    public Page<FairResponseDto> getFutureFairs(
+    public PageResponseDto<FairResponseDto> getFutureFairs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "fairDate") String sortBy) {
 
-        Page<FairResponseDto> result = fairService.getFutureFairs(page, size, sortBy);
+        PageResponseDto<FairResponseDto> result = fairService.getFutureFairs(page, size, sortBy);
 
         log.info("[GET_FUTURE_FAIRS] Future fairs fetched successfully page={} size={} " +
                 "sortBy={} totalElements={}", page, size, sortBy, result.getTotalElements());
@@ -98,7 +99,6 @@ public class FairController {
         log.info("[DELETE_FAIR] Fair deleted successfully fairId={}", id);
         return ResponseEntity.noContent().build();
     }
-
 
     @PatchMapping("/{id}/interest")
     public ResponseEntity<FairResponseDto> insertInterest(

@@ -1,4 +1,4 @@
-package com.dog_feliz.user_service.shared.exception;
+package com.dog.feliz.user.service.shared.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

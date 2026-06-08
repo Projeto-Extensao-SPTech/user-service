@@ -13,6 +13,7 @@ import com.dog.feliz.user.service.shared.exception.UserNotFoundException;
 import com.dog.feliz.user.service.stub.AddressStub;
 import com.dog.feliz.user.service.stub.UserStub;
 import com.dog.feliz.user.service.support.TestConstants;
+import lombok.Getter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,8 +43,6 @@ class UserServiceTest {
     private ValidationService validationService;
     @Mock
     private StringHasher stringHasher;
-    @Mock
-    private NotificationService notificationService;
 
     @InjectMocks
     private UserService userService;
@@ -122,7 +121,7 @@ class UserServiceTest {
     @Test
     @DisplayName("Dado telefone inexistente, quando updatePassword é chamado, deve lançar UserNotFoundException")
     void givenUnknownPhone_whenUpdatePassword_thenThrowsNotFound() {
-        when(userRepository.findByPhone(TestConstants.VALID_PHONE)).thenReturn(Optional.empty());
+        when(userRepository.findByMailAddressHash(anyString())).thenReturn(Optional.empty());
 
         var request = new UpdatePasswordRequestDto(TestConstants.VALID_PHONE, TestConstants.VALID_PASSWORD);
 
@@ -133,7 +132,7 @@ class UserServiceTest {
     @DisplayName("Dado telefone válido, quando updatePassword é chamado, deve atualizar a senha do usuário autenticado")
     void givenValidPhone_whenUpdatePassword_thenUpdatesPassword() {
         UserEntity user = UserStub.entityWithId(5L);
-        when(userRepository.findByPhone(TestConstants.VALID_PHONE)).thenReturn(Optional.of(user));
+        when(userRepository.findByMailAddressHash(anyString())).thenReturn(Optional.of(user));
 
         var request = new UpdatePasswordRequestDto(TestConstants.VALID_PHONE, "NovaSenha@99");
         userService.updatePassword(request);

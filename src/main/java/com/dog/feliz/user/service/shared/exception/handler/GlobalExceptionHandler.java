@@ -2,7 +2,9 @@ package com.dog.feliz.user.service.shared.exception.handler;
 
 import com.dog.feliz.user.service.shared.exception.AddressNotFoundException;
 import com.dog.feliz.user.service.shared.exception.ConflictUserException;
+import com.dog.feliz.user.service.shared.exception.FairInterestConflictException;
 import com.dog.feliz.user.service.shared.exception.ForbiddenUserException;
+import com.dog.feliz.user.service.shared.exception.InvalidRecoveryCodeException;
 import com.dog.feliz.user.service.shared.exception.InvalidRefreshTokenException;
 import com.dog.feliz.user.service.shared.exception.MailSenderException;
 import com.dog.feliz.user.service.shared.exception.ShipmentNotFoundException;
@@ -10,6 +12,7 @@ import com.dog.feliz.user.service.shared.exception.SponsorshipNotFoundException;
 import com.dog.feliz.user.service.shared.exception.UnauthorizedUserException;
 import com.dog.feliz.user.service.shared.exception.UserNotFoundException;
 import com.dog.feliz.user.service.shared.exception.VolunteerNotFoundException;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -100,7 +103,7 @@ public class GlobalExceptionHandler {
         body.put("status", status);
         return ResponseEntity.status(status).body(body);
     }
-      
+
     @ExceptionHandler(HttpServerErrorException.class)
     public ResponseEntity<Object> handleHttpServerErrorException(HttpServerErrorException ex) {
         Map<String, Object> body = new HashMap<>();
@@ -208,5 +211,14 @@ public class GlobalExceptionHandler {
         body.put("timestamp", LocalDateTime.now());
         body.put("status", ex.getStatus().value());
         return ResponseEntity.status(ex.getStatus()).body(body);
+    }
+
+    @ExceptionHandler(InvalidRecoveryCodeException.class)
+    public ResponseEntity<Object> handleInvalidRecoveryCode(InvalidRecoveryCodeException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.UNPROCESSABLE_ENTITY);
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(body);
     }
 }

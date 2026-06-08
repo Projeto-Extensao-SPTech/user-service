@@ -7,6 +7,7 @@ import com.dog.feliz.user.service.entity.AddressEntity;
 import com.dog.feliz.user.service.entity.FairEntity;
 import com.dog.feliz.user.service.repository.AddressRepository;
 import com.dog.feliz.user.service.repository.FairRepository;
+import com.dog.feliz.user.service.repository.UserFairInterestRepository;
 import com.dog.feliz.user.service.service.storage.S3StorageService;
 import com.dog.feliz.user.service.shared.exception.StorageException;
 import com.dog.feliz.user.service.stub.FairStub;
@@ -54,6 +55,9 @@ public class FairServiceTest {
     private FairService fairService;
 
     private FairStub fairStub;
+
+    @Mock
+    private UserFairInterestRepository userFairInterestRepository;
 
     @BeforeEach
     void setup() {

@@ -6,12 +6,15 @@ import com.dog.feliz.user.service.controller.dto.PageResponseDto;
 import com.dog.feliz.user.service.entity.AddressEntity;
 import com.dog.feliz.user.service.entity.FairEntity;
 import com.dog.feliz.user.service.repository.AddressRepository;
+import com.dog.feliz.user.service.repository.UserFairInterestRepository;
+import com.dog.feliz.user.service.entity.UserFairInterestEntity;
 import com.dog.feliz.user.service.repository.FairRepository;
 import com.dog.feliz.user.service.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -26,6 +29,7 @@ public class FairService {
     private final AddressRepository addressRepository;
 
     private final StorageService storageService;
+
     private final UserFairInterestRepository userFairInterestRepository;
 
     @CacheEvict(value = "fairs", allEntries = true)
@@ -57,7 +61,7 @@ public class FairService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortedBy));
         return new PageResponseDto<>(
                 fairRepository.findByFairDateGreaterThan(LocalDate.now(), pageable)
-                        .map(FairResponseDto::new)
+                        .map(fair -> toResponse(fair, null))
         );
     }
 
@@ -76,7 +80,7 @@ public class FairService {
         boolean jaRegistrado = userFairInterestRepository
                 .existsByUserIdAndFairId(userId, fairId);
         if (jaRegistrado) {
-            throw new FairInterestConflictException(
+            throw new com.dog.feliz.user.service.shared.exception.FairInterestConflictException(
                     "Usuário já registrou interesse nessa feira."
             );
         }

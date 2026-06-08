@@ -10,10 +10,15 @@ import com.dog.feliz.user.service.repository.UserRepository;
 import com.dog.feliz.user.service.shared.crypto.hash.StringHasher;
 import com.dog.feliz.user.service.shared.exception.AddressNotFoundException;
 import com.dog.feliz.user.service.shared.exception.ConflictUserException;
+import com.dog.feliz.user.service.shared.exception.InvalidRecoveryCodeException;
 import com.dog.feliz.user.service.shared.exception.UserNotFoundException;
+import com.dog.feliz.user.service.controller.dto.NotificationSendRequest;
+import com.dog.feliz.user.service.controller.dto.NotificationType;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,13 +37,28 @@ public class UserService {
 
     private final StringHasher stringHasher;
 
-    public UserService(UserRepository userRepository, AddressRepository addressRepository, BCryptPasswordEncoder passwordEncoder, ValidationService validationService, NotificationService notificationService, StringHasher stringHasher) {
+    private final StringRedisTemplate recoveryCodeRedisTemplate;
+
+    private static final String RECOVERY_PREFIX = "recovery:";
+
+    private static final long RECOVERY_TTL_MINUTES = 15L;
+
+    public UserService(
+            UserRepository userRepository,
+            AddressRepository addressRepository,
+            BCryptPasswordEncoder passwordEncoder,
+            ValidationService validationService,
+            NotificationService notificationService,
+            StringHasher stringHasher,
+            StringRedisTemplate recoveryCodeRedisTemplate
+    ) {
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
         this.passwordEncoder = passwordEncoder;
         this.validationService = validationService;
         this.notificationService = notificationService;
         this.stringHasher = stringHasher;
+        this.recoveryCodeRedisTemplate = recoveryCodeRedisTemplate;
     }
 
     public List<UserResponseDto> getUsers() {
@@ -64,12 +84,12 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found by mail"));
 
         String code = generateRandomCode();
-//
-//        redisTemplate.opsForValue().set(
-//                CODE_PREFIX + mailHash,
-//                code,
-//                Duration.ofMinutes(CODE_TTL_MINUTES)
-//        );
+
+        recoveryCodeRedisTemplate.opsForValue().set(
+                RECOVERY_PREFIX + mailHash,
+                code,
+                Duration.ofMinutes(RECOVERY_TTL_MINUTES)
+        );
 
         notificationService.send(new NotificationSendRequest(
                 NotificationType.UPDATE_PASSWORD,
@@ -79,12 +99,34 @@ public class UserService {
         ));
     }
 
+    public void validateCode(String mail, String code) {
+        String mailHash = stringHasher.hash(mail);
+        String stored = recoveryCodeRedisTemplate.opsForValue()
+                .get(RECOVERY_PREFIX + mailHash);
+
+        if (stored == null || !stored.equals(code)) {
+            throw new InvalidRecoveryCodeException("Invalid or expired recovery code");
+        }
+
+        recoveryCodeRedisTemplate.delete(RECOVERY_PREFIX + mailHash);
+    }
+
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
         String mailAddressHash = stringHasher.hash(userRequestDto.getMailAddress());
-        if (userRepository.findByMailAddressHash(mailAddressHash).isPresent())
+        if (userRepository.findByMailAddressHash(mailAddressHash).isPresent()) {
             throw new ConflictUserException("Already exists an user with requested email");
+        }
+
         AddressEntity address = addressRepository.save(new AddressEntity(userRequestDto.getAddress()));
-        UserEntity user = userRepository.save(new UserEntity(userRequestDto, address, passwordEncoder.encode(userRequestDto.getPassword()), mailAddressHash));
+
+        UserEntity user = userRepository.save(
+                new UserEntity(
+                        userRequestDto,
+                        address,
+                        passwordEncoder.encode(userRequestDto.getPassword()),
+                        mailAddressHash
+                )
+        );
         return new UserResponseDto(user);
     }
 
@@ -92,11 +134,20 @@ public class UserService {
         UserEntity userEntity = verifyUserId(id);
         Long addressId = userEntity.getAddress().getId();
         Optional<AddressEntity> addressEntity = addressRepository.findById(addressId);
-        if (addressEntity.isEmpty())
+        if (addressEntity.isEmpty()) {
             throw new AddressNotFoundException("Address not found by id %d".formatted(addressId));
+        }
 
-        AddressEntity addressUpdated = addressRepository.save(new AddressEntity(addressEntity.get().getId(), userRequestDto.getAddress()));
-        UserEntity userUpdated = userRepository.save(new UserEntity(id, userRequestDto, addressUpdated));
+        AddressEntity addressUpdated = addressRepository.save(
+                new AddressEntity(
+                        addressEntity.get().getId(),
+                        userRequestDto.getAddress()
+                )
+        );
+
+        UserEntity userUpdated = userRepository.save(
+                new UserEntity(id, userRequestDto, addressUpdated)
+        );
         return new UserResponseDto(userUpdated);
     }
 
@@ -107,7 +158,10 @@ public class UserService {
     }
 
     public void updatePassword(UpdatePasswordRequestDto updatePasswordRequest) {
-        UserEntity userEntity = userRepository.findByMailAddressHash(updatePasswordRequest.mail()).orElseThrow(() -> new UserNotFoundException("User not found by requested mail and password, verify your credentials"));
+        UserEntity userEntity = userRepository.findByMailAddressHash(updatePasswordRequest.mail())
+                .orElseThrow(() -> new UserNotFoundException(
+                        "User not found by requested mail and password, verify your credentials"
+                ));
         validationService.verifyIsValidUserId(userEntity.getId());
         userRepository.save(new UserEntity(userEntity, passwordEncoder.encode(updatePasswordRequest.password())));
     }

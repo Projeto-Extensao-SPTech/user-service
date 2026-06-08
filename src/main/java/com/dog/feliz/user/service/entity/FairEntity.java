@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-
 @Entity
 @Table(name = "fair")
 @Getter
@@ -27,6 +26,7 @@ public class FairEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private LocalDate fairDate;
 
     private LocalDateTime fairHour;
@@ -39,7 +39,10 @@ public class FairEntity {
     private String imageKeys;
 
     public List<String> getImageKeys() {
-        if (imageKeys == null || imageKeys.isBlank()) return List.of();
+        if (imageKeys == null || imageKeys.isBlank()) {
+            return List.of();
+        }
+
         return Arrays.asList(imageKeys.split(","));
     }
 
