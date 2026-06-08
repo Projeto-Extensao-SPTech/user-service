@@ -4,13 +4,17 @@ import com.dog_feliz.user_service.controller.dto.UpdatePasswordRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.user.UserEntity;
+import com.dog_feliz.user_service.service.AuthService;
 import com.dog_feliz.user_service.service.UserService;
 import com.dog_feliz.user_service.service.ValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+
+import static org.bouncycastle.internal.asn1.iana.IANAObjectIdentifiers.mail;
 
 @RestController
 @RequestMapping("/users")
@@ -26,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping
-    private ResponseEntity<List<UserResponseDto>> getUsers(){
+    private ResponseEntity<List<UserResponseDto>> getUsers() {
         List<UserResponseDto> users = userService.getUsers();
         log.info("[GET_USERS] Users fetched successfully total={}", users.size());
         return ResponseEntity.ok(users);
@@ -35,7 +39,7 @@ public class UserController {
     @GetMapping("/{id}")
     private ResponseEntity<UserResponseDto> getUser(
             @PathVariable Long id
-    ){
+    ) {
         validationService.verifyIsValidUserId(id);
         UserResponseDto user = toResponse(userService.getUserById(id));
 
@@ -66,13 +70,24 @@ public class UserController {
                 id, receiveNotification);
     }
 
-    @GetMapping("/exists-by-phone/{phone}")
-    private Boolean existsByPhone(
-            @PathVariable String phone
+    @GetMapping("/exists-by-mail/{mail}")
+    private Boolean existsByMailAddress(
+            @PathVariable String mail
     ) {
-        Boolean exists = userService.existsByPhone(phone);
-        log.info("[EXISTS_USER_BY_PHONE] Check executed phoneExists={}", exists);
+        var exists = userService.existsByMailAddress(mail);
+
+        log.info("[EXISTS_USER_BY_MAIL] Check executed mailExists={}", exists);
         return exists;
+    }
+
+
+    @PostMapping("/send-code/{mail}")
+    private void sendCode(
+            @PathVariable String mail
+    ) {
+        userService.sendCodeForMail(mail);
+        log.info("[SEND_FOR_EMAIL] Sending code by email={}", mail);
+
     }
 
     @PatchMapping("/update-password")

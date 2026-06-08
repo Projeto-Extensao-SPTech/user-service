@@ -13,7 +13,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByMailAddressHash(String mailAddressHash);
     Optional<UserEntity> findByPhone(String phone);
     List<UserEntity> findByReceiveNotificationsTrue();
-    Boolean existsByPhone(String phone);
 
     @Query("""
     SELECT TO_CHAR(u.createdAt, 'YYYY-MM') AS month,
