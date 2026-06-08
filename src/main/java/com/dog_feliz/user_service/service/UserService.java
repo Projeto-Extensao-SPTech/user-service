@@ -55,16 +55,25 @@ public class UserService {
     }
 
     public void sendCodeForMail(String mail) {
-        String generateRandomCode = Integer.toString(1000 + (int) (Math.random() * 9000));
-        notificationService.send(
-                new NotificationSendRequest(
-                        NotificationType.UPDATE_PASSWORD,
-                        mail,
-                        generateRandomCode,
-                        null
-                )
-        );
+        String mailHash = stringHasher.hash(mail);
 
+        UserEntity user = userRepository.findByMailAddressHash(mailHash)
+                .orElseThrow(() -> new UserNotFoundException("User not found by mail"));
+
+        String code = generateRandomCode();
+//
+//        redisTemplate.opsForValue().set(
+//                CODE_PREFIX + mailHash,
+//                code,
+//                Duration.ofMinutes(CODE_TTL_MINUTES)
+//        );
+
+        notificationService.send(new NotificationSendRequest(
+                NotificationType.UPDATE_PASSWORD,
+                mail,
+                code,
+                user.getId()
+        ));
     }
 
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
@@ -95,7 +104,7 @@ public class UserService {
     }
 
     public void updatePassword(UpdatePasswordRequestDto updatePasswordRequest) {
-        UserEntity userEntity = userRepository.findByPhone(updatePasswordRequest.phone()).orElseThrow(() -> new UserNotFoundException("User not found by requested phone and password, verify your credentials"));
+        UserEntity userEntity = userRepository.findByMailAddressHash(updatePasswordRequest.mail()).orElseThrow(() -> new UserNotFoundException("User not found by requested mail and password, verify your credentials"));
         validationService.verifyIsValidUserId(userEntity.getId());
         userRepository.save(new UserEntity(userEntity, passwordEncoder.encode(updatePasswordRequest.password())));
     }
@@ -112,5 +121,9 @@ public class UserService {
         Optional<UserEntity> userEntity = userRepository.findById(userId);
         if (userEntity.isEmpty()) throw new UserNotFoundException("User not found by id %d".formatted(userId));
         return userEntity.get();
+    }
+
+    private String generateRandomCode() {
+        return Integer.toString(1000 + (int) (Math.random() * 9000));
     }
 }

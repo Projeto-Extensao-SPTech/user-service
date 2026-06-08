@@ -42,6 +42,8 @@ class UserServiceTest {
     private ValidationService validationService;
     @Mock
     private StringHasher stringHasher;
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private UserService userService;
@@ -141,11 +143,20 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Dada consulta por telefone, quando existsByPhone é chamado, deve retornar o resultado do repositório")
-    void givenPhone_whenExistsByPhone_thenDelegatesToRepository() {
-        when(userRepository.existsByPhone(TestConstants.VALID_PHONE)).thenReturn(true);
+    @DisplayName("Dada consulta por e-mail, quando existsByMailAddress é chamado, deve retornar true se o usuário existir")
+    void givenMail_whenExistsByMailAddress_thenReturnsTrueIfUserExists() {
+        when(userRepository.findByMailAddressHash(TestConstants.VALID_EMAIL))
+                .thenReturn(Optional.of(UserStub.entityWithId(1L)));
 
-        assertTrue(userService.existsByPhone(TestConstants.VALID_PHONE));
+        assertTrue(userService.existsByMailAddress(TestConstants.VALID_EMAIL));
+    }
+
+    @Test
+    @DisplayName("Dada consulta por e-mail inexistente, quando existsByMailAddress é chamado, deve retornar false")
+    void givenUnknownMail_whenExistsByMailAddress_thenReturnsFalse() {
+        when(userRepository.findByMailAddressHash("unknown@test.com")).thenReturn(Optional.empty());
+
+        assertFalse(userService.existsByMailAddress("unknown@test.com"));
     }
 
     @Test

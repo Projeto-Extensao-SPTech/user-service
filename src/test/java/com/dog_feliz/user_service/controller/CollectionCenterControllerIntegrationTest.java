@@ -2,7 +2,6 @@ package com.dog_feliz.user_service.controller;
 
 import com.dog_feliz.user_service.entity.AddressEntity;
 import com.dog_feliz.user_service.entity.CollectionCenterEntity;
-import com.dog_feliz.user_service.repository.AddressRepository;
 import com.dog_feliz.user_service.repository.CollectionCenterRepository;
 import com.dog_feliz.user_service.stub.AddressStub;
 import com.dog_feliz.user_service.support.IntegrationTestBase;
@@ -25,13 +24,9 @@ class CollectionCenterControllerIntegrationTest extends IntegrationTestBase {
     @Autowired
     private CollectionCenterRepository collectionCenterRepository;
 
-    @Autowired
-    private AddressRepository addressRepository;
-
     @BeforeEach
     void seedData() {
         collectionCenterRepository.deleteAll();
-        addressRepository.deleteAll();
 
         AddressEntity address = new AddressEntity(AddressStub.validRequest());
 

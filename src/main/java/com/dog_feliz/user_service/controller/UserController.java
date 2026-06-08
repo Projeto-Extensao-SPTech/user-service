@@ -4,7 +4,6 @@ import com.dog_feliz.user_service.controller.dto.UpdatePasswordRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserRequestDto;
 import com.dog_feliz.user_service.controller.dto.UserResponseDto;
 import com.dog_feliz.user_service.entity.user.UserEntity;
-import com.dog_feliz.user_service.service.AuthService;
 import com.dog_feliz.user_service.service.UserService;
 import com.dog_feliz.user_service.service.ValidationService;
 import org.slf4j.Logger;
@@ -13,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.bouncycastle.internal.asn1.iana.IANAObjectIdentifiers.mail;
 
 @RestController
 @RequestMapping("/users")
@@ -87,7 +84,6 @@ public class UserController {
     ) {
         userService.sendCodeForMail(mail);
         log.info("[SEND_FOR_EMAIL] Sending code by email={}", mail);
-
     }
 
     @PatchMapping("/update-password")
