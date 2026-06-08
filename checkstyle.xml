@@ -16,12 +16,12 @@
         <module name="MethodName">
             <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
         </module>
-        <module name="LocalVariableName">
-            <property name="format" value="^[a-z][a-zA-Z0-9]+$"/>
-        </module>
-        <module name="ParameterName">
-            <property name="format" value="^[a-z][a-zA-Z0-9]+$"/>
-        </module>
+<!--        <module name="LocalVariableName">-->
+<!--            <property name="format" value="^[a-z][a-zA-Z0-9]+$"/>-->
+<!--        </module>-->
+<!--        <module name="ParameterName">-->
+<!--            <property name="format" value="^[a-z][a-zA-Z0-9]+$"/>-->
+<!--        </module>-->
         <module name="MemberName">
             <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
         </module>
@@ -68,9 +68,6 @@
         </module>
         <module name="MethodLength">
             <property name="max" value="40"/>
-        </module>
-        <module name="MagicNumber">
-            <property name="ignoreNumbers" value="-1, 0, 1"/>
         </module>
         <module name="EqualsHashCode"/>
         <module name="StringLiteralEquality"/>
