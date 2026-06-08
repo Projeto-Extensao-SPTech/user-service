@@ -8,6 +8,8 @@ volumes:
   mysql-user-service-data:
   mysql-notification-service-data:
   rabbitmq-data:
+  redis_data:
+  redisinsight_data:
 
 services:
 
@@ -25,7 +27,7 @@ services:
       - "3307:3306"
     volumes:
       - mysql-user-service-data:/var/lib/mysql
-      - .\init-scripts\user-service:/docker-entrypoint-initdb.d:ro
+      - ./init-scripts/user-service:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_USER_SERVICE_ROOT_PASSWORD}"]
       interval: 10s
@@ -49,7 +51,7 @@ services:
       - "3308:3306"
     volumes:
       - mysql-notification-service-data:/var/lib/mysql
-      - .\init-scripts\notification-service:/docker-entrypoint-initdb.d:ro
+      - ./init-scripts/notification-service:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_NOTIFICATION_SERVICE_ROOT_PASSWORD}"]
       interval: 10s
@@ -73,8 +75,8 @@ services:
       - "15672:15672" # Management UI
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
-      - .\rabbitmq\rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro # optional
-      - .\rabbitmq\definitions.json:/etc/rabbitmq/definitions.json:ro # optional
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro # optional
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro # optional
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
       interval: 10s
@@ -102,6 +104,7 @@ services:
       SPRING_RABBITMQ_VIRTUAL_HOST: ${RABBITMQ_VHOST}
       SPRING_PROFILES_ACTIVE:       ${SPRING_PROFILES_ACTIVE:-local}
       SPRING_NOTIFICATION_URL:      notification-service:8080
+      CACHE_HOST:                   redis
     ports:
       - "8081:8080"
     depends_on:
@@ -111,6 +114,8 @@ services:
         condition: service_healthy
       notification-service:
         condition: service_started
+      redis:
+        condition: service_healthy
     networks:
       - app-network
 
@@ -140,3 +145,32 @@ services:
         condition: service_healthy
     networks:
       - app-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: [ "redis-server", "--save", "60", "1", "--loglevel", "warning" ]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    networks:
+      - app-network
+    volumes:
+      - redisinsight_data:/data
