@@ -72,7 +72,8 @@ public class UserService {
     }
 
     public Boolean existsByMailAddress(String mail) {
-        var findUserByEmail = userRepository.findByMailAddressHash(mail);
+        String mailHash = stringHasher.hash(mail);
+        var findUserByEmail = userRepository.findByMailAddressHash(mailHash);
 
         return findUserByEmail.isPresent();
     }
