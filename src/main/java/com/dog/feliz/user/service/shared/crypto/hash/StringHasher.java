@@ -29,6 +29,7 @@ public class StringHasher {
         }
     }
 
+    @SuppressWarnings("checkstyle:LocalVariableName")
     private String bytesToHex(byte[] bytes) {
         StringBuilder hexString = new StringBuilder();
         for (byte b : bytes) {

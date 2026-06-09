@@ -19,6 +19,7 @@ public class IntegerCryptoConverter extends AbstractCryptoConverter<Integer> {
         return aInteger == null ? null : encryptor.encrypt(aInteger.toString());
     }
 
+    @SuppressWarnings("checkstyle:ParameterName")
     @Override
     public Integer convertToEntityAttribute(String s) {
         return s == null ? null : convertFromString(encryptor.decrypt(s));

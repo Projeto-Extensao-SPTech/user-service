@@ -19,6 +19,7 @@ public class DoubleCryptoConverter extends AbstractCryptoConverter<Double> {
         return aDouble == null ? null : encryptor.encrypt(aDouble.toString());
     }
 
+    @SuppressWarnings("checkstyle:ParameterName")
     @Override
     public Double convertToEntityAttribute(String s) {
         return s == null ? null : convertFromString(encryptor.decrypt(s));

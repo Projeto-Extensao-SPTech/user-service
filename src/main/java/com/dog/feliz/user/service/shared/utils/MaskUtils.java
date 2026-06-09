@@ -31,6 +31,7 @@ public class MaskUtils {
         return namePart.charAt(0) + "***@" + domainPart;
     }
 
+    @SuppressWarnings("checkstyle:LocalVariableName")
     public static String maskNameField(String name) {
         if (name == null || name.isEmpty()) {
             return "***";

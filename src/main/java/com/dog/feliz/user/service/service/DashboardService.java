@@ -43,6 +43,7 @@ public class DashboardService {
         return new DashboardFairKpiDto((String) raw[0], ((Number) raw[1]).longValue());
     }
 
+    @SuppressWarnings("checkstyle:LocalVariableName")
     public DashboardVolunteerKpiDto getDayWithMostVolunteers() {
         List<VolunteerEntity> volunteers = volunteerRepository.findAllByAvailableDateIsNotNull();
 

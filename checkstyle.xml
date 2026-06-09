@@ -10,18 +10,19 @@
     </module>
 
     <module name="TreeWalker">
+        <module name="SuppressWarningsHolder"/>
         <module name="TypeName">
             <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
         </module>
         <module name="MethodName">
             <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
         </module>
-<!--        <module name="LocalVariableName">-->
-<!--            <property name="format" value="^[a-z][a-zA-Z0-9]+$"/>-->
-<!--        </module>-->
-<!--        <module name="ParameterName">-->
-<!--            <property name="format" value="^[a-z][a-zA-Z0-9]+$"/>-->
-<!--        </module>-->
+        <module name="LocalVariableName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]+$"/>
+        </module>
+        <module name="ParameterName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]+$"/>
+        </module>
         <module name="MemberName">
             <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
         </module>
@@ -72,4 +73,5 @@
         <module name="EqualsHashCode"/>
         <module name="StringLiteralEquality"/>
     </module>
+    <module name="SuppressWarningsFilter"/>
 </module>
