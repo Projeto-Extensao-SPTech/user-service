@@ -9,21 +9,20 @@ import java.util.List;
 
 @Getter
 public class FairResponseDto {
-    private final Long id;
+    private Long id;
 
-    private final LocalDate fairDate;
+    private LocalDate fairDate;
 
-    private final LocalDateTime fairHour;
+    private LocalDateTime fairHour;
 
-    private final AddressResponseDto address;
+    private AddressResponseDto address;
 
-    private final List<String> images;
+    private List<String> images;
 
-    private final long totalInterest;
+    private long totalInterest;
 
-    private final boolean userHasInterest;
+    private boolean userHasInterest;
 
-    @JsonCreator
     public FairResponseDto() {}
 
     public FairResponseDto(FairEntity entity, long totalInterest, boolean userHasInterest) {
