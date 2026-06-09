@@ -56,7 +56,6 @@ public class FairStub {
         fair.setFairDate(LocalDate.now().plusDays(7));
         fair.setFairHour(LocalDateTime.now().plusDays(7));
         fair.setAddress(address);
-        fair.setInterest(0);
         fair.setImageKeys(List.of("fair/uuid-stub_foto.png"));
         return fair;
     }

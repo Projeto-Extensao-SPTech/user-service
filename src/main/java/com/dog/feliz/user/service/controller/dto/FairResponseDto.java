@@ -9,27 +9,27 @@ import java.util.List;
 
 @Getter
 public class FairResponseDto {
+    private final Long id;
 
-    private Long id;
+    private final LocalDate fairDate;
 
-    private LocalDate fairDate;
+    private final LocalDateTime fairHour;
 
-    private LocalDateTime fairHour;
+    private final AddressResponseDto address;
 
-    private AddressResponseDto address;
+    private final List<String> images;
 
-    private Integer interest;
+    private final long totalInterest;
 
-    private List<String> images;
+    private final boolean userHasInterest;
 
-    public FairResponseDto() {}
-
-    public FairResponseDto(FairEntity entity) {
+    public FairResponseDto(FairEntity entity, long totalInterest, boolean userHasInterest) {
         this.id = entity.getId();
         this.fairDate = entity.getFairDate();
         this.fairHour = entity.getFairHour();
         this.address = new AddressResponseDto(entity.getAddress());
-        this.interest = entity.getInterest();
         this.images = entity.getImageKeys();
+        this.totalInterest = totalInterest;
+        this.userHasInterest = userHasInterest;
     }
 }

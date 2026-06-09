@@ -13,6 +13,7 @@ import com.dog.feliz.user.service.shared.exception.UserNotFoundException;
 import com.dog.feliz.user.service.stub.AddressStub;
 import com.dog.feliz.user.service.stub.UserStub;
 import com.dog.feliz.user.service.support.TestConstants;
+import lombok.Getter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -120,7 +121,7 @@ class UserServiceTest {
     @Test
     @DisplayName("Dado telefone inexistente, quando updatePassword é chamado, deve lançar UserNotFoundException")
     void givenUnknownPhone_whenUpdatePassword_thenThrowsNotFound() {
-        when(userRepository.findByPhone(TestConstants.VALID_PHONE)).thenReturn(Optional.empty());
+        when(userRepository.findByMailAddressHash(anyString())).thenReturn(Optional.empty());
 
         var request = new UpdatePasswordRequestDto(TestConstants.VALID_PHONE, TestConstants.VALID_PASSWORD);
 
@@ -131,7 +132,7 @@ class UserServiceTest {
     @DisplayName("Dado telefone válido, quando updatePassword é chamado, deve atualizar a senha do usuário autenticado")
     void givenValidPhone_whenUpdatePassword_thenUpdatesPassword() {
         UserEntity user = UserStub.entityWithId(5L);
-        when(userRepository.findByPhone(TestConstants.VALID_PHONE)).thenReturn(Optional.of(user));
+        when(userRepository.findByMailAddressHash(anyString())).thenReturn(Optional.of(user));
 
         var request = new UpdatePasswordRequestDto(TestConstants.VALID_PHONE, "NovaSenha@99");
         userService.updatePassword(request);
@@ -141,11 +142,20 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Dada consulta por telefone, quando existsByPhone é chamado, deve retornar o resultado do repositório")
-    void givenPhone_whenExistsByPhone_thenDelegatesToRepository() {
-        when(userRepository.existsByPhone(TestConstants.VALID_PHONE)).thenReturn(true);
+    @DisplayName("Dada consulta por e-mail, quando existsByMailAddress é chamado, deve retornar true se o usuário existir")
+    void givenMail_whenExistsByMailAddress_thenReturnsTrueIfUserExists() {
+        when(userRepository.findByMailAddressHash(TestConstants.VALID_EMAIL))
+                .thenReturn(Optional.of(UserStub.entityWithId(1L)));
 
-        assertTrue(userService.existsByPhone(TestConstants.VALID_PHONE));
+        assertTrue(userService.existsByMailAddress(TestConstants.VALID_EMAIL));
+    }
+
+    @Test
+    @DisplayName("Dada consulta por e-mail inexistente, quando existsByMailAddress é chamado, deve retornar false")
+    void givenUnknownMail_whenExistsByMailAddress_thenReturnsFalse() {
+        when(userRepository.findByMailAddressHash("unknown@test.com")).thenReturn(Optional.empty());
+
+        assertFalse(userService.existsByMailAddress("unknown@test.com"));
     }
 
     @Test

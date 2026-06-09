@@ -6,6 +6,8 @@ import com.dog.feliz.user.service.controller.dto.PageResponseDto;
 import com.dog.feliz.user.service.entity.AddressEntity;
 import com.dog.feliz.user.service.entity.FairEntity;
 import com.dog.feliz.user.service.repository.AddressRepository;
+import com.dog.feliz.user.service.repository.UserFairInterestRepository;
+import com.dog.feliz.user.service.entity.UserFairInterestEntity;
 import com.dog.feliz.user.service.repository.FairRepository;
 import com.dog.feliz.user.service.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +30,16 @@ public class FairService {
 
     private final StorageService storageService;
 
+    private final UserFairInterestRepository userFairInterestRepository;
+
     @CacheEvict(value = "fairs", allEntries = true)
     public FairEntity createFair(FairRequestDto dto) {
         AddressEntity address = addressRepository.save(new AddressEntity(dto.getAddress()));
-        List<String> imageKeys = storageService.uploadAll(dto.getImages(), "fair");
+        List<String> imageKeys = storageService.uploadAll(dto.getImages(), "fairs");
         FairEntity fair = new FairEntity();
         fair.setFairDate(dto.getFairDate());
         fair.setFairHour(dto.getFairHour());
         fair.setAddress(address);
-        fair.setInterest(0);
         fair.setImageKeys(imageKeys);
         return fairRepository.save(fair);
     }
@@ -47,8 +50,9 @@ public class FairService {
     }
 
     public List<FairResponseDto> getAllFair() {
-        return fairRepository.findAll().stream()
-                .map(FairResponseDto::new)
+        return fairRepository.findAll()
+                .stream()
+                .map(fair -> toResponse(fair, null))
                 .toList();
     }
 
@@ -57,7 +61,7 @@ public class FairService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortedBy));
         return new PageResponseDto<>(
                 fairRepository.findByFairDateGreaterThan(LocalDate.now(), pageable)
-                        .map(FairResponseDto::new)
+                        .map(fair -> toResponse(fair, null))
         );
     }
 
@@ -70,10 +74,24 @@ public class FairService {
     }
 
     @CacheEvict(value = "fairs", allEntries = true)
-    public void insertInterest(Long id) {
-        FairEntity fair = fairRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Feira não encontrada"));
-        fair.setInterest(fair.getInterest() + 1);
-        fairRepository.save(fair);
+    public FairEntity insertInterest(Long fairId, Long userId) {
+        FairEntity fair = fairRepository.findById(fairId)
+                .orElseThrow(() -> new RuntimeException("Feira não encontrada com o id: " + fairId));
+        boolean jaRegistrado = userFairInterestRepository
+                .existsByUserIdAndFairId(userId, fairId);
+        if (jaRegistrado) {
+            throw new com.dog.feliz.user.service.shared.exception.FairInterestConflictException(
+                    "Usuário já registrou interesse nessa feira."
+            );
+        }
+        userFairInterestRepository.save(new UserFairInterestEntity(userId, fairId));
+        return fair;
+    }
+
+    public FairResponseDto toResponse(FairEntity fair, Long userId) {
+        long totalInterest = userFairInterestRepository.countByFairId(fair.getId());
+        boolean userHasInterest = userId != null &&
+                userFairInterestRepository.existsByUserIdAndFairId(userId, fair.getId());
+        return new FairResponseDto(fair, totalInterest, userHasInterest);
     }
 }

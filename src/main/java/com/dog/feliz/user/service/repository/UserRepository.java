@@ -16,8 +16,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     List<UserEntity> findByReceiveNotificationsTrue();
 
-    Boolean existsByPhone(String phone);
-
     @Query("""
     SELECT TO_CHAR(u.createdAt, 'YYYY-MM') AS month,
     COUNT(u.id) AS total
