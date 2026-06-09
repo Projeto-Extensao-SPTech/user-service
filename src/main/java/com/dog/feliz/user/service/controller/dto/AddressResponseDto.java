@@ -2,6 +2,7 @@ package com.dog.feliz.user.service.controller.dto;
 
 import com.dog.feliz.user.service.entity.AddressEntity;
 import com.dog.feliz.user.service.shared.utils.MaskUtils;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.time.ZonedDateTime;
 
@@ -20,6 +21,7 @@ public class AddressResponseDto {
 
     private ZonedDateTime createdAt;
 
+    @JsonCreator
     public AddressResponseDto() {
     }
 
