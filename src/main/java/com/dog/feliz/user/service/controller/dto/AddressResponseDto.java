@@ -20,22 +20,7 @@ public class AddressResponseDto {
 
     private ZonedDateTime createdAt;
 
-    public AddressResponseDto(
-            Long id,
-            String zipCode,
-            Integer number,
-            String street,
-            String city,
-            String state,
-            ZonedDateTime createdAt
-    ) {
-        this.id = id;
-        this.zipCode = zipCode;
-        this.number = number;
-        this.street = street;
-        this.city = city;
-        this.state = state;
-        this.createdAt = createdAt;
+    public AddressResponseDto() {
     }
 
     public AddressResponseDto(AddressEntity address) {
