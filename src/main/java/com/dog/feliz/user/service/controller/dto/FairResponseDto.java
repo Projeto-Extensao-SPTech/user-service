@@ -1,8 +1,8 @@
 package com.dog.feliz.user.service.controller.dto;
 
 import com.dog.feliz.user.service.entity.FairEntity;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
