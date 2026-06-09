@@ -161,7 +161,7 @@ public class UserEntity implements UserDetails {
                 ", type=" + type +
                 ", name='" + name + '\'' +
                 ", document='" + document + '\'' +
-                ", phone='" + phone + '\'' +
+                ", mail='" + phone + '\'' +
                 ", mailAddress='" + mailAddress + '\'' +
                 ", password='" + password + '\'' +
                 ", address=" + address +

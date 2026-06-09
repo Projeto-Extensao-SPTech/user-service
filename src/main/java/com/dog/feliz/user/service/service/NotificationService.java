@@ -123,6 +123,10 @@ public class NotificationService {
             throw new IllegalArgumentException("The message is required when reference id is null");
         }
 
+        if (type == NotificationType.UPDATE_PASSWORD && message != null) {
+            return mailTemplateService.renderUpdatePassword(message);
+        }
+
         if (referenceId != null) {
             return getContentByNotificationType(type, referenceId);
         }

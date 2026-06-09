@@ -7,6 +7,7 @@ import com.dog.feliz.user.service.entity.AddressEntity;
 import com.dog.feliz.user.service.entity.FairEntity;
 import com.dog.feliz.user.service.repository.AddressRepository;
 import com.dog.feliz.user.service.repository.FairRepository;
+import com.dog.feliz.user.service.repository.UserFairInterestRepository;
 import com.dog.feliz.user.service.service.storage.S3StorageService;
 import com.dog.feliz.user.service.shared.exception.StorageException;
 import com.dog.feliz.user.service.stub.FairStub;
@@ -55,6 +56,9 @@ public class FairServiceTest {
 
     private FairStub fairStub;
 
+    @Mock
+    private UserFairInterestRepository userFairInterestRepository;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
@@ -68,8 +72,8 @@ public class FairServiceTest {
         AddressEntity savedAddress = new AddressEntity();
         when(addressRepository.save(any())).thenReturn(savedAddress);
 
-        List<String> uploadedKeys = List.of("fair/uuid_foto.png");
-        when(storageService.uploadAll(any(), eq("fair"))).thenReturn(uploadedKeys);
+        List<String> uploadedKeys = List.of("fairs/uuid_foto.png");
+        when(storageService.uploadAll(any(), eq("fairs"))).thenReturn(uploadedKeys);
 
         FairEntity savedFair = new FairEntity();
         savedFair.setId(1L);
@@ -84,7 +88,7 @@ public class FairServiceTest {
         assertEquals(uploadedKeys, fair.getImageKeys());
 
         verify(addressRepository, times(1)).save(any());
-        verify(storageService, times(1)).uploadAll(any(), eq("fair"));
+        verify(storageService, times(1)).uploadAll(any(), eq("fairs"));
         verify(fairRepository, times(1)).save(any());
     }
 
@@ -99,8 +103,8 @@ public class FairServiceTest {
 
         when(addressRepository.save(any())).thenReturn(new AddressEntity());
 
-        List<String> uploadedKeys = List.of("fair/uuid-1_foto1.png", "fair/uuid-2_foto2.png");
-        when(storageService.uploadAll(any(), eq("fair"))).thenReturn(uploadedKeys);
+        List<String> uploadedKeys = List.of("fairs/uuid-1_foto1.png", "fairs/uuid-2_foto2.png");
+        when(storageService.uploadAll(any(), eq("fairs"))).thenReturn(uploadedKeys);
 
         FairEntity savedFair = new FairEntity();
         savedFair.setId(1L);
@@ -111,21 +115,20 @@ public class FairServiceTest {
 
         assertNotNull(fair);
         assertEquals(2, fair.getImageKeys().size());
-        verify(storageService, times(1)).uploadAll(eq(List.of(file1, file2)), eq("fair"));
+        verify(storageService, times(1)).uploadAll(eq(List.of(file1, file2)), eq("fairs"));
     }
 
     @Test
     @DisplayName("Dado uma chamada para criar feira, quando o upload falhar deve lançar StorageException")
     void createFairUploadFailure() {
         when(addressRepository.save(any())).thenReturn(new AddressEntity());
-        when(storageService.uploadAll(any(), eq("fair")))
+        when(storageService.uploadAll(any(), eq("fairs")))
                 .thenThrow(new StorageException("Falha no upload", new RuntimeException()));
 
         FairRequestDto request = fairStub.createNewFair();
 
         assertThrows(StorageException.class, () -> fairService.createFair(request));
 
-        // fair não deve ser salva se o upload falhou
         verify(fairRepository, never()).save(any());
     }
 
@@ -161,6 +164,7 @@ public class FairServiceTest {
         FairEntity f2 = fairStub.createFairEntity(2L, address);
 
         when(fairRepository.findAll()).thenReturn(List.of(f1, f2));
+        when(userFairInterestRepository.countByFairId(anyLong())).thenReturn(0L);
 
         List<FairResponseDto> fairs = fairService.getAllFair();
 
@@ -178,6 +182,7 @@ public class FairServiceTest {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
         when(fairRepository.findByFairDateGreaterThan(LocalDate.now(), pageable))
                 .thenReturn(new PageImpl<>(List.of(futureFair), pageable, 1));
+        when(userFairInterestRepository.countByFairId(anyLong())).thenReturn(0L);
 
         PageResponseDto<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
 
@@ -196,6 +201,7 @@ public class FairServiceTest {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
         when(fairRepository.findByFairDateGreaterThan(LocalDate.now(), pageable))
                 .thenReturn(new PageImpl<>(List.of(fair1, fair2), pageable, 2));
+        when(userFairInterestRepository.countByFairId(anyLong())).thenReturn(0L);
 
         PageResponseDto<FairResponseDto> fairs = fairService.getFutureFairs(0, 10, "id");
 
@@ -241,31 +247,5 @@ public class FairServiceTest {
 
         verify(storageService, never()).delete(anyString());
         verify(fairRepository, never()).deleteById(anyLong());
-    }
-
-    @Test
-    @DisplayName("Dado uma chamada para inserir interesse, deve incrementar corretamente")
-    void insertInterest() {
-        AddressEntity address = fairStub.createAddressEntity(1L);
-        FairEntity fair = fairStub.createFairEntity(1L, address);
-        fair.setInterest(5);
-
-        when(fairRepository.findById(1L)).thenReturn(Optional.of(fair));
-
-        fairService.insertInterest(1L);
-
-        assertEquals(6, fair.getInterest());
-        verify(fairRepository, times(1)).save(fair);
-    }
-
-    @Test
-    @DisplayName("Dado uma chamada para inserir interesse, quando a feira não existir deve lançar erro")
-    void insertInterestNotFound() {
-        when(fairRepository.findById(999L)).thenReturn(Optional.empty());
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> fairService.insertInterest(999L));
-
-        assertEquals("Feira não encontrada", exception.getMessage());
-        verify(fairRepository, never()).save(any());
     }
 }

@@ -22,7 +22,7 @@ public class UserRequestDto {
     private final String document;
 
     /**
-     * Accepted formats to phone field
+     * Accepted formats to mail field
      * (11) 91234-5678,
      * 11 91234-5678,
      * 11 1234-5678,
@@ -72,7 +72,7 @@ public class UserRequestDto {
                 "type=" + type +
                 ", name='" + MaskUtils.maskNameField(name) + '\'' +
                 ", document='" + MaskUtils.maskDocument(document) + '\'' +
-                ", phone='" + MaskUtils.maskPhone(phone) + '\'' +
+                ", mail='" + MaskUtils.maskPhone(phone) + '\'' +
                 ", mailAddress='" + MaskUtils.maskMailAddress(mailAddress) + '\'' +
                 ", isAdmin=" + isAdmin +
                 '}';

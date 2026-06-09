@@ -5,5 +5,5 @@ public enum NotificationType {
     DONATION,
     VOLUNTEER,
     SPONSORSHIP,
-    GENERAL
+    UPDATE_PASSWORD,
 }

@@ -14,12 +14,13 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
-@Setter
-@Getter
 @Table(name = "fair")
+@Getter
+@Setter
 public class FairEntity {
 
     @Id
@@ -29,8 +30,6 @@ public class FairEntity {
     private LocalDate fairDate;
 
     private LocalDateTime fairHour;
-
-    private Integer interest;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
@@ -43,10 +42,11 @@ public class FairEntity {
         if (imageKeys == null || imageKeys.isBlank()) {
             return List.of();
         }
-        return List.of(imageKeys.split(","));
+
+        return Arrays.asList(imageKeys.split(","));
     }
 
     public void setImageKeys(List<String> keys) {
-        this.imageKeys = String.join(",", keys);
+        this.imageKeys = keys == null ? null : String.join(",", keys);
     }
 }

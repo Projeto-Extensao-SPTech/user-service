@@ -2,16 +2,17 @@ package com.dog.feliz.user.service.controller;
 
 import com.dog.feliz.user.service.controller.dto.FairRequestDto;
 import com.dog.feliz.user.service.controller.dto.FairResponseDto;
-import com.dog.feliz.user.service.controller.dto.PageResponseDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import com.dog.feliz.user.service.entity.FairEntity;
 import com.dog.feliz.user.service.service.FairService;
 import com.dog.feliz.user.service.service.ValidationService;
 import com.dog.feliz.user.service.service.storage.S3StorageService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import com.dog.feliz.user.service.controller.dto.PageResponseDto;
+import org.springframework.security.core.Authentication;
+import com.dog.feliz.user.service.entity.user.UserEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,38 +26,28 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/fairs")
+@RequiredArgsConstructor
 public class FairController {
-
     private final FairService fairService;
 
     private final ValidationService validationService;
 
     private final S3StorageService storageService;
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-    public FairController(
-            FairService fairService,
-            ValidationService validationService,
-            S3StorageService storageService
-    ) {
-        this.fairService = fairService;
-        this.validationService = validationService;
-        this.storageService = storageService;
-    }
-
-    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/create", consumes = "multipart/form-data")
     public ResponseEntity<FairEntity> createFair(
-            @RequestPart("fair") FairRequestDto dto,
-            @RequestPart("image") MultipartFile[] image
-    ) {
+            @RequestPart FairRequestDto fairRequest,
+            @RequestPart MultipartFile[] image) {
+
         validationService.verifyIsAdminUser();
-        dto.setImages(List.of(image));
-        FairEntity fair = fairService.createFair(dto);
+        fairRequest.setImages(Arrays.asList(image));
+        FairEntity fair = fairService.createFair(fairRequest);
 
         log.info("[CREATE_FAIR] Fair created successfully fairId={}", fair.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(fair);
@@ -64,16 +55,15 @@ public class FairController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FairResponseDto> getFair(@PathVariable Long id) {
-
-        FairResponseDto fair = toResponse(fairService.getFair(id));
+        FairEntity fair = fairService.getFair(id);
 
         log.info("[GET_FAIR] Fair fetched successfully fairId={}", id);
-        return ResponseEntity.ok(fair);
+        return ResponseEntity.ok(fairService.toResponse(fair, null));
     }
 
     @GetMapping("/images")
     public ResponseEntity<Void> getImage(@RequestParam String key) {
-        String presignedUrl = storageService.getPresignedUrl(key, Duration.ofMinutes(15));
+        String presignedUrl = storageService.getPresignedUrl(key, Duration.ofMinutes(5));
 
         log.info("[GET_FAIR_IMAGE] Redirecting to presigned URL key={}", key);
         return ResponseEntity.status(HttpStatus.FOUND)
@@ -93,32 +83,33 @@ public class FairController {
     public PageResponseDto<FairResponseDto> getFutureFairs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy
-    ) {
-        PageResponseDto<FairResponseDto> fairs = fairService.getFutureFairs(page, size, sortBy);
-        log.info("[GET_FUTURE_FAIRS] Future fairs fetched successfully page={} size={} sortBy={} totalElements={}",
-                page, size, sortBy, fairs.getTotalElements());
-        return fairs;
+            @RequestParam(defaultValue = "fairDate") String sortBy) {
+
+        PageResponseDto<FairResponseDto> result = fairService.getFutureFairs(page, size, sortBy);
+
+        log.info("[GET_FUTURE_FAIRS] Future fairs fetched successfully page={} size={} " +
+                "sortBy={} totalElements={}", page, size, sortBy, result.getTotalElements());
+        return result;
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFair(@PathVariable Long id) {
         validationService.verifyIsAdminUser();
         fairService.deleteFair(id);
-
         log.info("[DELETE_FAIR] Fair deleted successfully fairId={}", id);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Void> insertInterest(@PathVariable Long id) {
-        fairService.insertInterest(id);
+    @PatchMapping("/{id}/interest")
+    public ResponseEntity<FairResponseDto> insertInterest(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        UserEntity currentUser = (UserEntity) authentication.getPrincipal();
+        Long userId = currentUser.getId();
+        FairEntity fair = fairService.insertInterest(id, userId);
 
         log.info("[INSERT_INTEREST_FAIR] Interest updated successfully fairId={}", id);
-        return ResponseEntity.noContent().build();
-    }
-
-    private FairResponseDto toResponse(FairEntity fair) {
-        return new FairResponseDto(fair);
+        return ResponseEntity.ok(fairService.toResponse(fair, userId));
     }
 }

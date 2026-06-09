@@ -10,8 +10,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "collection_center_tb")
 public class CollectionCenterEntity {
@@ -23,7 +25,7 @@ public class CollectionCenterEntity {
     @Column(length = 40, nullable = false)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 

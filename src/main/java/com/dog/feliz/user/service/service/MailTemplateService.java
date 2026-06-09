@@ -48,4 +48,11 @@ public class MailTemplateService {
         ctx.setVariable("siteUrl", siteUrl);
         return templateEngine.process("emails/feira", ctx);
     }
+
+    public String renderUpdatePassword(String code) {
+        Context ctx = new Context();
+        ctx.setVariable("code", code);
+        return templateEngine.process("emails/update_password", ctx);
+
+    }
 }

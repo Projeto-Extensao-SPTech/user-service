@@ -127,7 +127,7 @@ class AuthControllerIntegrationTest extends IntegrationTestBase {
                 "type", UserType.PF.name(),
                 "name", TestConstants.VALID_NAME,
                 "document", TestConstants.VALID_DOCUMENT,
-                "phone", TestConstants.VALID_PHONE,
+                "mail", TestConstants.VALID_PHONE,
                 "mail_address", email,
                 "password", TestConstants.VALID_PASSWORD,
                 "is_admin", requestAdmin,
