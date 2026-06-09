@@ -1,0 +1,47 @@
+package com.dog.feliz.user.service.controller.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
+@Getter
+@Setter
+public class NotificationRequestDto {
+    private final String eventId = UUID.randomUUID().toString();
+
+    @NotNull(message = "O tipo da notificação é obrigatório.")
+    private NotificationType type;
+
+    @JsonProperty("fair_id")
+    @NotNull(message = "O ID da feira de adoção é obrigatório.")
+    @Positive(message = "O ID da feira deve ser um número positivo.")
+    private Long fairId;
+
+    @Size(max = 255, message = "A mensagem deve ter no máximo 255 caracteres.")
+    private String message;
+
+    @JsonProperty("event_date")
+    @NotNull(message = "A data do evento é obrigatória.")
+    @Future(message = "A data do evento deve ser hoje ou uma data futura.")
+    private LocalDate eventDate;
+
+    @NotNull(message = "A lista de recorrências não pode ser nula.")
+    @Size(min = 1, message = "Pelo menos uma recorrência deve ser informada.")
+    private List<
+            @NotNull(message = "A recorrência não pode conter valores nulos.")
+            @Positive(message = "Cada recorrência deve ser maior ou igual a 0.")
+                    Integer
+            > recurrences;
+
+    public NotificationRequestDto() {}
+
+}
+
