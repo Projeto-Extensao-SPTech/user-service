@@ -98,12 +98,8 @@ public class NotificationService {
     }
 
     @Cacheable(value = "notifications", key = "'page:' + #page + ':size:' + #size")
-    public PageResponseDto<NotificationResponseDto> getAllNotifications(int page, int size) {
-        try {
-            return notificationClient.getAll(page, size);
-        } catch (Exception e) {
-            throw new HttpServerErrorException(HttpStatusCode.valueOf(500));
-        }
+    public PageResponseDto<NotificationResponseDto> getAllNotifications(Integer page, Integer size) {
+        return notificationClient.getAll(page, size);
     }
 
     public NotificationResponseDto getNotificationById(Long id) {
