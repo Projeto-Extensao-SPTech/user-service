@@ -41,9 +41,7 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-                )
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/h2-console/**",
@@ -67,7 +65,8 @@ public class SecurityConfig {
                                 "/users/exists-by-mail/**",
                                 "/users/update-password",
                                 "/notifications/send-today-notifications",
-                                "/rabbitmq/**"
+                                "/rabbitmq/**",
+                                "/users/send-code/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

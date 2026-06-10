@@ -10,7 +10,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -50,9 +52,13 @@ public class ShipmentService {
                     new ParameterizedTypeReference<>() {}
             );
             List<ShipmentResponseDto> body = response.getBody();
-            return body.stream().map(shipment -> new ShipmentDetailsResponseDto(shipment)).toList();
-        } catch (Exception e) {
-            throw new HttpServerErrorException(HttpStatus.BAD_GATEWAY, e.getMessage());
+            return body.stream()
+                    .map(shipment -> new ShipmentDetailsResponseDto(shipment))
+                    .toList();
+        } catch (HttpClientErrorException e) {
+            throw new HttpServerErrorException(HttpStatus.BAD_GATEWAY, "Melhor Envio client error: " + e.getMessage());
+        } catch (RestClientException e) {
+            throw new HttpServerErrorException(HttpStatus.BAD_GATEWAY, "RestTemplate error: " + e.getMessage());
         }
     }
 }
