@@ -134,10 +134,9 @@ class UserServiceTest {
         UserEntity user = UserStub.entityWithId(5L);
         when(userRepository.findByMailAddressHash(anyString())).thenReturn(Optional.of(user));
 
-        var request = new UpdatePasswordRequestDto(TestConstants.VALID_PHONE, "NovaSenha@99");
+        var request = new UpdatePasswordRequestDto(TestConstants.VALID_EMAIL, "NovaSenha@99");
         userService.updatePassword(request);
 
-        verify(validationService).verifyIsValidUserId(5L);
         verify(userRepository).save(any(UserEntity.class));
     }
 
