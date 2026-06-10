@@ -101,6 +101,7 @@ public class UserEntity implements UserDetails {
         this.document = userEntity.document;
         this.phone = userEntity.phone;
         this.mailAddress = userEntity.mailAddress;
+        this.mailAddressHash = userEntity.mailAddressHash;
         this.address = userEntity.address;
         this.receiveNotifications = userEntity.receiveNotifications;
         this.createdAt = userEntity.createdAt;
