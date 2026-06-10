@@ -64,7 +64,7 @@ public class SecurityConfig {
                                 "/mails/gmail/default",
                                 "/users/exists-by-mail/**",
                                 "/users/update-password",
-                                "/validate-code/**",
+                                "/users/validate-code",
                                 "/notifications/send-today-notifications",
                                 "/rabbitmq/**",
                                 "/users/send-code/**"
