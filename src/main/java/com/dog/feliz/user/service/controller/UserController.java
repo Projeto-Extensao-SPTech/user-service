@@ -119,6 +119,14 @@ public class UserController {
         log.info("[DELETE_USER] User deleted successfully userId={}", id);
     }
 
+    @GetMapping("/users-to-notification")
+    private List<String> getUsersToNotification() {
+        return userService.getUsersForNotification()
+                .stream()
+                .map(UserEntity::getMailAddress)
+                .toList();
+    }
+
     private UserResponseDto toResponse(UserEntity user) {
         return new UserResponseDto(user);
     }
