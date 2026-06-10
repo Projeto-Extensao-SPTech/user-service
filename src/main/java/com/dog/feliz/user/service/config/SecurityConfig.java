@@ -69,8 +69,7 @@ public class SecurityConfig {
                                 "/notifications/send-today-notifications",
                                 "/rabbitmq/**",
                                 "/users/send-code/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        ).permitAll().anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
