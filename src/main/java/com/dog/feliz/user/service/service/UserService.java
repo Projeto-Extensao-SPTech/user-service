@@ -165,7 +165,6 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(
                         "User not found by requested mail, verify your credentials"
                 ));
-        validationService.verifyIsValidUserId(userEntity.getId());
         userRepository.save(new UserEntity(userEntity, passwordEncoder.encode(updatePasswordRequest.password())));
     }
 
