@@ -140,7 +140,10 @@ public class NotificationService {
             case DONATION -> {
                 DonationEntity donation = donationRepository.findById(referenceId)
                         .orElseThrow(() -> new EntityNotFoundException("Donation not found with id: " + referenceId));
-                return mailTemplateService.renderDonation(donation);
+                UserEntity user = userRepository.findById(donation.getUserId().longValue())
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                "User not found with id: " + donation.getUserId()));
+                return mailTemplateService.renderDonation(donation, user);
             }
             case VOLUNTEER -> {
                 VolunteerEntity volunteer = volunteerRepository.findById(referenceId)

@@ -20,9 +20,10 @@ public class MailTemplateService {
     @Value("${mail.site.url:http://abrigodogfeliz.qzz.io/}")
     private String siteUrl;
 
-    public String renderDonation(DonationEntity donation) {
+    public String renderDonation(DonationEntity donation, UserEntity user) {
         Context ctx = new Context();
         ctx.setVariable("donation", donation);
+        ctx.setVariable("user", user);
         ctx.setVariable("siteUrl", siteUrl);
         return templateEngine.process("emails/doacao", ctx);
     }
