@@ -159,9 +159,11 @@ public class UserService {
     }
 
     public void updatePassword(UpdatePasswordRequestDto updatePasswordRequest) {
-        UserEntity userEntity = userRepository.findByMailAddressHash(updatePasswordRequest.mail())
+        String mailAddressHash = stringHasher.hash(updatePasswordRequest.mail());
+
+        UserEntity userEntity = userRepository.findByMailAddressHash(mailAddressHash)
                 .orElseThrow(() -> new UserNotFoundException(
-                        "User not found by requested mail and password, verify your credentials"
+                        "User not found by requested mail, verify your credentials"
                 ));
         validationService.verifyIsValidUserId(userEntity.getId());
         userRepository.save(new UserEntity(userEntity, passwordEncoder.encode(updatePasswordRequest.password())));
