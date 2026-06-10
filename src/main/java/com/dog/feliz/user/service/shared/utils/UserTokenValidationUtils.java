@@ -11,6 +11,13 @@ public class UserTokenValidationUtils {
 
     private final HttpServletRequest httpServletRequest;
 
+    public Long getUserId() {
+        return jwtService.extractClaim(
+                getToken(),
+                claims -> claims.get("id", Long.class)
+        );
+    }
+
     public UserTokenValidationUtils(JwtService jwtService, HttpServletRequest httpServletRequest) {
         this.jwtService = jwtService;
         this.httpServletRequest = httpServletRequest;

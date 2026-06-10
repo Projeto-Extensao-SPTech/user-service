@@ -10,6 +10,7 @@ import com.dog.feliz.user.service.repository.UserFairInterestRepository;
 import com.dog.feliz.user.service.entity.UserFairInterestEntity;
 import com.dog.feliz.user.service.repository.FairRepository;
 import com.dog.feliz.user.service.service.storage.StorageService;
+import com.dog.feliz.user.service.shared.utils.UserTokenValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -31,6 +32,8 @@ public class FairService {
     private final StorageService storageService;
 
     private final UserFairInterestRepository userFairInterestRepository;
+
+    private final UserTokenValidationUtils userTokenValidationUtils;
 
     @CacheEvict(value = "fairs", allEntries = true)
     public FairEntity createFair(FairRequestDto dto) {
@@ -61,7 +64,7 @@ public class FairService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortedBy));
         return new PageResponseDto<>(
                 fairRepository.findByFairDateGreaterThan(LocalDate.now(), pageable)
-                        .map(fair -> toResponse(fair, null))
+                        .map(fair -> toResponse(fair, userTokenValidationUtils.getUserId()))
         );
     }
 
