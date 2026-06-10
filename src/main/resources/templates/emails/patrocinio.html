@@ -48,15 +48,13 @@
                 <tr>
                     <td style="background-color:#ffffff;">
 
-                        <!-- Barra de seção -->
+                        <!-- Barra de seção: Detalhes da Proposta -->
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td style="background-color:#f8f9fb;border-bottom:1px solid #eeeeee;padding:14px 28px;">
                                     <table cellpadding="0" cellspacing="0">
                                         <tr>
-                                            <td style="width:8px;height:8px;background-color:#FCAD0B;border-radius:50%;vertical-align:middle;">
-                                                &nbsp;
-                                            </td>
+                                            <td style="width:8px;height:8px;background-color:#FCAD0B;border-radius:50%;vertical-align:middle;">&nbsp;</td>
                                             <td style="padding-left:10px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6b7280;vertical-align:middle;">
                                                 Detalhes da Proposta
                                             </td>
@@ -66,7 +64,7 @@
                             </tr>
                         </table>
 
-                        <!-- Linhas de informação -->
+                        <!-- Linhas de informação da proposta -->
                         <table width="100%" cellpadding="0" cellspacing="0" style="padding:8px 28px 4px;">
 
                             <!-- Tipo de Patrocínio -->
@@ -81,8 +79,7 @@
                                     </table>
                                 </td>
                                 <td style="padding:16px 0 16px 16px;border-bottom:1px solid #f3f4f6;vertical-align:middle;">
-                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">
-                                        Tipo de patrocínio</p>
+                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Tipo de patrocínio</p>
                                     <span th:text="${sponsorship.type}"
                                           style="display:inline-block;background-color:#e8f0fe;color:#052759;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700;"></span>
                                 </td>
@@ -100,8 +97,7 @@
                                     </table>
                                 </td>
                                 <td style="padding:16px 0 16px 16px;border-bottom:1px solid #f3f4f6;vertical-align:top;">
-                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">
-                                        Departamento</p>
+                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Departamento</p>
                                     <p th:text="${sponsorship.department}"
                                        style="margin:0;font-size:15px;color:#111827;font-weight:600;"></p>
                                 </td>
@@ -119,8 +115,7 @@
                                     </table>
                                 </td>
                                 <td style="padding:16px 0 16px 16px;vertical-align:top;">
-                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">
-                                        Descrição</p>
+                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Descrição</p>
                                     <p th:text="${sponsorship.description}"
                                        style="margin:0;font-size:14px;color:#4b5563;font-style:italic;line-height:1.6;"></p>
                                 </td>
@@ -128,8 +123,83 @@
 
                         </table>
 
+                        <!-- Barra de seção: Informações do Patrocinador -->
+                        <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:16px;">
+                            <tr>
+                                <td style="background-color:#f8f9fb;border-top:1px solid #eeeeee;border-bottom:1px solid #eeeeee;padding:14px 28px;">
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="width:8px;height:8px;background-color:#052759;border-radius:50%;vertical-align:middle;">&nbsp;</td>
+                                            <td style="padding-left:10px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6b7280;vertical-align:middle;">
+                                                Informações do Patrocinador
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Linhas de informação do usuário -->
+                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:8px 28px 4px;">
+
+                            <!-- Nome -->
+                            <tr>
+                                <td style="padding:16px 0;border-bottom:1px solid #f3f4f6;vertical-align:top;width:52px;">
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="background-color:#e8f0fe;width:36px;height:36px;border-radius:8px;text-align:center;vertical-align:middle;font-size:17px;">
+                                                👤
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="padding:16px 0 16px 16px;border-bottom:1px solid #f3f4f6;vertical-align:top;">
+                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Nome</p>
+                                    <p th:text="${user.name}"
+                                       style="margin:0;font-size:15px;color:#111827;font-weight:600;"></p>
+                                </td>
+                            </tr>
+
+                            <!-- E-mail -->
+                            <tr>
+                                <td style="padding:16px 0;border-bottom:1px solid #f3f4f6;vertical-align:top;width:52px;">
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="background-color:#fef3c7;width:36px;height:36px;border-radius:8px;text-align:center;vertical-align:middle;font-size:17px;">
+                                                ✉️
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="padding:16px 0 16px 16px;border-bottom:1px solid #f3f4f6;vertical-align:top;">
+                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">E-mail</p>
+                                    <p th:text="${user.mailAddress}"
+                                       style="margin:0;font-size:15px;color:#111827;font-weight:600;"></p>
+                                </td>
+                            </tr>
+
+                            <!-- Telefone (condicional) -->
+                            <tr th:if="${user.phone}">
+                                <td style="padding:16px 0;vertical-align:top;width:52px;">
+                                    <table cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="background-color:#fce7f3;width:36px;height:36px;border-radius:8px;text-align:center;vertical-align:middle;font-size:17px;">
+                                                📞
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="padding:16px 0 16px 16px;vertical-align:top;">
+                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">Telefone</p>
+                                    <p th:text="${user.phone}"
+                                       style="margin:0;font-size:15px;color:#111827;font-weight:600;"></p>
+                                </td>
+                            </tr>
+
+                        </table>
+
                         <!-- Próximos passos -->
-                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:8px 28px 0;">
+                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:24px 28px 0;">
                             <tr>
                                 <td style="background-color:#fffbf0;border:1px solid #fde68a;border-radius:10px;padding:20px;">
                                     <p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#92400e;letter-spacing:0.5px;text-transform:uppercase;">
@@ -144,10 +214,7 @@
                         </table>
 
                         <!-- CTA -->
-                        <table width="100%" cellpadding="0" cellspacing="0"
-                               style="padding:28px 28px 36px;text-align:center;">
-
-                        </table>
+                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:28px 28px 36px;text-align:center;"></table>
 
                     </td>
                 </tr>

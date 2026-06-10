@@ -28,9 +28,10 @@ public class MailTemplateService {
         return templateEngine.process("emails/doacao", ctx);
     }
 
-    public String renderSponsorship(SponsorshipEntity sponsorship) {
+    public String renderSponsorship(SponsorshipEntity sponsorship, UserEntity user) {
         Context ctx = new Context();
         ctx.setVariable("sponsorship", sponsorship);
+        ctx.setVariable("user", user);
         ctx.setVariable("siteUrl", siteUrl);
         return templateEngine.process("emails/patrocinio", ctx);
     }

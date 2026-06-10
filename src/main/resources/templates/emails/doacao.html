@@ -127,25 +127,6 @@
                                 </td>
                             </tr>
 
-                            <!-- Data de disponibilidade -->
-                            <tr>
-                                <td style="padding:16px 0;border-bottom:1px solid #f3f4f6;vertical-align:top;width:52px;">
-                                    <table cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td style="background-color:#fce7f3;width:36px;height:36px;border-radius:8px;text-align:center;vertical-align:middle;font-size:17px;">
-                                                📅
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td style="padding:16px 0 16px 16px;border-bottom:1px solid #f3f4f6;vertical-align:middle;">
-                                    <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;">
-                                        Data de disponibilidade</p>
-                                    <span th:text="${#temporals.format(volunteer.availableDate, 'dd/MM/yyyy')}"
-                                          style="display:inline-block;background-color:#d1fae5;color:#065f46;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700;"></span>
-                                </td>
-                            </tr>
-
                             <!-- Mensagem (condicional) -->
                             <tr th:if="${volunteer.message}">
                                 <td style="padding:16px 0;vertical-align:top;width:52px;">

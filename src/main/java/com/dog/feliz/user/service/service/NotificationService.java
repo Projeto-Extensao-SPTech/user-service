@@ -26,6 +26,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
+
 import java.util.List;
 
 @Service
@@ -130,6 +131,7 @@ public class NotificationService {
         return message;
     }
 
+    @SuppressWarnings("checkstyle:MethodLength")
     private String getContentByNotificationType(NotificationType type, Long referenceId) {
         switch (type) {
             case FAIR -> {
@@ -161,7 +163,15 @@ public class NotificationService {
                 SponsorshipEntity sponsorship = sponsorshipRepository.findById(referenceId)
                         .orElseThrow(() ->
                                 new EntityNotFoundException("Sponsorship not found with id: " + referenceId));
-                return mailTemplateService.renderSponsorship(sponsorship);
+
+                UserEntity user = userRepository.findById(sponsorship.getSponsor().getId())
+                        .orElseThrow(() ->
+                                new EntityNotFoundException(
+                                        "User not found with id: " +
+                                                sponsorship.getSponsor().getId()
+                                )
+                        );
+                return mailTemplateService.renderSponsorship(sponsorship, user);
             }
         }
         return null;
